@@ -1,8 +1,7 @@
 <?php
 namespace app\api\controller;
-use services\OpensslService;
+use app\api\logic\Tokens;
 use think\facade\Config;
-use app\dashboard\model\AdminUser;
 use think\Db;
 class Rest extends Base{
     private $httpMethodsEncodingParametersInURI;
@@ -108,12 +107,11 @@ class Rest extends Base{
     }
     private function verify_token($token,$parseOnly){
         $api_type = strtolower($this->mapInfo['api_type']);
-        $opensslService = new OpensslService();
-        $decJson=$opensslService->aes_decrypt($token);
-        if(!$decJson)
+        $tokens = new Tokens();
+        $decArray=$tokens->decodeJWT($token);
+        if(!$decArray)
             return ['ErrorCode'=>5,'ErrorMsg'=>'token异常,请重新登录'];
 
-        $decArray = json_decode($decJson,1);
         if(!isset($decArray['token_created_at']))
             return ['ErrorCode'=>5,'ErrorMsg'=>'token异常,请重新登录'];
 
@@ -121,14 +119,12 @@ class Rest extends Base{
         if($exptime < now_time())
             return ['ErrorCode'=>5,'ErrorMsg'=>'帐号已过期,请重新登录'];
 
-        //$adminUserModel = new AdminUser();
-        //$str_atoken = $adminUserModel->where([['id','=',$decArray['token_admin_child_id']]])->value("admin_token");
+        $str_atoken = Db::name("cmp_resident")->where([['id','=',$decArray['token_resident_id']]])->value("atoken");
         $enStr = !empty($str_atoken)?$str_atoken:"";
-        $decReJson = $opensslService->aes_decrypt($enStr);
-        if(!$decReJson)
+        $decReArray = $tokens->decodeJWT($enStr);
+        if(!$decReArray)
             return ['ErrorCode'=>5,'ErrorMsg'=>'请重新登录'];
 
-        $decReArray = json_decode($decReJson,1);
         if(!isset($decReArray['token_created_at']))
             return ['ErrorCode'=>5,'ErrorMsg'=>'请重新登录'];
 

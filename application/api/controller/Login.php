@@ -1,0 +1,58 @@
+<?php
+namespace app\api\controller;
+use think\Controller;
+class Login extends  Base
+{
+    //用户三方登陆
+    public function thirdByResidentLogin($input)
+    {
+        $data = array();
+        $data['code'] = isset($input['code'])?$input['code']:"";
+        $data['sns_type'] = isset($input['sns_type'])?$input['sns_type']:0;
+        $data['sub_domain'] = isset($input['sub_domain']) ? trim($input['sub_domain']): '';
+        if (empty($data['sns_type'])) {
+            $this->error_data['ErrorMsg'] = '参数错误';
+            return $this->print_result($this->error_data);
+        }
+        $login = Controller('Login', 'logic');
+        $res = $login->thirdByAdminLogin($data);
+        return $this->print_result($res);
+    }
+
+    //帐号登录或绑定第三方帐号
+    public function residentLogin($input)
+    {
+        $data = array();
+        $data['user_name']     = isset($input['user_name'])?trim($input['user_name']):"";
+        $data['password']      = isset($input['password'])?trim($input['password']):"";
+        $data['login_mod']     = isset($input['login_mod'])?$input['login_mod']:1;//2=帐号加密码登录1=手机号加验证码登录
+        $data['verify_code']   = isset($input['verify_code'])?$input['verify_code']:"";
+        if (empty($data['user_name'])) {
+            $this->error_data['ErrorMsg'] = '用户名或手机号不能为空';
+            return $this->print_result($this->error_data);
+        }
+        if($data['login_mod'] == 2 && empty($data['password'])){
+            $this->error_data['ErrorMsg'] = "密码不能为空";
+            return $this->print_result($this->error_data);
+        }
+        $login = Controller('Login', 'logic');
+        $res = $login->residentLogin($data);
+        return $this->print_result($res);
+    }
+
+    /**
+     * @param $input
+     * @return mixed  退出
+     */
+    public function residentLogout($input){
+        $data = array();
+        $data['resident_id'] = isset($input['token_resident_id']) ? $input['token_resident_id'] : 0;
+        if (empty($data['token_admin_child_id'])) {
+            $this->error_data['ErrorMsg'] = '参数错误';
+            return $this->print_result($this->error_data);
+        }
+        $login = Controller('Login', 'logic');
+        $res = $login->residentLogout($data);
+        return $this->print_result($res);
+    }
+}
