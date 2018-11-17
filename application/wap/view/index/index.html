@@ -17,7 +17,8 @@
     .top .search{
         width: calc(100% - 100px);
         padding: 2px 0;
-        float: left;
+        /*float: left;*/
+        margin: 0 auto;
     }
     .top .search input{
         width: 100%;
@@ -61,26 +62,30 @@
     /**-------------------menu end-------------**/
     /**-------------------notice start-------------**/
     .notice{
-        padding: 20px;
-        display: flex;
-        background-color: #eee;
+        padding: 8px 15px;
+        overflow: hidden;
+        margin-bottom: 8px;
+        border: 1px solid #ddd;
+        border-width: 1px 0;
     }
     .notice .title{
-        width: 48px;
-        line-height: 24px;
+        width: 50px;
+        line-height: 25px;
         text-align: center;
         border: 1px solid #ccc;
         font-size: 14px;
         background-color: #fff;
+        float: left;
     }
     .notice .notice-con{
-        width: calc(100% - 68px);
+        width: calc(100% - 60px);
         color: red;
         font-size: 12px;
         padding: 4px 5px;
         line-height: 20px;
-        margin-left: 20px;
-        background-color: #ddd;
+        margin-left: 10px;
+        background-color: #eee;
+        float: left;
     }
     .notice .notice-con span{
         color: #999;
@@ -89,13 +94,13 @@
 </style>
 <div class="top">
     <a class="pos" href="{:url('Index/estatePos')}">
-        <i class="iconfont icon-weizhi"></i>
+        <!--<i class="iconfont icon-weizhi"></i>-->
     </a>
     <div class="search">
         <input type="text" />
     </div>
     <div class="msg">
-        <a href="{:url('Index/msgList')}"><i class="iconfont icon-xiaoxi"></i></a>
+        <!--<a href="{:url('Index/msgList')}"><i class="iconfont icon-xiaoxi"></i></a>-->
     </div>
 </div>
 {include file="public/banner" /}
@@ -114,6 +119,12 @@
             </a>
         </li>
     </ul>
+</div>
+<div class="notice">
+    <div class="title">通知<br/>通告</div>
+    <div class="notice-con">
+        <span>公告：</span>停电通知：接供电公司通知，9月21日下午1点至6点停电...
+    </div>
 </div>
 <div class="notice">
     <div class="title">通知<br/>通告</div>

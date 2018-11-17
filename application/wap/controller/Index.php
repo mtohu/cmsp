@@ -1,13 +1,21 @@
 <?php
 namespace app\wap\controller;
 
-class Index extends Base
+use think\Controller;
+
+class Index extends Controller
 {
     public function initialize(){
         parent::initialize();
     }
     public function index()
     {
+        $nav_item = [
+            'index' => 'nav-item-active',
+            'manager' => '',
+            'user' => ''
+        ];
+        $this->assign('nav_item', $nav_item);
         return $this->fetch();
     }
 

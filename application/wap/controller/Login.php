@@ -84,7 +84,7 @@ class Login extends Controller {
      */
     public function setRegisterInfo()
     {
-        $this->assign('head_title', '绑定房产物业');
+        $this->assign('head_title', '完善信息');
         return $this->fetch();
     }
 

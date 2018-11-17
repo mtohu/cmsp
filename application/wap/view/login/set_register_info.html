@@ -1,5 +1,18 @@
 {include file="public/head" /}
 <style>
+    .tabs{
+        overflow: hidden;
+    }
+    .tabs .tab{
+        width: 50%;
+        float: left;
+        line-height: 36px;
+        text-align: center;
+    }
+    .tabs .no-active{
+        color: #ccc;
+        border-bottom: 1px solid #d0d0d0;
+    }
     .form-item select{
         height: 24px;
         line-height: 24px;
@@ -8,15 +21,19 @@
         margin-bottom: 50px;
     }
 </style>
-<div class="form-item">
-    <div class="form-label">物业信息</div>
+<div class="tabs">
+    <div class="tab" id="tab-house" style="border-right: 1px solid #d0d0d0;">绑定房屋产业</div>
+    <div class="tab no-active" id="tab-service">我是维修人员</div>
+</div>
+<div class="form-item tab-house">
+    <div class="form-label">小区</div>
     <div class="form-input">
         <select name="" id="" style="padding: 0 20px;">
             <option value="">亲情鼎苑</option>
         </select>
     </div>
 </div>
-<div class="form-item">
+<div class="form-item tab-house">
     <div class="form-label">房号</div>
     <div class="form-input">
         <select name="" id="">
@@ -24,37 +41,63 @@
         </select>
         栋
         <select name="" id="">
+            <option value="">1</option>
+        </select>
+        单元
+        <select name="" id="">
             <option value="">101</option>
         </select>
         室
     </div>
 </div>
-<div class="form-item">
-    <div class="form-label">物业信息</div>
+<div class="form-item tab-house">
+    <div class="form-label">用户类型</div>
     <div class="form-input">
         <select name="" id="" style="padding: 0 20px;">
             <option value="">我是房主</option>
         </select>
     </div>
 </div>
-<div class="form-item">
+<div class="form-item tab-service">
     <div class="form-label">身份证号码</div>
     <div class="form-input">
-        <input type="text" value="请输入房屋登记人身份证号" />
+        <input type="text" placeholder="请输入房屋登记人身份证号" />
     </div>
 </div>
-<div class="form-item">
+<div class="form-item tab-service">
     <div class="form-label">姓名</div>
     <div class="form-input">
-        <input type="text" value="请输入姓名" />
+        <input type="text" placeholder="请输入姓名" />
     </div>
 </div>
-<div class="form-item">
+<div class="form-item tab-service">
     <div class="form-label">预留手机号</div>
     <div class="form-input">
-        <input type="text" value="请输入房屋登记人预留手机号" />
+        <input type="text" placeholder="请输入房屋登记人预留手机号" />
     </div>
 </div>
 <div class="form-submit">
     <a href="{:url('Index/index')}"><input type="button" value="确定" /></a>
 </div>
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+var tab = {
+    init: function(){
+        this.click();
+    },
+    click: function(){
+        $('#tab-house').click(function(){
+            $(this).removeClass('no-active');
+            $('#tab-service').addClass('no-active');
+            $('.tab-house').show();
+        });
+        $('#tab-service').click(function(){
+            $(this).removeClass('no-active');
+            $('#tab-house').addClass('no-active');
+            $('.tab-house').hide();
+        });
+    }
+};
+tab.init();
+</script>
