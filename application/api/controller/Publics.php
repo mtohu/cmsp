@@ -37,5 +37,27 @@ class Publics extends Base
         }
         return $this->print_result($this->error_data);
     }
+    /******检查手机验证码是否正确******/
+    public  function checkVerifyCode($input){
+        $phone = isset($input['phone']) ? trim(strval($input['phone'])) : '';
+        $verify_code  = isset($input['verify_code'])?trim($input['verify_code']):"";
+        $type = isset($input['type']) ? intval($input['type']) :1;//1=注册2=找回密码
+        if (empty($phone)) {
+            $this->error_data["ErrorMsg"] = '手机号码不能为空';
+            return $this->print_result($this->error_data);
+        }
+        if (empty($verify_code)) {
+            $this->error_data["ErrorMsg"] = '验证码不能为空';
+            return $this->print_result($this->error_data);
+        }
+        $verifyModel = new Verify();
+        $verify = $verifyModel->where([['phone','=',$phone],['type','=',$type],['is_use','=',0]])->order("id","desc")->find();
+        if(!isset($verify['id']) || (isset($verify['id']) && $verify['verify'] != $verify_code)){
+            $this->error_data["ErrorMsg"] = '验证码不正确';
+            return $this->print_result($this->error_data);
+        }
+        $this->error_data['ErrorCode'] = 0;
+        return $this->print_result($this->error_data);
+    }
 
 }
