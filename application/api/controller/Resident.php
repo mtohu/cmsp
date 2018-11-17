@@ -18,7 +18,7 @@ class Resident extends  Base
             $this->error_data['ErrorMsg'] = "未登录无法获取信息";
             return $this->error_data;
         }
-        $login = Controller('Login', 'logic');
+        $login = Controller('Resident', 'logic');
         $res = $login->bindCommunityRoomPresent($data);
         return $this->print_result($res);
     }
@@ -51,7 +51,7 @@ class Resident extends  Base
             $this->error_data['ErrorMsg'] = "身份证号错误";
             return $this->error_data;
         }
-        $login = Controller('Login', 'logic');
+        $login = Controller('Resident', 'logic');
         $res = $login->saveBindCommunityRoom($data);
         return $this->print_result($res);
     }

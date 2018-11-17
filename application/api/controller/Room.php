@@ -18,7 +18,7 @@ class Room extends  Base
             $this->error_data['ErrorMsg'] = "未登录无法获取信息";
             return $this->error_data;
         }
-        $login = Controller('Login', 'logic');
+        $login = Controller('Room', 'logic');
         $res = $login->checkRoomOwnerBind($data);
         return $this->print_result($res);
     }
