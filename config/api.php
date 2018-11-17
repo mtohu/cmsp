@@ -7,6 +7,7 @@ return [
     'register_resient/post'     => ['c'=>'Login','a'=>'registerResient','api_type'=>'','need_auth'=>'false','desc'=>'注册用户并登录成功'],
     'resident_logout/post'     => ['c'=>'Login','a'=>'residentLogout','api_type'=>'','need_auth'=>'false','desc'=>' logout'],
     'check_account_isexit/post'     => ['c'=>'Login','a'=>'checkAccountIsexit','api_type'=>'','need_auth'=>'false','desc'=>'检查帐号信息是否存在'],
+    'find_pwd/post'     => ['c'=>'Login','a'=>'findPwd','api_type'=>'','need_auth'=>'false','desc'=>' 找回密码'],
     'admin_user/post'     => ['c'=>'Admin','a'=>'adminUser','api_type'=>'','need_auth'=>'true','desc'=>'admin user'],
     'set_admin_user_pwd/post'     => ['c'=>'Admin','a'=>'setAdminUserPwd','api_type'=>'','need_auth'=>'true','desc'=>'set admin user pwd'],
     'admin_user_save/post'     => ['c'=>'Admin','a'=>'adminUserSave','api_type'=>'','need_auth'=>'true','desc'=>'商户信息保存'],
