@@ -41,13 +41,28 @@ class Login extends  Base
     }
     /******注册用户********/
     public function registerResient($input){
-
+        $data = array();
+        $data['phone']         = isset($input['phone'])?trim($input['phone']):"";
+        $data['user_name']     = isset($input['user_name'])?trim($input['user_name']):"";
+        $data['password']      = isset($input['password'])?trim($input['password']):"";
+        $data['verify_code']   = isset($input['verify_code'])?$input['verify_code']:"";
+        if (empty($data['user_name']) || empty($data['phone'])) {
+            $this->error_data['ErrorMsg'] = '用户名或手机号不能为空';
+            return $this->print_result($this->error_data);
+        }
+        if(empty($data['password'])){
+            $this->error_data['ErrorMsg'] = "密码不能为空";
+            return $this->print_result($this->error_data);
+        }
+        $login = Controller('Login', 'logic');
+        $res = $login->registerResient($data);
+        return $this->print_result($res);
     }
     /******检查帐号用户名是否存在*******/
     public function checkAccountIsexit($input){
         $type = isset($input['type'])?intval($input['type']):0;//type 1=检查手机号2=检查用户名
         if(empty($input["user_name"]) || !$type){
-            $this->error_data['ErrorMsg'] = "检查信息不能为空";
+            $this->error_data['ErrorMsg'] = "检查信息和检查类型不能为空";
             return $this->print_result($this->error_data);
         }
         $login = Controller('Login', 'logic');

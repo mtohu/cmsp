@@ -107,8 +107,7 @@ class Rest extends Base{
     }
     private function verify_token($token,$parseOnly){
         $api_type = strtolower($this->mapInfo['api_type']);
-        $tokens = new Tokens();
-        $decArray=$tokens->decodeJWT($token);
+        $decArray=Tokens::decodeJWT($token);
         if(!$decArray)
             return ['ErrorCode'=>5,'ErrorMsg'=>'token异常,请重新登录'];
 
@@ -121,7 +120,7 @@ class Rest extends Base{
 
         $str_atoken = Db::name("cmp_resident")->where([['id','=',$decArray['token_resident_id']]])->value("atoken");
         $enStr = !empty($str_atoken)?$str_atoken:"";
-        $decReArray = $tokens->decodeJWT($enStr);
+        $decReArray = Tokens::decodeJWT($enStr);
         if(!$decReArray)
             return ['ErrorCode'=>5,'ErrorMsg'=>'请重新登录'];
 
