@@ -1,10 +1,30 @@
 <?php
 namespace app\api\controller;
-
-class Index
+use think\Controller;
+use think\Db;
+class Index extends Base
 {
-    public function index()
-    {
-        return '<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} a{color:#2E5CD5;cursor: pointer;text-decoration: none} a:hover{text-decoration:underline; } body{ background: #fff; font-family: "Century Gothic","Microsoft yahei"; color: #333;font-size:18px;} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.6em; font-size: 42px }</style><div style="padding: 24px 48px;"> <h1>:) </h1><p> ThinkPHP V5.1<br/><span style="font-size:30px">12载初心不改（2006-2018） - 你值得信赖的PHP框架</span></p></div><script type="text/javascript" src="https://tajs.qq.com/stats?sId=64890268" charset="UTF-8"></script><script type="text/javascript" src="https://e.topthink.com/Public/static/client.js"></script><think id="eab4b9f840753f8e7"></think>';
+    /*****滚动图******/
+    public  function bannerList($input){
+        $banners = Db::name("cmp_banner")->where([['banner_state','=',1]])->order("order_sort desc,id desc")->select();
+        $this->error_data['ErrorCode'] = 0;
+        $this->error_data['Data'] = $banners;
+        return $this->print_result($this->error_data);
+
     }
+    /*****通知信息*****/
+    public function noticeList($input){
+        $datetime = date('Y-m-d H:i:s',now_time());
+        $notices = Db::name("cmp_notice")->alias('a')
+            ->leftJoin('cmp_notice_type nt','a.notice_type_id = nt.id')
+            ->field("a.id,a.title,a.content,a.notice_type_id,nt.type_name")
+            ->whereTime('a.effective_date', '<=', $datetime)
+            ->whereTime('a.expire_date', '>=', $datetime)
+            ->order("id desc")
+            ->select();
+        $this->error_data['ErrorCode'] = 0;
+        $this->error_data['Data'] = $notices;
+        return $this->print_result($this->error_data);
+    }
+
 }

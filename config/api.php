@@ -14,8 +14,8 @@ return [
 
     'sms_send/post'         => ['c'=>'Publics','a'=>'smsSend','api_type'=>'','need_auth'=>'false','desc' =>'发送短信'],
     'check_verify_code/post'=> ['c'=>'Publics','a'=>'checkVerifyCode','api_type'=>'','need_auth'=>'false','desc' =>'检查手机号验证码'],
-    'get_province/post'    => ['c'=>'Publics','a'=>'getProvince','api_type'=>'','need_auth'=>'false','desc' =>'获取省份'],
-    'get_city/post'        => ['c'=>'Publics','a'=>'getCity','api_type'=>'','need_auth'=>'false','desc' =>'获取市'],
+    'banner_list/post'    => ['c'=>'Index','a'=>'bannerList','api_type'=>'','need_auth'=>'false','desc' =>'获取banner轮播'],
+    'notice_list/post'     => ['c'=>'Index','a'=>'noticeList','api_type'=>'','need_auth'=>'false','desc' =>'获取通知列表'],
     'get_area/post'        => ['c'=>'Publics','a'=>'getArea','api_type'=>'','need_auth'=>'false','desc' =>'获取地区'],
     'get_banner/post'      => ['c'=>'Index','a'=>'getBanner','api_type'=>'','need_auth'=>'false','desc' =>'获取轮播图'],
     'get_category/post'    => ['c'=>'Index','a'=>'getCategory','api_type'=>'','need_auth'=>'false','desc' =>'获取分类'],

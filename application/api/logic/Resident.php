@@ -39,19 +39,27 @@ class Resident extends Base
         $identification =isset($input['identification']) ? trim($input['identification']) : "";
         $uphone =isset($input['uphone']) ? trim($input['uphone']) : "";
         $name =isset($input['name']) ? trim($input['name']) : "";
+        $is_maintenance_staff = isset($inpu['is_maintenance_staff'])?$input['is_maintenance_staff']:0;
         try{
             Db::startTrans();
             $resident = Db::name("cmp_resident")->where('id',$resident_id)->find();
             if(!isset($resident['id'])){
                 throw new ErrorException("用户不存在");
             }
-            if(intval($resident['is_verified']) == 1){
+            $rroom = Db::name("cmp_resident_room")->where([['resident_id','=',$resident_id],['room_id','=',$room_id]])->find();
+            if(isset($rroom['id']) && intval($rroom['is_verified']) == 1){
                 throw new ErrorException("已经绑定请不要重复绑定");
             }
             $saveData=array("resident_type"=>$resident_type,"identification"=>$identification,"uphone"=>$uphone);
-            $saveData["room_id"]=$room_id;
+            //$saveData["room_id"]=$room_id;
+            $saveData["is_maintenance_staff"]=$is_maintenance_staff;
             $saveData["update_date"]=date('Y-m-d H:i:s',now_time());
             $res = Db::name("cmp_resident")->where('id',$resident_id)->data($saveData)->update();
+            if(!$res){
+                throw new ErrorException("保存失败");
+            }
+            $resident_room_data=array("resident_id"=>$resident_id,"room_id"=>$room_id,"update_date"=>date('Y-m-d H:i:s',now_time()));
+            $res=Db::name("cmp_resident_room")->insert($resident_room_data);
             if(!$res){
                 throw new ErrorException("保存失败");
             }
