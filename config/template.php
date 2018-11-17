@@ -40,5 +40,6 @@ return [
         '__CSS__' => '/static/css',
         '__IMG__' => '/static/img',
         '__JS__' => '/static/js',
+        '__PLUG__' => '/static/plug',
     ]
 ];

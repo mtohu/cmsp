@@ -34,9 +34,10 @@ class Login extends Controller {
     /**
      * 检验登录验证码
      */
-    public function checkLoginVerifyCode()
+    public function checkFindPwdVerifyCode()
     {
         $this->assign('head_title', '安全检测');
+        $this->assign('phone', input('phone'));
         return $this->fetch();
     }
 
@@ -46,6 +47,8 @@ class Login extends Controller {
     public function resetPwd()
     {
         $this->assign('head_title', '重置密码');
+        $this->assign('phone', input('phone'));
+        $this->assign('verify_code', input('verify_code'));
         return $this->fetch();
     }
 
