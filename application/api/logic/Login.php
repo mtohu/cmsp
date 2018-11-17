@@ -108,7 +108,7 @@ class Login extends Base
     {
         $user_name = isset($input['user_name']) ? trim($input['user_name']) : "";
         $password = isset($input['password']) ? trim($input['password']) : "";
-        $login_mod  = isset($input['login_mod']) ? $input['login_mod'] : 0;  //1=手机号加验证码登录 2=帐号加密码登录
+        $login_mod  = isset($input['login_mod']) ? intval($input['login_mod']) : 0;  //1=手机号加验证码登录 2=帐号加密码登录
         $verify_code = isset($input['verify_code']) ? $input['verify_code'] :"";
         $password_code = get_resident_pwd($password);
         //判定登陆方式
@@ -137,7 +137,7 @@ class Login extends Base
                 $this->error_data['ErrorMsg'] = "更新验证码状态错误";
                 return $this->error_data;
             }
-        }elseif ($login_mod == 2){
+        }else{
             if (preg_match("/^1[3456789]\d{9}$/", $user_name)) {
                 //phone,username
                 $login_info = Db::name('cmp_resident')->where([['phone', '=', $user_name]])->find();
@@ -286,7 +286,7 @@ class Login extends Base
      *  退出
      */
     public function residentLogout($input){
-        $resident_id = isset($input['token_resident_id']) ? $input['token_resident_id']:0;
+        $resident_id = isset($input['resident_id']) ? $input['resident_id']:0;
         $data['atoken']='';$data['update_date']=date('Y-m-d H:i:s',now_time());
         $res = Db::name('cmp_resident')->where('id','=',$resident_id)->update($data);
         if (!$res){

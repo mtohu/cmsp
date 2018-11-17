@@ -25,7 +25,7 @@ class Login extends  Base
         $data = array();
         $data['user_name']     = isset($input['user_name'])?trim($input['user_name']):"";
         $data['password']      = isset($input['password'])?trim($input['password']):"";
-        $data['login_mod']     = isset($input['login_mod'])?$input['login_mod']:1;//2=帐号加密码登录1=手机号加验证码登录
+        $data['login_mod']     = isset($input['login_mod'])?$input['login_mod']:0;//2=帐号加密码登录1=手机号加验证码登录
         $data['verify_code']   = isset($input['verify_code'])?$input['verify_code']:"";
         if (empty($data['user_name'])) {
             $this->error_data['ErrorMsg'] = '用户名或手机号不能为空';
@@ -77,7 +77,7 @@ class Login extends  Base
     public function residentLogout($input){
         $data = array();
         $data['resident_id'] = isset($input['token_resident_id']) ? $input['token_resident_id'] : 0;
-        if (empty($data['token_admin_child_id'])) {
+        if (empty($data['resident_id'])) {
             $this->error_data['ErrorMsg'] = '参数错误';
             return $this->print_result($this->error_data);
         }
