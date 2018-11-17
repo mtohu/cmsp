@@ -2,14 +2,17 @@
 //接口配置文件
 return [
     //c=控制器a=方法api_type=什么类型的接口need_auth=是否要验证 desc=描述
-    'third_resident_login/post'     => ['c'=>'Login','a'=>'thirdByResidentLogin','api_type'=>'','need_auth'=>'false','desc'=>'third admin login'],
-    'resident_login/post'     => ['c'=>'Login','a'=>'residentLogin','api_type'=>'','need_auth'=>'false','desc'=>'admin login'],
-    'resident_logout/post'     => ['c'=>'Login','a'=>'residentLogout','api_type'=>'','need_auth'=>'false','desc'=>'admin logout'],
+    'third_resident_login/post'     => ['c'=>'Login','a'=>'thirdByResidentLogin','api_type'=>'','need_auth'=>'false','desc'=>'third  login'],
+    'resident_login/post'     => ['c'=>'Login','a'=>'residentLogin','api_type'=>'','need_auth'=>'false','desc'=>' login'],
+    'register_resient/post'     => ['c'=>'Login','a'=>'registerResient','api_type'=>'','need_auth'=>'false','desc'=>'注册用户并登录成功'],
+    'resident_logout/post'     => ['c'=>'Login','a'=>'residentLogout','api_type'=>'','need_auth'=>'false','desc'=>' logout'],
+    'check_account_isexit/post'     => ['c'=>'Login','a'=>'checkAccountIsexit','api_type'=>'','need_auth'=>'false','desc'=>'检查帐号信息是否存在'],
     'admin_user/post'     => ['c'=>'Admin','a'=>'adminUser','api_type'=>'','need_auth'=>'true','desc'=>'admin user'],
     'set_admin_user_pwd/post'     => ['c'=>'Admin','a'=>'setAdminUserPwd','api_type'=>'','need_auth'=>'true','desc'=>'set admin user pwd'],
     'admin_user_save/post'     => ['c'=>'Admin','a'=>'adminUserSave','api_type'=>'','need_auth'=>'true','desc'=>'商户信息保存'],
 
-    'sms_send/post'        => ['c'=>'Publics','a'=>'smsSend','api_type'=>'','need_auth'=>'false','desc' =>'发送短信'],
+    'sms_send/post'         => ['c'=>'Publics','a'=>'smsSend','api_type'=>'','need_auth'=>'false','desc' =>'发送短信'],
+    'check_verify_code/post'=> ['c'=>'Publics','a'=>'checkVerifyCode','api_type'=>'','need_auth'=>'false','desc' =>'检查手机号验证码'],
     'get_province/post'    => ['c'=>'Publics','a'=>'getProvince','api_type'=>'','need_auth'=>'false','desc' =>'获取省份'],
     'get_city/post'        => ['c'=>'Publics','a'=>'getCity','api_type'=>'','need_auth'=>'false','desc' =>'获取市'],
     'get_area/post'        => ['c'=>'Publics','a'=>'getArea','api_type'=>'','need_auth'=>'false','desc' =>'获取地区'],

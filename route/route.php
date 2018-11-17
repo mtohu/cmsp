@@ -14,7 +14,8 @@ Route::get('think', function () {
 });
 
 Route::get('hello/:name', 'index/hello');
-
+Route::rule('api/:resourceName','api/Rest/gateway')
+    ->pattern(['resourceName' => '[a-zA-Z-_0-9]+']);
 return [
 
 ];

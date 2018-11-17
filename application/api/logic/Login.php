@@ -82,8 +82,7 @@ class Login extends Base
                 $return_data['account_name']='';
                 $return_data['resident_name']=$userdata['name'];
             }
-            $create_token = new Tokens();
-            $token = $create_token->createResidentToken($token_data);
+            $token = Tokens::createResidentToken($token_data);
             $update = Db::name('cmp_resident')->where('id',$token_data['resident_id'])
                       ->data(['atoken'=>$token,'update_date'=>date('Y-m-d H:i:s',now_time())])->update();
             if(!$update || empty($token)){
@@ -109,7 +108,7 @@ class Login extends Base
     {
         $user_name = isset($input['user_name']) ? trim($input['user_name']) : "";
         $password = isset($input['password']) ? trim($input['password']) : "";
-        $login_mod  = isset($input['login_mod']) ? $input['login_mod'] : 0;  //1=手机号加验证码登录 2=帐号加密码登录
+        $login_mod  = isset($input['login_mod']) ? intval($input['login_mod']) : 0;  //1=手机号加验证码登录 2=帐号加密码登录
         $verify_code = isset($input['verify_code']) ? $input['verify_code'] :"";
         $password_code = get_resident_pwd($password);
         //判定登陆方式
@@ -138,7 +137,7 @@ class Login extends Base
                 $this->error_data['ErrorMsg'] = "更新验证码状态错误";
                 return $this->error_data;
             }
-        }elseif ($login_mod == 2){
+        }else{
             if (preg_match("/^1[3456789]\d{9}$/", $user_name)) {
                 //phone,username
                 $login_info = Db::name('cmp_resident')->where([['phone', '=', $user_name]])->find();
@@ -180,7 +179,6 @@ class Login extends Base
             $this->error_data['ErrorMsg'] = "帐号被加入黑名单,请联系客服人员";
             return $this->error_data;
         }
-        $create_token = new Tokens();
         $expiresAt = now_time() + 7200;
         $token_data = [
             'expires_in' => 7200,
@@ -189,7 +187,7 @@ class Login extends Base
             'created_at' => now_time(),
             'expiresAt' => $expiresAt
         ];
-        $token = $create_token->createResidentToken($token_data);
+        $token = Tokens::createResidentToken($token_data);
         $returnData = array("resident_id" => $login_info['id'], "account_name" => $login_info['account'], "resident_name" => $login_info['name'],"token" => $token);
         $res = Db::name('cmp_resident')->where('id', $login_info['id'])->update(['login_time'=>now_time(),'last_time'=>$login_info['login_time'],
                      'login_num'=>intval($login_info['login_num'])+1,
@@ -202,11 +200,93 @@ class Login extends Base
         $this->error_data['Data'] = $returnData;
         return $this->error_data;
     }
+    /*****注册用户******/
+    public function registerResient($input){
+        $phone         = isset($input['phone'])?trim($input['phone']):"";
+        $user_name     = isset($input['user_name'])?trim($input['user_name']):"";
+        $password      = isset($input['password'])?trim($input['password']):"";
+        $verify_code   = isset($input['verify_code'])?$input['verify_code']:"";
+        $password_code = get_resident_pwd($password);
+        $ip = request()->ip();
+        try{
+            Db::startTrans();
+            $rpuser = Db::name('cmp_resident')->where('phone', '=', $phone)->find();
+            if(isset($rpuser['id'])){
+                throw new ErrorException("手机号已经存在");
+            }
+            $rpuser = Db::name('cmp_resident')->where('account', '=', $user_name)->find();
+            if(isset($rpuser['id'])){
+                throw new ErrorException("用户名已经存在");
+            }
+            //验证码
+            $verify_code_arr = Db::name('cmp_verify')->where([['phone','=', $phone],['type','=',1]])->order('id','desc')->find();
+            if(!isset($verify_code_arr['id'])){
+                throw new ErrorException("验证码错误");
+            }
+            if(isset($verify_code_arr['verify']) && ($verify_code_arr['period'] < now_time() || $verify_code_arr['is_use'] ==1)){
+                //throw new ErrorException("验证码过期或验证码已被使用");
+            }
+            if(isset($verify_code_arr['verify']) && $verify_code != $verify_code_arr['verify']){
+                throw new ErrorException("验证码不正确");
+            }
+            $res=Db::name('cmp_verify')->where([['id','=',$verify_code_arr['id']]])->update(['is_use'=>1]);
+            if(!$res){
+                throw new ErrorException("更新验证码状态错误");
+            }
+            $inserData=array("phone"=>$phone,"account"=>$user_name,"password"=>$password_code,"login_time"=>now_time(),
+                      "login_ip"=>$ip,'login_num'=>1,"create_date"=>date('Y-m-d H:i:s',now_time()));
+            //echo "1111";exit;
+            $rid = Db::name("cmp_resident")->insertGetId($inserData);
+            if(!$rid){
+                throw new ErrorException("注册失败");
+            }
+            $expiresAt = now_time() + 7200;
+            $token_data = [
+                'expires_in' => 7200,
+                'ip' => $ip,
+                'resident_id' => $rid,
+                'created_at' => now_time(),
+                'expiresAt' => $expiresAt
+            ];
+            $token = Tokens::createResidentToken($token_data);
+            $returnData = array("resident_id" => $rid, "account_name" => $user_name, "resident_name" => "","token" => $token);
+            $res = Db::name('cmp_resident')->where('id', $rid)
+                   ->update(['update_date'=>date('Y-m-d H:i:s',now_time()),'atoken'=>$token]);
+            if(!$res){
+                throw new ErrorException("生成会话失败");
+            }
+            Db::commit();
+        }catch (ErrorException $e){
+            Db::rollback();
+            $this->error_data['ErrorMsg'] = $e->getMessage();
+            return $this->error_data;
+        }
+        $this->error_data['ErrorCode'] = 0;
+        $this->error_data['Data'] = $returnData;
+        return $this->error_data;
+    }
+    /*****检测用户名是否存在*****/
+    public function checkAccountIsexit($input){
+        $type = isset($input['type'])?intval($input['type']):0;//type 1=检查手机号2=检查用户名
+        $user_name = trim($input["user_name"]);
+        if($type == 1){
+            $id = Db::name("cmp_resident")->where([["phone","=",$user_name]])->value("id");
+        }else{
+            $id = Db::name("cmp_resident")->where([["account","=",$user_name]])->value("id");
+        }
+        $id = intval($id);
+        if($id){
+            $this->error_data['ErrorCode'] = 1;
+        }else{
+            $this->error_data['ErrorCode'] = 0;
+        }
+        return $this->error_data;
+    }
     /**
      *  退出
      */
     public function residentLogout($input){
-        $resident_id = isset($input['token_resident_id']) ? $input['token_resident_id']:0;
+        $resident_id = isset($input['resident_id']) ? $input['resident_id']:0;
         $data['atoken']='';$data['update_date']=date('Y-m-d H:i:s',now_time());
         $res = Db::name('cmp_resident')->where('id','=',$resident_id)->update($data);
         if (!$res){

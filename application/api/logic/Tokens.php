@@ -1,16 +1,16 @@
 <?php
 namespace app\api\logic;
-//use services\OpensslService;
+require_once "../vendor/firebase/php-jwt/src/JWT.php";
 use \Firebase\JWT\JWT;
 use think\facade\Config;
 class Tokens extends Base{
-    protected $opensslService;
-    protected $key="sxcmp";
-    protected $alg="HS256";
-    public function __construct(){
+    //protected $opensslService;
+    protected static $key="sxcmp";
+    protected static $alg="HS256";
+    /*public function __construct(){
         //$this->opensslService = new OpensslService();
-    }
-    public function createResidentToken($data){
+    }*/
+    public static function createResidentToken($data){
         if(!is_array($data)) return false;
         $map=array();
         $expiresAt = $data["created_at"] + $data['expires_in'];
@@ -26,15 +26,15 @@ class Tokens extends Base{
             'exp' => $expiresAt, //过期时间,这里设置2个小时
             'data' => $map,
         ];
-        $token=JWT::encode($payload, $this->key,$this->alg);
+        $token=JWT::encode($payload, self::$key,self::$alg);
         //$token=$this->opensslService->aes_encrypt(json_encode($map));
         return $token;
     }
 
-    public function decodeJWT($token){
+    public static function decodeJWT($token){
         try {
             JWT::$leeway = 60;//当前时间减去60，把时间留点余地
-            $decoded = JWT::decode($token, $this->key, [$this->alg]); //HS256方式，这里要和签发的时候对应
+            $decoded = JWT::decode($token,  self::$key, [self::$alg]); //HS256方式，这里要和签发的时候对应
             $arr = (array)$decoded;
         } catch(\Firebase\JWT\SignatureInvalidException $e) {  //签名不正确
             return false;
