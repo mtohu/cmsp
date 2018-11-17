@@ -406,3 +406,11 @@ function get_ips()
     }
     return $realip;
 }
+/*****房屋类型***/
+function resident_type($n=0){
+    $type = [1=>"房屋所有者",2=>"房屋所有者家人",3=>"租客"];
+    if($n){
+        return isset($type[$n])?$type[$n]:[];
+    }
+    return $type;
+}

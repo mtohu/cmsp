@@ -8,9 +8,9 @@ return [
     'resident_logout/post'     => ['c'=>'Login','a'=>'residentLogout','api_type'=>'','need_auth'=>'false','desc'=>' logout'],
     'check_account_isexit/post'     => ['c'=>'Login','a'=>'checkAccountIsexit','api_type'=>'','need_auth'=>'false','desc'=>'检查帐号信息是否存在'],
     'find_pwd/post'     => ['c'=>'Login','a'=>'findPwd','api_type'=>'','need_auth'=>'false','desc'=>' 找回密码'],
-    'admin_user/post'     => ['c'=>'Admin','a'=>'adminUser','api_type'=>'','need_auth'=>'true','desc'=>'admin user'],
-    'set_admin_user_pwd/post'     => ['c'=>'Admin','a'=>'setAdminUserPwd','api_type'=>'','need_auth'=>'true','desc'=>'set admin user pwd'],
-    'admin_user_save/post'     => ['c'=>'Admin','a'=>'adminUserSave','api_type'=>'','need_auth'=>'true','desc'=>'商户信息保存'],
+    'check_room_owner_bind/post'     => ['c'=>'Room','a'=>'checkRoomOwnerBind','api_type'=>'','need_auth'=>'true','desc'=>'检查房号是否已经绑定了业主'],
+    'bind_community_room_present/post'     => ['c'=>'Resident','a'=>'bindCommunityRoomPresent','api_type'=>'','need_auth'=>'true','desc'=>'绑定社区和房号页面数据'],
+    'save_bind_community_room/post'     => ['c'=>'Resident','a'=>'saveBindCommunityRoom','api_type'=>'','need_auth'=>'true','desc'=>'保存绑定信息'],
 
     'sms_send/post'         => ['c'=>'Publics','a'=>'smsSend','api_type'=>'','need_auth'=>'false','desc' =>'发送短信'],
     'check_verify_code/post'=> ['c'=>'Publics','a'=>'checkVerifyCode','api_type'=>'','need_auth'=>'false','desc' =>'检查手机号验证码'],

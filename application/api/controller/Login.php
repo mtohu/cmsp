@@ -15,7 +15,7 @@ class Login extends  Base
             return $this->print_result($this->error_data);
         }
         $login = Controller('Login', 'logic');
-        $res = $login->thirdByAdminLogin($data);
+        $res = $login->thirdByResidentLogin($data);
         return $this->print_result($res);
     }
 
