@@ -1,0 +1,61 @@
+<style>
+    body{
+        padding-bottom: 150px;
+    }
+    .top{
+        width: 100%;
+        background-color: #07c6fd;
+        height: 80px;
+    }
+    .user-info{
+        width: calc(100% - 30px);
+        margin: 0 auto;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 10px;
+        position: relative;
+        top: -30px;
+        background-color: #fff;
+    }
+    .menu-item{
+        padding: 0 15px;
+        border-bottom: 1px solid #ccc;
+        line-height: 48px;
+        position: relative;
+    }
+    .menu-item .icon{
+        position: absolute;
+        top: 0;
+        right: 15px;
+    }
+</style>
+<div class="top">
+</div>
+<div class="user-info">
+    张三丰
+</div>
+<div class="menu-item">
+    <div class="menu-name">我的订单</div>
+    <div class="icon">
+        <i class="iconfont icon-dingdan"></i>
+    </div>
+</div>
+<div class="menu-item">
+    <div class="menu-name">我的家庭成员/租客</div>
+    <div class="icon">
+        <i class="iconfont icon-hunyinjiating"></i>
+    </div>
+</div>
+<div class="menu-item">
+    <div class="menu-name">评价我们</div>
+    <div class="icon">
+        <i class="iconfont icon-pingjia"></i>
+    </div>
+</div>
+<div class="menu-item">
+    <div class="menu-name">关于我们</div>
+    <div class="icon">
+        <i class="iconfont icon-about"></i>
+    </div>
+</div>
+{include file="public/bottom_nav" /}

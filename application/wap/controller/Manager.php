@@ -1,0 +1,12 @@
+<?php
+namespace app\wap\controller;
+
+use think\Controller;
+
+class Manager extends Controller
+{
+    public function index()
+    {
+        return $this->fetch();
+    }
+}

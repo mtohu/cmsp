@@ -1,5 +1,5 @@
 <style>
-    .bottom-menu{
+    .bottom-nav{
         position: fixed;
         bottom: 0;
         left: 0;
@@ -7,37 +7,37 @@
         background-color: #fff;
         border-top: 1px solid #ccc;
     }
-    .bottom-menu .menu-item{
+    .bottom-nav .nav-item{
         width: 33%;
         float: left;
         text-align: center;
     }
-    .bottom-menu .menu-item i{
+    .bottom-nav .nav-item i{
         display: inline-block;
         width: 100%;
         line-height: 30px;
     }
-    .bottom-menu .menu-item span{
+    .bottom-nav .nav-item span{
         display: inline-block;
         width: 100%;
         line-height: 30px;
     }
 </style>
-<div class="bottom-menu">
-    <div class="menu-item">
+<div class="bottom-nav">
+    <div class="nav-item">
         <a href="{:url('Index/index')}">
             <i class="iconfont icon-shouye"></i>
             <span>首页</span>
         </a>
     </div>
-    <div class="menu-item">
-        <a href="">
+    <div class="nav-item">
+        <a href="{:url('Manager/index')}">
             <i class="iconfont icon-liulanmoshi"></i>
             <span>管家</span>
         </a>
     </div>
-    <div class="menu-item">
-        <a href="">
+    <div class="nav-item">
+        <a href="{:url('User/index')}">
             <i class="iconfont icon-profile"></i>
             <span>我的</span>
         </a>
