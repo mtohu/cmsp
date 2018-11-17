@@ -14,8 +14,23 @@ class Publics extends Base
             $this->error_data["ErrorMsg"] = '手机号码不能为空';
             return $this->print_result($this->error_data);
         }
+        $now_time =now_time();$sms_number="";
+        $verifyModel = new Verify();
         $smsService      = new SmsService();
-        $returnData      = $smsService->send_sms(['phone' => $phone, 'type' => $type]);
+        $verify = $verifyModel->where([['phone','=',$phone],['is_use','=',0],['type','=',$type]])->order("id","desc")->find();
+        if(isset($verify['id'])){
+            $periodtime = $verify['period'];
+            $ctime = $verify['add_time'];
+            if($now_time - $ctime <=100){
+                $this->error_data['ErrorCode'] = 1;
+                $this->error_data['ErrorMsg']  = "请等待上次发送时间100秒后再发送";
+                return $this->error_data;
+            }
+            if($periodtime > $now_time){
+                $sms_number=$verify['verify'];
+            }
+        }
+        $returnData      = $smsService->send_sms(['phone' => $phone, 'type' => $type,'sms_number'=>$sms_number]);
         if (!isset($returnData["ErrorCode"]) || $returnData["ErrorCode"] == 1) {
             $this->error_data['ErrorCode'] = 1;
             if (!isset($returnData["ErrorCode"])) {
@@ -26,7 +41,7 @@ class Publics extends Base
             return $this->print_result($this->error_data);
         }
         $data        = $returnData['Data'];
-        $verifyModel = new Verify();
+
         $res         = $verifyModel->data($data)->save();
         if ($res === false || !$res) {
             $this->error_data['ErrorCode'] = 1;

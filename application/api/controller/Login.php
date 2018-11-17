@@ -45,13 +45,18 @@ class Login extends  Base
         $data['phone']         = isset($input['phone'])?trim($input['phone']):"";
         $data['user_name']     = isset($input['user_name'])?trim($input['user_name']):"";
         $data['password']      = isset($input['password'])?trim($input['password']):"";
+        $data['cure_password']      = isset($input['cure_password'])?trim($input['cure_password']):"";
         $data['verify_code']   = isset($input['verify_code'])?$input['verify_code']:"";
         if (empty($data['user_name']) || empty($data['phone'])) {
             $this->error_data['ErrorMsg'] = '用户名或手机号不能为空';
             return $this->print_result($this->error_data);
         }
-        if(empty($data['password'])){
+        if(empty($data['password']) || empty($data['cure_password']) ){
             $this->error_data['ErrorMsg'] = "密码不能为空";
+            return $this->print_result($this->error_data);
+        }
+        if($data['password'] != $data['cure_password']){
+            $this->error_data['ErrorMsg'] = "两个密码不一直";
             return $this->print_result($this->error_data);
         }
         $login = Controller('Login', 'logic');
@@ -67,6 +72,31 @@ class Login extends  Base
         }
         $login = Controller('Login', 'logic');
         $res = $login->checkAccountIsexit($input);
+        return $this->print_result($res);
+    }
+
+    /*******找回密码*******/
+    public function findPwd($input){
+        $data = array();
+        $data['find_type']     = isset($input['find_type'])?intval($input['find_type']):1;//1=手机号找回
+        $data['user_name']         = isset($input['user_name'])?trim($input['user_name']):"";
+        $data['password']      = isset($input['password'])?trim($input['password']):"";
+        $data['cure_password']      = isset($input['cure_password'])?trim($input['cure_password']):"";
+        $data['verify_code']   = isset($input['verify_code'])?$input['verify_code']:"";
+        if (empty($data['user_name'])) {
+            $this->error_data['ErrorMsg'] = '手机号不能为空';
+            return $this->print_result($this->error_data);
+        }
+        if(empty($data['password']) || empty($data['cure_password'])){
+            $this->error_data['ErrorMsg'] = "密码不能为空";
+            return $this->print_result($this->error_data);
+        }
+        if($data['password'] != $data['cure_password']){
+            $this->error_data['ErrorMsg'] = "两个密码不一直";
+            return $this->print_result($this->error_data);
+        }
+        $login = Controller('Login', 'logic');
+        $res = $login->findPwd($data);
         return $this->print_result($res);
     }
 

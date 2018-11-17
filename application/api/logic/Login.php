@@ -224,7 +224,7 @@ class Login extends Base
                 throw new ErrorException("验证码错误");
             }
             if(isset($verify_code_arr['verify']) && ($verify_code_arr['period'] < now_time() || $verify_code_arr['is_use'] ==1)){
-                //throw new ErrorException("验证码过期或验证码已被使用");
+                throw new ErrorException("验证码过期或验证码已被使用");
             }
             if(isset($verify_code_arr['verify']) && $verify_code != $verify_code_arr['verify']){
                 throw new ErrorException("验证码不正确");
@@ -281,6 +281,60 @@ class Login extends Base
             $this->error_data['ErrorCode'] = 0;
         }
         return $this->error_data;
+    }
+    public function findPwd($input){
+        $user_name         = isset($input['user_name'])?trim($input['user_name']):"";
+        $find_type     = isset($input['find_type'])?intval($input['find_type']):1;
+        $password      = isset($input['password'])?trim($input['password']):"";
+        $verify_code   = isset($input['verify_code'])?$input['verify_code']:"";
+        $password_code = get_resident_pwd($password);
+        $ip = request()->ip();
+        try{
+            Db::startTrans();
+            $rpuser = Db::name('cmp_resident')->where('phone', '=', $user_name)->find();
+            if(!isset($rpuser['id'])){
+                throw new ErrorException("手机号不存在");
+            }
+            //验证码
+            $verify_code_arr = Db::name('cmp_verify')->where([['phone','=', $user_name],['type','=',2]])->order('id','desc')->find();
+            if(!isset($verify_code_arr['id'])){
+                throw new ErrorException("验证码错误");
+            }
+            if(isset($verify_code_arr['verify']) && ($verify_code_arr['period'] < now_time() || $verify_code_arr['is_use'] ==1)){
+                //throw new ErrorException("验证码过期或验证码已被使用");
+            }
+            if(isset($verify_code_arr['verify']) && $verify_code != $verify_code_arr['verify']){
+                throw new ErrorException("验证码不正确");
+            }
+            $res=Db::name('cmp_verify')->where([['id','=',$verify_code_arr['id']]])->update(['is_use'=>1]);
+            if(!$res){
+                throw new ErrorException("更新验证码状态错误");
+            }
+            $expiresAt = now_time() + 7200;
+            $token_data = [
+                'expires_in' => 7200,
+                'ip' => $ip,
+                'resident_id' => $rpuser['id'],
+                'created_at' => now_time(),
+                'expiresAt' => $expiresAt
+            ];
+            $token = Tokens::createResidentToken($token_data);
+            $returnData = array("resident_id" => $rpuser['id'], "account_name" => $rpuser['account'], "resident_name" => $rpuser['name'],"token" => $token);
+            $res = Db::name('cmp_resident')->where('id', $rpuser['id'])
+                ->update(['update_date'=>date('Y-m-d H:i:s',now_time()),'password'=>$password_code,'atoken'=>$token]);
+            if(!$res){
+                throw new ErrorException("生成会话失败");
+            }
+            Db::commit();
+        }catch (ErrorException $e){
+            Db::rollback();
+            $this->error_data['ErrorMsg'] = $e->getMessage();
+            return $this->error_data;
+        }
+        $this->error_data['ErrorCode'] = 0;
+        $this->error_data['Data'] = $returnData;
+        return $this->error_data;
+
     }
     /**
      *  退出

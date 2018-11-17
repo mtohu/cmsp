@@ -13,6 +13,7 @@ class SmsService extends BaseService{
         $ins = $this->Instance($input);
         $phone = isset($input["phone"])?$input["phone"]:"";
         $type = isset($input["type"])?intval($input['type']):0;
+        $sms_number = isset($input["sms_number"])?$input["sms_number"]:"";
         if(empty($phone)){
             $this->error_data['ErrorMsg']='请输入手机号码';
             return $this->error_data;
@@ -22,14 +23,14 @@ class SmsService extends BaseService{
             return $this->error_data;
         }
         $now_time = time();
-        $strCode=Session::get('SMSCMP'.$phone);
+        /*$strCode=Session::get('SMSCMP'.$phone);
         $CodeAr = explode("\t",$strCode);
         $sms_number=isset($CodeAr[0])?$CodeAr[0]:"";$ctime = isset($CodeAr[1])?abs($CodeAr[1]):0;
         if($now_time - $ctime <=100){
             $this->error_data['ErrorCode']=1;
             $this->error_data['ErrorMsg']='请等待上次发送时间100秒后再发送';
             return $this->error_data;
-        }
+        }*/
         if(empty($sms_number)){
             $sms_number=rand(111111,999999);
         }
@@ -43,7 +44,7 @@ class SmsService extends BaseService{
         $this->error_data['ErrorMsg']="发送失败";
         $res_arr=$ins->send(['phone'=>$phone,'sms_number'=>$sms_number]);
         if(isset($res_arr['status']) && $res_arr['status'] == 1){
-            Session::set('SMSCMP'.$phone,$sms_number."\t".$now_time);
+            //Session::set('SMSCMP'.$phone,$sms_number."\t".$now_time);
             $info['period']=$now_time+600;
             $this->error_data['ErrorCode']=0;
             $this->error_data['ErrorMsg']="发送成功";
