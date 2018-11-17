@@ -20,11 +20,11 @@ li{
     position: relative;
     line-height: 48px;
     border-bottom: 1px solid #797979;
+    padding: 0 15px;
 }
 .form-item .form-label{
     width: 80px;
     float: left;
-    padding-left: 15px;
 }
 .form-item .form-input{
     width: calc(100% - 80px);

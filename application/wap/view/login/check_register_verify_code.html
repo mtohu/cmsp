@@ -1,0 +1,41 @@
+{include file="public/head" /}
+<style>
+    .check-desc{
+        text-align: center;
+        padding: 15px 0;
+    }
+    .check-desc span{
+        display: block;
+        line-height: 30px;
+    }
+    .get-verify-code{
+        line-height: 24px;
+        border-left: 1px solid #ff6600;
+        position: absolute;
+        right: 0;
+        top: 12px;
+    }
+    .get-verify-code a{
+        padding: 0 15px;
+        color: #ff6600;
+    }
+    .form-submit{
+        margin-bottom: 50px;
+    }
+</style>
+<div class="form-item check-desc">
+    <span style="font-size: 12px">我们已发送了验证码到您的手机</span>
+    <span>*******5255</span>
+</div>
+<div class="form-item">
+    <div class="form-label">校验码：</div>
+    <div class="form-input">
+        <input type="text" placeholder="短信验证码" />
+        <div class="get-verify-code">
+            <a href="javascript:;">获取验证码</a>
+        </div>
+    </div>
+</div>
+<div class="form-submit">
+    <a href="{:url('Login/setRegisterPwd')}"><input type="button" value="下一步" /></a>
+</div>
