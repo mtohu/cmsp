@@ -147,7 +147,7 @@ class Login extends Base
                         $this->error_data['ErrorMsg'] = "用户名不存在，不是手机号也不是用户名";
                         return $this->error_data;
                     }
-                    $login_info = Db::name('cmp_resident')->where([['user_name', '=', $user_name], ['password', '=', $password_code]])->find();
+                    $login_info = Db::name('cmp_resident')->where([['account', '=', $user_name], ['password', '=', $password_code]])->find();
                     if (!isset($login_info['id'])) {
                         $this->error_data['ErrorMsg'] = "密码错误";
                         return $this->error_data;
@@ -155,19 +155,19 @@ class Login extends Base
                 }
                 $login_info = Db::name('cmp_resident')->where([['phone', '=', $user_name], ['password', '=', $password_code]])->find();
                 if (!isset($login_info['id'])) {
-                    $login_info = Db::name('cmp_resident')->where([['user_name', '=', $user_name], ['password', '=', $password_code]])->find();
+                    $login_info = Db::name('cmp_resident')->where([['account', '=', $user_name], ['password', '=', $password_code]])->find();
                     if (!isset($login_info['id'])) {
                         $this->error_data['ErrorMsg'] = "密码错误";
                         return $this->error_data;
                     }
                 }
             } else {
-                $login_info = Db::name('cmp_resident')->where([['user_name', '=', $user_name]])->find();
+                $login_info = Db::name('cmp_resident')->where([['account', '=', $user_name]])->find();
                 if (!isset($login_info['id'])) {
                     $this->error_data['ErrorMsg'] = "用户名不存在";
                     return $this->error_data;
                 }
-                $login_info = Db::name('cmp_resident')->where([['user_name', '=', $user_name], ['password', '=', $password_code]])->find();
+                $login_info = Db::name('cmp_resident')->where([['account', '=', $user_name], ['password', '=', $password_code]])->find();
                 if (!isset($login_info['tid'])) {
                     $this->error_data['ErrorCode'] = 1;
                     $this->error_data['ErrorMsg'] = "密码错误";
