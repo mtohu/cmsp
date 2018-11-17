@@ -16,7 +16,7 @@ class Resident extends  Base
         if(empty($data['resident_id'])){
             $this->error_data['ErrorCode'] = 1;
             $this->error_data['ErrorMsg'] = "未登录无法获取信息";
-            return $this->error_data;
+            return $this->print_result($this->error_data);
         }
         $login = Controller('Resident', 'logic');
         $res = $login->bindCommunityRoomPresent($data);
@@ -24,6 +24,7 @@ class Resident extends  Base
     }
     /*****保持绑定社区和房号以及其他信息*****/
     public function saveBindCommunityRoom($input){
+
         $data = array();
         $data['resident_id'] = isset($input['token_resident_id']) ? $input['token_resident_id'] : 0;
         $data['room_id'] =isset($input['room_id']) ? intval($input['room_id']) : 0;
@@ -31,26 +32,28 @@ class Resident extends  Base
         $data['identification'] =isset($input['identification']) ? trim($input['identification']) : "";
         $data['uphone'] =isset($input['uphone']) ? trim($input['uphone']) : "";
         $data['name'] =isset($input['name']) ? trim($input['name']) : "";
+
         if(empty($data['resident_id'])){
             $this->error_data['ErrorCode'] = 1;
             $this->error_data['ErrorMsg'] = "请先登录";
-            return $this->error_data;
+            return $this->print_result($this->error_data);
         }
-        if(empty($data['room_id'])){
+        if(!$data['room_id']){
             $this->error_data['ErrorCode'] = 1;
             $this->error_data['ErrorMsg'] = "请选择房号";
-            return $this->error_data;
+            return $this->print_result($this->error_data);
         }
         if(empty($data['resident_type'])){
             $this->error_data['ErrorCode'] = 1;
             $this->error_data['ErrorMsg'] = "请选择用户类型";
-            return $this->error_data;
+            return $this->print_result($this->error_data);
         }
         if(empty($data['identification']) || !checkIdCard($data['identification'])){
             $this->error_data['ErrorCode'] = 1;
             $this->error_data['ErrorMsg'] = "身份证号错误";
-            return $this->error_data;
+            return $this->print_result($this->error_data);
         }
+
         $login = Controller('Resident', 'logic');
         $res = $login->saveBindCommunityRoom($data);
         return $this->print_result($res);

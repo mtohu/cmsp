@@ -24,7 +24,7 @@ class Room extends Base
         if(isset($resident['id'])){
             $this->error_data['ErrorCode'] = 1;
             $this->error_data['ErrorMsg'] = "该房号已经绑定业主";
-            return $this->error_data;
+            return $this->print_result($this->error_data);
         }
 
         $this->error_data['ErrorCode'] = 0;
