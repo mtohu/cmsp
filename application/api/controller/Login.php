@@ -39,6 +39,21 @@ class Login extends  Base
         $res = $login->residentLogin($data);
         return $this->print_result($res);
     }
+    /******注册用户********/
+    public function registerResient($input){
+
+    }
+    /******检查帐号用户名是否存在*******/
+    public function checkAccountIsexit($input){
+        $type = isset($input['type'])?intval($input['type']):0;//type 1=检查手机号2=检查用户名
+        if(empty($input["user_name"]) || !$type){
+            $this->error_data['ErrorMsg'] = "检查信息不能为空";
+            return $this->print_result($this->error_data);
+        }
+        $login = Controller('Login', 'logic');
+        $res = $login->checkAccountIsexit($input);
+        return $this->print_result($res);
+    }
 
     /**
      * @param $input

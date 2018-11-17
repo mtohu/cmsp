@@ -2,9 +2,10 @@
 //接口配置文件
 return [
     //c=控制器a=方法api_type=什么类型的接口need_auth=是否要验证 desc=描述
-    'third_resident_login/post'     => ['c'=>'Login','a'=>'thirdByResidentLogin','api_type'=>'','need_auth'=>'false','desc'=>'third admin login'],
-    'resident_login/post'     => ['c'=>'Login','a'=>'residentLogin','api_type'=>'','need_auth'=>'false','desc'=>'admin login'],
-    'resident_logout/post'     => ['c'=>'Login','a'=>'residentLogout','api_type'=>'','need_auth'=>'false','desc'=>'admin logout'],
+    'third_resident_login/post'     => ['c'=>'Login','a'=>'thirdByResidentLogin','api_type'=>'','need_auth'=>'false','desc'=>'third  login'],
+    'resident_login/post'     => ['c'=>'Login','a'=>'residentLogin','api_type'=>'','need_auth'=>'false','desc'=>' login'],
+    'resident_logout/post'     => ['c'=>'Login','a'=>'residentLogout','api_type'=>'','need_auth'=>'false','desc'=>' logout'],
+    'check_account_isexit/post'     => ['c'=>'Login','a'=>'checkAccountIsexit','api_type'=>'','need_auth'=>'false','desc'=>'检查帐号信息是否存在'],
     'admin_user/post'     => ['c'=>'Admin','a'=>'adminUser','api_type'=>'','need_auth'=>'true','desc'=>'admin user'],
     'set_admin_user_pwd/post'     => ['c'=>'Admin','a'=>'setAdminUserPwd','api_type'=>'','need_auth'=>'true','desc'=>'set admin user pwd'],
     'admin_user_save/post'     => ['c'=>'Admin','a'=>'adminUserSave','api_type'=>'','need_auth'=>'true','desc'=>'商户信息保存'],

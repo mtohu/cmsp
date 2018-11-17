@@ -202,6 +202,23 @@ class Login extends Base
         $this->error_data['Data'] = $returnData;
         return $this->error_data;
     }
+    /*****检测用户名是否存在*****/
+    public function checkAccountIsexit($input){
+        $type = isset($input['type'])?intval($input['type']):0;//type 1=检查手机号2=检查用户名
+        $user_name = trim($input["user_name"]);
+        if($type == 1){
+            $id = Db::name("cmp_resident")->where([["phone","=",$user_name]])->value("id");
+        }else{
+            $id = Db::name("cmp_resident")->where([["account","=",$user_name]])->value("id");
+        }
+        $id = intval($id);
+        if($id){
+            $this->error_data['ErrorCode'] = 1;
+        }else{
+            $this->error_data['ErrorCode'] = 0;
+        }
+        return $this->error_data;
+    }
     /**
      *  退出
      */
