@@ -1,0 +1,51 @@
+{include file="public/head" /}
+<style>
+    .forget-pwd{
+        text-align: right;
+        padding: 0 15px;
+        line-height: 36px;
+    }
+    .forget-pwd a{
+        font-size: 13px;
+    }
+    .register{
+        margin: 50px 0;
+        text-align: center;
+    }
+    .register input{
+        width: 120px;
+        text-align: center;
+        line-height: 36px;
+        margin: 0 auto;
+        color: #ff6633;
+        border: 1px solid #ff6633;
+        border-radius: 5px;
+    }
+</style>
+<div class="form">
+    <div class="form-item">
+        <div class="form-label">
+            账户
+        </div>
+        <div class="form-input">
+            <input type="text" placeholder="手机/会员/邮箱" />
+        </div>
+    </div>
+    <div class="form-item">
+        <div class="form-label">
+            密码
+        </div>
+        <div class="form-input">
+            <input type="password" placeholder="请输入密码" />
+        </div>
+    </div>
+    <div class="form-submit">
+        <input type="button" value="登录">
+    </div>
+    <div class="forget-pwd">
+        <a href="{:url('Login/findPwd')}">忘记密码</a>
+    </div>
+</div>
+<div class="register">
+    <input type="text" value="免费注册" />
+</div>

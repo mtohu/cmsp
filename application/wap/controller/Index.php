@@ -1,13 +1,15 @@
 <?php
 namespace app\wap\controller;
 
-class Index extends Base
+use think\Controller;
+
+class Index extends Controller
 {
     public function initialize(){
         parent::initialize();
     }
     public function index()
     {
-
+        return $this->fetch();
     }
 }
