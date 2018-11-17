@@ -1,0 +1,21 @@
+<script>
+    var myHttp = {
+        ajax: function(param){
+            if(typeof(param.type) == 'undefined'){
+                param.type = 'POST';
+            }
+            $.ajax({
+                type: param.type,
+                url: param.url,
+                data: param.data,
+                success: function(res){
+                    if(res.ErrorCode == 0){
+                        param.success(res);
+                    }else{
+                        param.error(res);
+                    }
+                }
+            });
+        }
+    };
+</script>

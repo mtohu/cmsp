@@ -29,7 +29,7 @@
             账户
         </div>
         <div class="form-input">
-            <input type="text" placeholder="手机/会员/邮箱" />
+            <input type="text" placeholder="手机/会员/邮箱" id="user-name" />
         </div>
     </div>
     <div class="form-item">
@@ -37,11 +37,11 @@
             密码
         </div>
         <div class="form-input">
-            <input type="password" placeholder="请输入密码" />
+            <input type="password" placeholder="请输入密码" id="password" />
         </div>
     </div>
     <div class="form-submit">
-        <input type="button" value="登录">
+        <input type="button" value="登录" id="submit">
     </div>
     <div class="forget-pwd">
         <a href="{:url('Login/findPwd')}">忘记密码</a>
@@ -50,3 +50,61 @@
 <div class="register">
     <a href="{:url('Login/register')}">免费注册</a>
 </div>
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+    $(function(){
+        var login = {
+            data: {
+                userName: '',
+                password: ''
+            },
+            checkData: function(){
+                var that = this;
+                if(that.data.userName == ''){
+                    layer.open({
+                        content: '账户不能为空'
+                        ,skin: 'msg'
+                        ,time: 2 //2秒后自动关闭
+                    });
+                    return false;
+                }
+                if(that.data.password == ''){
+                    layer.open({
+                        content: '密码不能为空'
+                        ,skin: 'msg'
+                        ,time: 2 //2秒后自动关闭
+                    });
+                    return false;
+                }
+                return true;
+            },
+            submit: function(){
+                var that = this;
+                that.data.userName = $('#user-name').val();
+                that.data.password = $('#password').val();
+                if(!that.checkData()){
+                    return;
+                }
+                myHttp.ajax({
+                    url: '/api/resident_login',
+                    data: {
+                        user_name: that.data.userName,
+                        password: that.data.password,
+                        login_mod: 1
+                    },
+                    success: function(res){
+
+                    },
+                    error: function(res){
+                        myLayer.alert(res.ErrorMsg);
+                    }
+                })
+            }
+        };
+        $('#submit').click(function(){
+            login.submit();
+        })
+
+    });
+</script>
