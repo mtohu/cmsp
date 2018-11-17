@@ -1,9 +1,7 @@
 <?php
 namespace app\wap\controller;
 
-use think\Controller;
-
-class Manager extends Controller
+class Manager extends Base
 {
     public function index()
     {

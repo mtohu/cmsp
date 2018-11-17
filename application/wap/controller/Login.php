@@ -1,13 +1,15 @@
 <?php
 namespace app\wap\controller;
+
 use think\Controller;
 use think\facade\Session;
+
 class Login extends Controller {
     public function initialize(){
         parent::initialize();
     }
 
-    public function cmpLogin(){
+    public function residentLogin(){
         return $this->fetch();
     }
 

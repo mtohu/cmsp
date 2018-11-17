@@ -11,7 +11,7 @@ class Base extends Controller{
     public $ResidentAccount=[];
     public $params=[];
     public $api_action="";
-    public $api_url="http://api.xxx.com/api/";//请求接口地址
+    public $api_url="http://001.pt-job1.com:8080/api/";//请求接口地址
     public $controller_name="";
     public $action_name="";
     public $third_code="";
@@ -103,7 +103,7 @@ class Base extends Controller{
 
             return $this->redirect('wap/index/index');
         }
-        return $this->redirect('wap/login/resident_login');
+        return $this->redirect('wap/login/residentLogin');
     }
 
 }

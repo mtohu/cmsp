@@ -1,9 +1,7 @@
 <?php
 namespace app\wap\controller;
 
-use think\Controller;
-
-class Index extends Controller
+class Index extends Base
 {
     public function initialize(){
         parent::initialize();
@@ -12,4 +10,22 @@ class Index extends Controller
     {
         return $this->fetch();
     }
+
+    /**
+     * 小区位置
+     */
+    public function estatePos()
+    {
+        return $this->fetch();
+    }
+
+    /**
+     * 消息列表
+     */
+    public function msgList()
+    {
+        $this->assign('head_title', '消息');
+        return $this->fetch();
+    }
+
 }
