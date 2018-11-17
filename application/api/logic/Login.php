@@ -233,7 +233,7 @@ class Login extends Base
             if(!$res){
                 throw new ErrorException("更新验证码状态错误");
             }
-            $inserData=array("phone"=>$phone,"account"=>$user_name,"password"=>$password,"login_time"=>now_time(),
+            $inserData=array("phone"=>$phone,"account"=>$user_name,"password"=>$password_code,"login_time"=>now_time(),
                       "login_ip"=>$ip,'login_num'=>1,"create_date"=>date('Y-m-d H:i:s',now_time()));
             //echo "1111";exit;
             $rid = Db::name("cmp_resident")->insertGetId($inserData);
