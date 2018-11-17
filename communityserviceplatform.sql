@@ -194,6 +194,37 @@ LOCK TABLES `auth_user_user_permissions` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `cmp_banner`
+--
+
+DROP TABLE IF EXISTS `cmp_banner`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmp_banner` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `titles` varchar(65) NOT NULL DEFAULT '' COMMENT '标题',
+  `pics` varchar(255) NOT NULL DEFAULT '' COMMENT '图片地址',
+  `link_url` varchar(255) NOT NULL DEFAULT '' COMMENT '链接地址',
+  `show_type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '显示类型1=手机移动web',
+  `show_time` int(11) NOT NULL DEFAULT '2' COMMENT '显示时间长短比如2秒显示时间',
+  `order_sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序号用于排序',
+  `banner_state` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态0=关闭1=启用',
+  `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cmp_banner`
+--
+
+LOCK TABLES `cmp_banner` WRITE;
+/*!40000 ALTER TABLE `cmp_banner` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cmp_banner` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `cmp_community`
 --
 
@@ -241,7 +272,7 @@ CREATE TABLE `cmp_fee` (
   `update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `payment_status` smallint(6) NOT NULL DEFAULT '0' COMMENT '付款状态0=未付款1=已付款',
   `payment_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '付款时间',
-  `fee_item_id_id` int(11) NOT NULL DEFAULT '0' COMMENT '缴费项目',
+  `fee_item_id_id` int(11) NOT NULL COMMENT '缴费项目',
   `resident_id_id` int(11) NOT NULL DEFAULT '0' COMMENT '缴费人',
   `room_id` int(11) DEFAULT '0' COMMENT '房号room表id',
   `user_id` int(11) NOT NULL DEFAULT '0' COMMENT 'auth_user表id维护人',
@@ -335,9 +366,9 @@ CREATE TABLE `cmp_notice` (
   `content` longtext NOT NULL COMMENT '内容',
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `effective_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '开始时间',
-  `expire_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '结束时间',
-  `create_user_id` int(11) NOT NULL DEFAULT '0' COMMENT '创建者auth_user表id',
-  `notice_type_id` int(11) NOT NULL DEFAULT '0' COMMENT '类型id',
+  `expire_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '结束时间',
+  `create_user_id` int(11) NOT NULL COMMENT '创建者auth_user表id',
+  `notice_type_id` int(11) NOT NULL COMMENT '类型id',
   PRIMARY KEY (`id`),
   KEY `cmp_notice_create_user_id_0cf2bc54_fk_auth_user_id` (`create_user_id`),
   KEY `cmp_notice_notice_type_id_dcbcef29_fk_cmp_notice_type_id` (`notice_type_id`),
@@ -421,16 +452,17 @@ DROP TABLE IF EXISTS `cmp_pay_order`;
 CREATE TABLE `cmp_pay_order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pay_sn` varchar(15) NOT NULL DEFAULT '' COMMENT '支付编号',
-  `fee_id` int(11) DEFAULT '0' COMMENT '缴费记录cmp_fee表id',
-  `amount` decimal(10,2) DEFAULT '0.00' COMMENT '应收金额',
-  `discount_amount` decimal(10,2) DEFAULT '0.00' COMMENT '优惠金额',
-  `trade_type` varchar(20) DEFAULT '' COMMENT '交易类型返回',
-  `transaction_id` varchar(32) DEFAULT '' COMMENT '支付平台订单号',
-  `pay_state` tinyint(1) DEFAULT '0' COMMENT '支付状态0=待支付1=支付成功-1=支付失败',
-  `pay_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '支付时间',
-  `pay_time` int(11) DEFAULT '0' COMMENT '支付时间',
-  `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `fee_id` int(11) NOT NULL DEFAULT '0' COMMENT '缴费记录cmp_fee表id',
+  `resident_id` int(11) NOT NULL DEFAULT '0' COMMENT 'cmp_resident表id',
+  `amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '应收金额',
+  `discount_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '优惠金额',
+  `trade_type` varchar(20) NOT NULL DEFAULT '' COMMENT '交易类型返回',
+  `transaction_id` varchar(32) NOT NULL DEFAULT '' COMMENT '支付平台订单号',
+  `pay_state` tinyint(1) NOT NULL DEFAULT '0' COMMENT '支付状态0=待支付1=支付成功-1=支付失败',
+  `pay_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '支付时间',
+  `pay_time` int(11) NOT NULL DEFAULT '0' COMMENT '支付时间',
+  `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `pay_sn_UNIQUE` (`pay_sn`),
   KEY `fee_id` (`fee_id`),
@@ -438,6 +470,7 @@ CREATE TABLE `cmp_pay_order` (
   KEY `pay_date` (`pay_date`) USING BTREE,
   KEY `pay_time` (`pay_time`) USING BTREE,
   KEY `create_date` (`create_date`) USING BTREE,
+  KEY `resident_id` (`resident_id`) USING BTREE,
   CONSTRAINT `fk_fee_id` FOREIGN KEY (`fee_id`) REFERENCES `cmp_fee` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -525,11 +558,9 @@ CREATE TABLE `cmp_resident` (
   `identification` varchar(18) NOT NULL DEFAULT '' COMMENT '身份证号',
   `phone` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '手机号',
   `resident_type` smallint(6) NOT NULL DEFAULT '0' COMMENT '住户类型1=房屋所有者2=房屋所有者家人3=租客',
-  `is_verified` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否以校验0=否1=是',
   `receive_notification` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否接收微信消息0=否1=是',
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
   `update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新日期',
-  `room_id` int(11) DEFAULT NULL COMMENT '房号id',
   `uphone` varchar(25) NOT NULL DEFAULT '' COMMENT '预留电话',
   `face_img` varchar(355) NOT NULL DEFAULT '' COMMENT '头像',
   `login_time` int(11) NOT NULL DEFAULT '0' COMMENT '登录时间',
@@ -537,12 +568,15 @@ CREATE TABLE `cmp_resident` (
   `last_time` int(11) NOT NULL DEFAULT '0' COMMENT '上次登录时间',
   `last_ip` varchar(15) NOT NULL DEFAULT '' COMMENT '上次登录ip',
   `login_num` int(11) NOT NULL DEFAULT '0' COMMENT '登录次数',
+  `is_maintenance_staff` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否是维修人员0=否1=是',
   `is_black` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否黑名单0=否1=是',
   `audit` tinyint(1) NOT NULL DEFAULT '0' COMMENT '审核绑定0=待审核1=审核进行中2=审核通过-1=审核不通过',
   `atoken` varchar(500) NOT NULL DEFAULT '' COMMENT '令牌',
   PRIMARY KEY (`id`),
-  KEY `cmp_resident_room_id_8857c151_fk_cmp_room_id` (`room_id`),
-  CONSTRAINT `cmp_resident_room_id_8857c151_fk_cmp_room_id` FOREIGN KEY (`room_id`) REFERENCES `cmp_room` (`id`)
+  KEY `account` (`account`) USING BTREE,
+  KEY `password` (`password`) USING BTREE,
+  KEY `phone` (`phone`) USING BTREE,
+  KEY `is_maintenance_staff` (`is_maintenance_staff`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -552,8 +586,38 @@ CREATE TABLE `cmp_resident` (
 
 LOCK TABLES `cmp_resident` WRITE;
 /*!40000 ALTER TABLE `cmp_resident` DISABLE KEYS */;
-INSERT INTO `cmp_resident` VALUES (25,'huhu','ec5083f7bab7cd2abd79731fcc8804f1','','','13634175905',0,0,0,'2018-11-17 15:18:33','2018-11-17 15:18:33',NULL,'','',1542439113,'127.0.0.1',0,'',1,0,0,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC93d3cuc3hjbXAubmV0IiwiYXVkIjoiaHR0cDpcL1wvd3d3LnN4Y21wLm5ldCIsImlhdCI6MTU0MjQzOTExMywibmJmIjoxNTQyNDM5MTEzLCJleHAiOjE1NDI0NDYzMTMsImRhdGEiOnsidG9rZW5fcmVzaWRlbnRfaWQiOiIyNSIsInRva2VuX2NyZWF0ZWRfYXQiOjE1NDI0MzkxMTMsInRva2VuX2V4cGlyZXNfYXQiOjE1NDI0NDYzMTMsInRva2VuX2lwIjoyMTMwNzA2NDMzfX0.Lz2Wv_sxMO4ExJl20piowOfb95ySigJ4cYCxpnM9qwU');
+INSERT INTO `cmp_resident` VALUES (25,'huhu','ec5083f7bab7cd2abd79731fcc8804f1','','','13634175905',0,0,'2018-11-17 15:18:33','2018-11-17 15:52:23','','',1542456949,'127.0.0.1',1542439568,'127.0.0.1',3,0,0,0,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC93d3cuc3hjbXAubmV0IiwiYXVkIjoiaHR0cDpcL1wvd3d3LnN4Y21wLm5ldCIsImlhdCI6MTU0MjQ1Njk0OSwibmJmIjoxNTQyNDU2OTQ5LCJleHAiOjE1NDI0NjQxNDksImRhdGEiOnsidG9rZW5fcmVzaWRlbnRfaWQiOiIyNSIsInRva2VuX2NyZWF0ZWRfYXQiOjE1NDI0NTY5NDksInRva2VuX2V4cGlyZXNfYXQiOjE1NDI0NjQxNDksInRva2VuX2lwIjoyMTMwNzA2NDMzfX0.Uz9HJHOZ1PiG7At6tBcSaE4r7dxyBVtf1nVLGrtiD7A');
 /*!40000 ALTER TABLE `cmp_resident` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cmp_resident_room`
+--
+
+DROP TABLE IF EXISTS `cmp_resident_room`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmp_resident_room` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `resident_id` int(11) NOT NULL DEFAULT '0' COMMENT 'cmp_resident表id',
+  `room_id` int(11) NOT NULL DEFAULT '0' COMMENT 'cmp_room表id',
+  `is_verified` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否已校验0=否1=是',
+  `update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `resident_id` (`resident_id`) USING BTREE,
+  KEY `room_id` (`room_id`) USING BTREE,
+  KEY `is_verified` (`is_verified`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cmp_resident_room`
+--
+
+LOCK TABLES `cmp_resident_room` WRITE;
+/*!40000 ALTER TABLE `cmp_resident_room` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cmp_resident_room` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -602,13 +666,21 @@ CREATE TABLE `cmp_room` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `region` varchar(45) NOT NULL DEFAULT '' COMMENT '区',
   `building` varchar(10) NOT NULL DEFAULT '' COMMENT '栋',
+  `unit` varchar(10) NOT NULL DEFAULT '' COMMENT '单元',
   `room_no` varchar(10) NOT NULL DEFAULT '' COMMENT '房间号',
+  `order_sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序号用来排序',
+  `room_state` tinyint(1) NOT NULL DEFAULT '1' COMMENT '房号状态 1=开启0=关闭-1=删除',
+  `lat` double NOT NULL DEFAULT '0' COMMENT '纬度',
+  `lng` double NOT NULL DEFAULT '0' COMMENT '经度',
+  `coord_type` varchar(10) NOT NULL DEFAULT '' COMMENT '坐标系',
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
   `update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新日期',
   PRIMARY KEY (`id`),
   KEY `room_no` (`room_no`) USING BTREE,
   KEY `region` (`region`) USING BTREE,
-  KEY `create_date` (`create_date`) USING BTREE
+  KEY `create_date` (`create_date`) USING BTREE,
+  KEY `room_state` (`room_state`) USING BTREE,
+  KEY `order_sort` (`order_sort`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='房号';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -633,7 +705,7 @@ CREATE TABLE `cmp_verify` (
   `phone` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT '手机号',
   `verify` varchar(6) NOT NULL DEFAULT '' COMMENT '验证码',
   `period` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '有效期',
-  `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1=签收和签约验证码',
+  `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1=注册2=找回密码',
   `status` int(1) NOT NULL DEFAULT '0' COMMENT '1=成功2=失败',
   `error_msg` varchar(500) NOT NULL DEFAULT '' COMMENT '错误信息',
   `add_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '生成时间',
@@ -644,7 +716,7 @@ CREATE TABLE `cmp_verify` (
   KEY `type` (`type`) USING BTREE,
   KEY `is_use` (`is_use`) USING BTREE,
   KEY `add_time` (`add_time`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=COMPACT COMMENT='验证码表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=COMPACT COMMENT='验证码表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -653,7 +725,7 @@ CREATE TABLE `cmp_verify` (
 
 LOCK TABLES `cmp_verify` WRITE;
 /*!40000 ALTER TABLE `cmp_verify` DISABLE KEYS */;
-INSERT INTO `cmp_verify` VALUES (1,'13634175905','526349',1542432321,1,0,'',1542431721,0),(2,'13634175905','526349',1542437457,1,0,'',1542436857,1);
+INSERT INTO `cmp_verify` VALUES (1,'13634175905','526349',1542432321,1,0,'',1542431721,1),(2,'13634175905','526349',1542437457,1,0,'',1542436857,1),(3,'13634175905','526349',1542441529,2,0,'',1542440929,1),(4,'13634175905','615500',1542442442,2,0,'',1542441842,0);
 /*!40000 ALTER TABLE `cmp_verify` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -959,4 +1031,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-17 15:21:08
+-- Dump completed on 2018-11-17 23:44:54
