@@ -82,22 +82,33 @@
 {include file="plug_js/jquery" /}
 {include file="plug_js/layer" /}
 <script>
-var tab = {
-    init: function(){
-        this.click();
-    },
-    click: function(){
-        $('#tab-house').click(function(){
-            $(this).removeClass('no-active');
-            $('#tab-service').addClass('no-active');
-            $('.tab-house').show();
-        });
-        $('#tab-service').click(function(){
-            $(this).removeClass('no-active');
-            $('#tab-house').addClass('no-active');
-            $('.tab-house').hide();
-        });
-    }
-};
-tab.init();
+$(function(){
+    /*****************  选项卡 start ***************/
+    var tab = {
+        init: function(){
+            this.click();
+        },
+        click: function(){
+            $('#tab-house').click(function(){
+                $(this).removeClass('no-active');
+                $('#tab-service').addClass('no-active');
+                $('.tab-house').show();
+            });
+            $('#tab-service').click(function(){
+                $(this).removeClass('no-active');
+                $('#tab-house').addClass('no-active');
+                $('.tab-house').hide();
+            });
+        }
+    };
+    tab.init();
+    /*****************  选项卡 end ***************/
+    /*****************  注册 start ***************/
+    var register = {
+        data: {
+
+        },
+    };
+    /*****************  注册 end ***************/
+});
 </script>

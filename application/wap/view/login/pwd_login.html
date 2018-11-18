@@ -1,5 +1,18 @@
 {include file="public/head" /}
 <style>
+    .tabs{
+        overflow: hidden;
+    }
+    .tabs .tab{
+        width: 50%;
+        float: left;
+        line-height: 36px;
+        text-align: center;
+    }
+    .tabs .no-active{
+        color: #ccc;
+        border-bottom: 1px solid #d0d0d0;
+    }
     .forget-pwd{
         text-align: right;
         padding: 0 15px;
@@ -23,16 +36,36 @@
         display: inline-block;
     }
 </style>
+<div class="tabs">
+    <div class="tab" id="tab-phone" style="border-right: 1px solid #d0d0d0;">验证码登录</div>
+    <div class="tab no-active" id="tab-username">密码登录</div>
+</div>
 <div class="form">
-    <div class="form-item">
+    <div class="form-item tab-phone">
+        <div class="form-label">
+            手机号码
+        </div>
+        <div class="form-input">
+            <input type="number" placeholder="请输入手机号码" id="phone" />
+        </div>
+    </div>
+    <div class="form-item tab-phone">
+        <div class="form-label">
+            验证码
+        </div>
+        <div class="form-input">
+            <input type="text" placeholder="请输入验证码" id="verify-code" />
+        </div>
+    </div>
+    <div class="form-item tab-username" style="display: none;">
         <div class="form-label">
             账户
         </div>
         <div class="form-input">
-            <input type="text" placeholder="手机/会员/邮箱" id="user-name" />
+            <input type="text" placeholder="用户名/手机号" id="user-name" />
         </div>
     </div>
-    <div class="form-item">
+    <div class="form-item tab-username" style="display: none;">
         <div class="form-label">
             密码
         </div>
@@ -54,47 +87,111 @@
 {include file="plug_js/layer" /}
 <script>
     $(function(){
+        /*---------------选项卡start-----------*/
+        var tab = {
+            init: function(){
+                this.click();
+            },
+            click: function(){
+                $('#tab-phone').click(function(){
+                    login.data.loginMod = 1;
+                    $(this).removeClass('no-active');
+                    $('#tab-username').addClass('no-active');
+                    $('.tab-phone').show();
+                    $('.tab-username').hide();
+                });
+                $('#tab-username').click(function(){
+                    login.data.loginMod = 2;
+                    $(this).removeClass('no-active');
+                    $('#tab-phone').addClass('no-active');
+                    $('.tab-phone').hide();
+                    $('.tab-username').show();
+                });
+            }
+        };
+        tab.init();
+        /*---------------选项卡end-----------*/
+        /*---------------登录start-----------*/
         var login = {
             data: {
+                phone: '',
+                verifyCode: '',
                 userName: '',
-                password: ''
+                password: '',
+                loginMod: 1
             },
             checkData: function(){
                 var that = this;
-                if(that.data.userName == ''){
-                    layer.open({
-                        content: '账户不能为空'
-                        ,skin: 'msg'
-                        ,time: 2 //2秒后自动关闭
-                    });
-                    return false;
+                if(that.data.loginMod == 1){
+                    if(that.data.phone == ''){
+                        layer.open({
+                            content: '手机号不能为空'
+                            ,skin: 'msg'
+                            ,time: 2 //2秒后自动关闭
+                        });
+                        return false;
+                    }
+                    if(!myCheck.checkPhone(that.data.phone)){
+                        layer.open({
+                            content: '手机号码格式不正确'
+                            ,skin: 'msg'
+                            ,time: 2 //2秒后自动关闭
+                        });
+                        return false;
+                    }
+                    if(that.data.verifyCode == ''){
+                        layer.open({
+                            content: '验证码不能为空'
+                            ,skin: 'msg'
+                            ,time: 2 //2秒后自动关闭
+                        });
+                        return false;
+                    }
+                }else{
+                    if(that.data.userName == ''){
+                        layer.open({
+                            content: '账户不能为空'
+                            ,skin: 'msg'
+                            ,time: 2 //2秒后自动关闭
+                        });
+                        return false;
+                    }
+                    if(that.data.password == ''){
+                        layer.open({
+                            content: '密码不能为空'
+                            ,skin: 'msg'
+                            ,time: 2 //2秒后自动关闭
+                        });
+                        return false;
+                    }
                 }
-                if(that.data.password == ''){
-                    layer.open({
-                        content: '密码不能为空'
-                        ,skin: 'msg'
-                        ,time: 2 //2秒后自动关闭
-                    });
-                    return false;
-                }
+
                 return true;
             },
             submit: function(){
                 var that = this;
+                that.data.phone = $('#phone').val();
+                that.data.verifyCode = $('#verify-code').val();
                 that.data.userName = $('#user-name').val();
                 that.data.password = $('#password').val();
                 if(!that.checkData()){
                     return;
                 }
+                var post_data = {
+                    login_mod: that.data.loginMod
+                };
+                if(that.data.loginMod == 1){
+                    post_data.user_name = that.data.phone;
+                    post_data.verify_code = that.data.verifyCode;
+                }else{
+                    post_data.user_name = that.data.userName;
+                    post_data.password = that.data.password;
+                }
                 myHttp.ajax({
                     url: '/api/resident_login',
-                    data: {
-                        user_name: that.data.userName,
-                        password: that.data.password,
-                        login_mod: 1
-                    },
+                    data: post_data,
                     success: function(res){
-
+                        location.href = "{:url('Index/index')}";
                     },
                     error: function(res){
                         myLayer.alert(res.ErrorMsg);
@@ -105,6 +202,6 @@
         $('#submit').click(function(){
             login.submit();
         })
-
+        /*---------------登录end-----------*/
     });
 </script>

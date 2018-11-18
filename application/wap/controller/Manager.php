@@ -2,6 +2,7 @@
 namespace app\wap\controller;
 
 use think\Controller;
+use app\wap\logic\Banner;
 
 class Manager extends Controller
 {
@@ -12,6 +13,8 @@ class Manager extends Controller
             'manager' => 'nav-item-active',
             'user' => ''
         ];
+        //banner
+        $this->assign('banners', Banner::getBanners());
         $this->assign('nav_item', $nav_item);
         return $this->fetch();
     }

@@ -81,14 +81,19 @@
         width: calc(100% - 60px);
         color: red;
         font-size: 12px;
-        padding: 4px 5px;
+        padding: 0 5px;
         line-height: 20px;
         margin-left: 10px;
         background-color: #eee;
         float: left;
     }
-    .notice .notice-con span{
+    .notice .notice-con div{
         color: #999;
+        line-height: 24px;
+    }
+    .notice .notice-con .t{
+        height: 25px;
+        overflow: hidden;
     }
     /**-------------------notice end-------------**/
 </style>
@@ -120,16 +125,52 @@
         </li>
     </ul>
 </div>
-<div class="notice">
-    <div class="title">通知<br/>通告</div>
-    <div class="notice-con">
-        <span>公告：</span>停电通知：接供电公司通知，9月21日下午1点至6点停电...
+<div id="notice-list" style="display: none;">
+    <div class="notice" v-for="notice in notice_list" @click="show(notice)">
+        <div class="title">通知<br/>通告</div>
+        <div class="notice-con">
+            <div class="t">{{notice.title}}</div>
+            <div class="c" :style="{height: notice.notice_con_c_height, overflow: notice.notice_con_c_overflow, textOverflow: notice.notice_con_c_text_overflow, whiteSpace: notice.notice_con_c_white_space}">{{notice.content}}</div>
+        </div>
     </div>
 </div>
-<div class="notice">
-    <div class="title">通知<br/>通告</div>
-    <div class="notice-con">
-        <span>公告：</span>停电通知：接供电公司通知，9月21日下午1点至6点停电...
-    </div>
-</div>
+{include file="plug_js/vue" /}
+<script>
+    $(function(){
+        myHttp.ajax({
+            url: '/api/notice_list',
+            success: function(res){
+                $('#notice-list').show();
+                var notice_list = res.Data;
+                for(var i in notice_list){
+                    notice_list[i].notice_con_c_height = '25px';
+                    notice_list[i].notice_con_c_overflow = 'hidden';
+                    notice_list[i].notice_con_c_text_overflow = 'ellipsis';
+                    notice_list[i].notice_con_c_white_space = 'nowrap';
+                }
+                var notice = new Vue({
+                    el: '#notice-list',
+                    data: {
+                        notice_list: notice_list
+                    },
+                    methods: {
+                        show: function(notice){
+                            if(notice.notice_con_c_overflow == 'hidden'){
+                                notice.notice_con_c_height = 'auto';
+                                notice.notice_con_c_overflow = 'visible';
+                                notice.notice_con_c_text_overflow = 'clip';
+                                notice.notice_con_c_white_space = 'normal';
+                            }else{
+                                notice.notice_con_c_height = '25px';
+                                notice.notice_con_c_overflow = 'hidden';
+                                notice.notice_con_c_text_overflow = 'ellipsis';
+                                notice.notice_con_c_white_space = 'nowrap';
+                            }
+                        }
+                    }
+                })
+            }
+        });
+    });
+</script>
 {include file="public/bottom_nav" /}

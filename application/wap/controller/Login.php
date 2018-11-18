@@ -67,6 +67,9 @@ class Login extends Controller {
     public function checkRegisterVerifyCode()
     {
         $this->assign('head_title', '填写校验码');
+        $phone = input('phone');
+        $this->assign('phone', $phone);
+        $this->assign('hide_phone', '*******' . substr($phone, -4));
         return $this->fetch();
     }
 
@@ -76,6 +79,8 @@ class Login extends Controller {
     public function setRegisterPwd()
     {
         $this->assign('head_title', '账户设置');
+        $this->assign('verify_code', input('verify_code'));
+        $this->assign('phone', input('phone'));
         return $this->fetch();
     }
 

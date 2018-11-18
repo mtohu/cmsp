@@ -1,7 +1,10 @@
 <?php
 namespace app\wap\controller;
 
+use app\wap\logic\Banner;
 use think\Controller;
+
+use think\Db;
 
 class Index extends Controller
 {
@@ -10,12 +13,16 @@ class Index extends Controller
     }
     public function index()
     {
+        //底部导航
         $nav_item = [
             'index' => 'nav-item-active',
             'manager' => '',
             'user' => ''
         ];
         $this->assign('nav_item', $nav_item);
+        //banner
+        $this->assign('banners', Banner::getBanners());
+
         return $this->fetch();
     }
 
