@@ -37,7 +37,7 @@
             date.setTime(date.getTime()+expiresDays*24*3600*1000); //格式化为cookie识别的时间
             document.cookie=key + "=" + val +";expires="+date.toGMTString();  //设置cookie
         },
-        get: function(){
+        get: function(key){
             /*获取cookie参数*/
             var getCookie = document.cookie.replace(/[ ]/g,"");  //获取cookie，并且将获得的cookie格式化，去掉空格字符
             var arrCookie = getCookie.split(";")  //将获得的cookie以"分号"为标识 将cookie保存到arrCookie的数组中
@@ -51,7 +51,7 @@
             }
             return tips;
         },
-        delete: function(){
+        delete: function(key){
             var date = new Date(); //获取当前时间
             date.setTime(date.getTime()-10000); //将date设置为过去的时间
             document.cookie = key + "=v; expires =" +date.toGMTString();//设置cookie

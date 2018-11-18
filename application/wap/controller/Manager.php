@@ -18,4 +18,14 @@ class Manager extends Controller
         $this->assign('nav_item', $nav_item);
         return $this->fetch();
     }
+
+    /**
+     * 报修
+     */
+    public function submitRepair()
+    {
+        $this->assign('head_title', '报修报事');
+        return $this->fetch();
+    }
+
 }

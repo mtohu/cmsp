@@ -1,0 +1,94 @@
+{include file="public/head" /}
+<style>
+    .repair{
+        padding: 15px;
+    }
+    .repair-tips{
+        line-height: 30px;
+    }
+    .repair-type{
+        margin-top: 15px;
+        overflow: hidden;
+    }
+    .repair-type .type-item{
+        width: 56px;
+        height: 56px;
+        float: left;
+        border: 1px solid #999;
+        border-radius: 100%;
+        margin-right: 10px;
+    }
+    .repair-type .type-item i{
+        line-height: 24px;
+        display: block;
+        text-align: center;
+    }
+    .repair-type .type-item span{
+        line-height: 24px;
+        display: block;
+        text-align: center;
+        font-size: 10px;
+    }
+    .repair-desc{
+        margin-top: 20px;
+    }
+    .repair-desc textarea{
+        width: 100%;
+        height: 100px;
+        padding: 15px;
+        line-height: 24px;
+    }
+    .submit-repair{
+        width: 100%;
+        height: 48px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        padding: 5px 15px;
+        border-top: 1px solid #eee;
+    }
+    .submit-repair input{
+        border: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #07c6fd;
+        color: #fff;
+    }
+</style>
+<div class="repair">
+    <div class="repair-tips">
+        请选择报修类型并输入详细信息：
+    </div>
+    <div class="repair-type">
+        <div class="type-item">
+            <i class="iconfont icon-my-home"></i>
+            <span>居家报修</span>
+        </div>
+        <div class="type-item">
+            <i class="iconfont icon-baohanxiaoqusvg"></i>
+            <span>小区报修</span>
+        </div>
+        <div class="type-item">
+            <i class="iconfont icon-yiliaoweisheng-"></i>
+            <span>小区卫生</span>
+        </div>
+        <div class="type-item">
+            <i class="iconfont icon-lvhua"></i>
+            <span>小区绿化</span>
+        </div>
+    </div>
+    <div class="repair-desc">
+        <textarea name="" id=""></textarea>
+    </div>
+    <div class="repair-imgs">
+
+    </div>
+</div>
+<div class="submit-repair">
+    <input type="button" value="提交">
+</div>
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+    
+</script>

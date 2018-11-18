@@ -1,0 +1,34 @@
+{include file="public/head" /}
+<style>
+    .set-item{
+        line-height: 48px;
+        padding: 0 15px;
+        border-bottom: 1px solid #ccc;
+    }
+    .set-item a{
+        display: block;
+    }
+    .set-item i{
+        float: right;
+    }
+</style>
+<div class="set-list">
+    <div class="set-item">
+        <a href="{:url('User/setRoomNo')}">
+            房号设置
+            <i class="iconfont icon-bianhaoshezhi"></i>
+        </a>
+    </div>
+    <div class="set-item">
+        <a href="{:url('User/setPhone')}">
+            修改手机号码
+            <i class="iconfont icon-shouji"></i>
+        </a>
+    </div>
+    <div class="set-item">
+        <a href="{:url('User/setBasicInfo')}">
+            基础信息设置
+            <i class="iconfont icon-shezhi"></i>
+        </a>
+    </div>
+</div>

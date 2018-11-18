@@ -81,8 +81,11 @@
                         verify_code: that.data.verifyCode
                     },
                     success: function(res){
+                        console.log(res);
                         var user_id = res.Data.resident_id;
+                        var token = res.Data.token;
                         myCookie.set('user_id', user_id);
+                        myCookie.set('token', token);
                         location.href = "{:url('Login/setRegisterInfo')}";
                     },
                     error: function(res){
