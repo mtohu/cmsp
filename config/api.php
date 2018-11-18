@@ -13,6 +13,7 @@ return [
     'save_bind_community_room/post'     => ['c'=>'Resident','a'=>'saveBindCommunityRoom','api_type'=>'','need_auth'=>'true','desc'=>'保存绑定信息'],
     'resident_info/post'     => ['c'=>'Resident','a'=>'residentInfo','api_type'=>'','need_auth'=>'true','desc'=>'获取用户信息'],
     'resident_members/post'     => ['c'=>'Resident','a'=>'residentMembers','api_type'=>'','need_auth'=>'true','desc'=>'获取用户下面成员'],
+    'audit_user_members/post'     => ['c'=>'Resident','a'=>'auditUserMembers','api_type'=>'','need_auth'=>'true','desc'=>'审核成员'],
 
     'sms_send/post'         => ['c'=>'Publics','a'=>'smsSend','api_type'=>'','need_auth'=>'false','desc' =>'发送短信'],
     'check_verify_code/post'=> ['c'=>'Publics','a'=>'checkVerifyCode','api_type'=>'','need_auth'=>'false','desc' =>'检查手机号验证码'],

@@ -118,7 +118,7 @@ class Resident extends Base
             $room_ids[]=$v['room_id'];
         }
         $residents = Db::name("cmp_resident_room")->alias('rr')
-                   ->field("rr.room_id,rr.resident_id,r.name,r.uphone")
+                   ->field("rr.room_id,rr.resident_id,r.name,r.uphone,rr.is_verified,rr.update_date")
                    ->leftJoin("cmp_resident r","r.id = rr.resident_id")
                    ->where([['rr.room_id','in',$room_ids],['rr.resident_type','in',[2,3]]])
                    ->order("id desc")
@@ -126,6 +126,35 @@ class Resident extends Base
                    ->select();
         $this->error_data['ErrorCode'] = 0;
         $this->error_data['Data'] = $residents;
+        return $this->error_data;
+    }
+    /******审核某个成员用户*****/
+    public function auditUserMembers($input){
+        $resident_id = isset($input['resident_id']) ? $input['resident_id'] : 0;
+        $cover_resident_id =isset($input['cover_resident_id']) ? intval($input['cover_resident_id']) : 0;
+        $room_id =isset($input['room_id']) ? intval($input['room_id']) : 0;
+        $coverresident = Db::name("cmp_resident")->where('id',$cover_resident_id)->find();
+        if(!isset($coverresident['id'])){
+            $this->error_data['ErrorCode'] = 1;
+            $this->error_data['ErrorMsg'] = "被审核的用户不存在";
+            return $this->error_data;
+        }
+        try{
+            Db::startTrans();
+            $res =Db::name("cmp_resident_room")
+                     ->where([['room_id','=',$room_id],['resident_id','=',$cover_resident_id]])
+                     ->data(['is_verified'=>1,'update_date'=>date('Y-m-d H:i:s',now_time())])->update();
+            if(!$res){
+                throw new ErrorException("审核失败");
+            }
+            Db::commit();
+        }catch (ErrorException $e){
+            Db::rollback();
+            $this->error_data['ErrorCode'] = 1;
+            $this->error_data['ErrorMsg'] = $e->getMessage();
+            return $this->error_data;
+        }
+        $this->error_data['ErrorCode'] = 0;
         return $this->error_data;
     }
 }

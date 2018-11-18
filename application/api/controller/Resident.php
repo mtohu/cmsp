@@ -82,4 +82,24 @@ class Resident extends  Base
         $res = $login->residentMembers($data);
         return $this->print_result($res);
     }
+    /*****审核用户成员*****/
+    public function auditUserMembers($input){
+        $data = array();
+        $data['resident_id'] = isset($input['token_resident_id']) ? $input['token_resident_id'] : 0;//当前操作用户id
+        $data['room_id'] =isset($input['room_id']) ? intval($input['room_id']) : 0;//房号id
+        $data['cover_resident_id'] =isset($input['cover_resident_id']) ? intval($input['cover_resident_id']) : 0;//被审核人
+        if(empty($data['resident_id'])){
+            $this->error_data['ErrorCode'] = 1;
+            $this->error_data['ErrorMsg'] = "未登录无法获取信息";
+            return $this->print_result($this->error_data);
+        }
+        if(empty($data['room_id']) || empty($data['cover_resident_id'])){
+            $this->error_data['ErrorCode'] = 1;
+            $this->error_data['ErrorMsg'] = "参数错误";
+            return $this->print_result($this->error_data);
+        }
+        $login = Controller('Resident', 'logic');
+        $res = $login->auditUserMembers($data);
+        return $this->print_result($res);
+    }
 }
