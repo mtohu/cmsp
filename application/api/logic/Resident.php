@@ -167,6 +167,8 @@ class Resident extends Base
     public function setResident($input){
         $resident_id = isset($input['resident_id']) ? $input['resident_id'] : 0;
         $uphone = isset($input['uphone'])?trim($input['uphone']):"";
+        $phone = isset($input['phone'])?trim($input['phone']):"";
+        $verify_code   = isset($input['verify_code'])?$input['verify_code']:"";
         $name = isset($input['name'])?trim($input['name']):"";
         $identification = isset($input['identification'])?trim($input['identification']) : "";
         $is_maintenance_staff = isset($input['is_maintenance_staff'])?intval($input['is_maintenance_staff']) :-1;
@@ -185,11 +187,33 @@ class Resident extends Base
             if(!empty($is_maintenance_staff) && $is_maintenance_staff != -1){
                 $saveData['is_maintenance_staff']=$is_maintenance_staff;
             }
+            if(!empty($phone)){
+                $resident=Db::name("cmp_resident")->where([['phone','=',$phone]])->find();
+                if(isset($resident['id'])){
+                    throw new ErrorException("手机号已经存在");
+                }
+                //验证码
+                $verify_code_arr = Db::name('cmp_verify')->where([['phone','=', $phone],['type','=',1]])->order('id','desc')->find();
+                if(!isset($verify_code_arr['id'])){
+                    throw new ErrorException("验证码错误");
+                }
+                if(isset($verify_code_arr['verify']) && ($verify_code_arr['period'] < now_time() || $verify_code_arr['is_use'] ==1)){
+                    throw new ErrorException("验证码过期或验证码已被使用");
+                }
+                if(isset($verify_code_arr['verify']) && $verify_code != $verify_code_arr['verify']){
+                    throw new ErrorException("验证码不正确");
+                }
+                $res=Db::name('cmp_verify')->where([['id','=',$verify_code_arr['id']]])->update(['is_use'=>1]);
+                if(!$res){
+                    throw new ErrorException("更新验证码状态错误");
+                }
+                $saveData['phone']=$phone;
+            }
             $res =Db::name("cmp_resident")
                 ->where([['id','=',$resident_id]])
                 ->data($saveData)->update();
             if(!$res){
-                throw new ErrorException("更新失败".Db::name("cmp_resident")->getLastSql());
+                throw new ErrorException("更新失败");
             }
             Db::commit();
         }catch (ErrorException $e){
