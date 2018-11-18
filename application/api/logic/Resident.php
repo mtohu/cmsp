@@ -169,6 +169,7 @@ class Resident extends Base
         $uphone = isset($input['uphone'])?trim($input['uphone']):"";
         $name = isset($input['name'])?trim($input['name']):"";
         $identification = isset($input['identification'])?trim($input['identification']) : "";
+        $is_maintenance_staff = isset($input['is_maintenance_staff'])?intval($input['is_maintenance_staff']) :-1;
         try{
             Db::startTrans();
             $saveData=array('update_date'=>date('Y-m-d H:i:s',now_time()));
@@ -180,6 +181,9 @@ class Resident extends Base
             }
             if(!empty($name)){
                 $saveData['name']=$name;
+            }
+            if(!empty($is_maintenance_staff) && $is_maintenance_staff != -1){
+                $saveData['is_maintenance_staff']=$is_maintenance_staff;
             }
             $res =Db::name("cmp_resident")
                 ->where([['id','=',$resident_id]])
