@@ -142,7 +142,7 @@ class Login extends Base
                 //phone,username
                 $login_info = Db::name('cmp_resident')->where([['phone', '=', $user_name]])->find();
                 if (!isset($login_info['id'])) {
-                    $login_info = Db::name('cmp_resident')->where([['user_name', '=', $user_name]])->find();
+                    $login_info = Db::name('cmp_resident')->where([['account', '=', $user_name]])->find();
                     if (!isset($login_info['id'])) {
                         $this->error_data['ErrorMsg'] = "用户名不存在，不是手机号也不是用户名";
                         return $this->error_data;
