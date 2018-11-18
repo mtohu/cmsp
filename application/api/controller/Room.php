@@ -22,6 +22,19 @@ class Room extends  Base
         $res = $login->checkRoomOwnerBind($data);
         return $this->print_result($res);
     }
+    /****获取所有的房号信息****/
+    public function roomlist($input){
+        $data = array();
+        $data['resident_id'] = isset($input['token_resident_id']) ? $input['token_resident_id'] : 0;
+        if(empty($data['resident_id'])){
+            $this->error_data['ErrorCode'] = 1;
+            $this->error_data['ErrorMsg'] = "未登录无法获取信息";
+            return $this->print_result($this->error_data);
+        }
+        $login = Controller('Room', 'logic');
+        $res = $login->roomlist($data);
+        return $this->print_result($res);
+    }
     /*****获取自己设置的房号列表******/
     public function myRoomList($input){
         $data = array();

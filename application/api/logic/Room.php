@@ -30,6 +30,17 @@ class Room extends Base
         $this->error_data['ErrorCode'] = 0;
         return $this->error_data;
     }
+    /****获取所有的房号信息****/
+    public function roomlist($input){
+        $resident_id = isset($input['resident_id']) ? $input['resident_id']:0;
+        $rooms=Db::name("cmp_room")
+                  ->where([['room_state','=',1]])
+                  ->order("order_sort desc,id desc")
+                  ->select();
+        $this->error_data['ErrorCode'] = 0;
+        $this->error_data['Data'] = ['rooms'=>$rooms,'resident_types'=>resident_type()];
+        return $this->error_data;
+    }
     /*****获取自己设置的房号列表******/
     public function myRoomList($input){
         $resident_id = isset($input['resident_id']) ? $input['resident_id']:0;
