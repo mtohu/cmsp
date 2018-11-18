@@ -91,6 +91,9 @@ class Resident extends Base
                 $resident['face_img']=get_newpic_url($resident['face_img']);
             }
         }
+        if(!empty($resident['identification'])){
+            $resident['identification']=substr_replace($resident['identification'],'****',4,-4);
+        }
         unset($resident['password']);
         unset($resident['atoken']);
         $this->error_data['ErrorCode'] = 0;
@@ -149,6 +152,40 @@ class Resident extends Base
                      ->data(['is_verified'=>1,'update_date'=>date('Y-m-d H:i:s',now_time())])->update();
             if(!$res){
                 throw new ErrorException("审核失败");
+            }
+            Db::commit();
+        }catch (ErrorException $e){
+            Db::rollback();
+            $this->error_data['ErrorCode'] = 1;
+            $this->error_data['ErrorMsg'] = $e->getMessage();
+            return $this->error_data;
+        }
+        $this->error_data['ErrorCode'] = 0;
+        return $this->error_data;
+    }
+    /******设置用户信息***/
+    public function setResident($input){
+        $resident_id = isset($input['resident_id']) ? $input['resident_id'] : 0;
+        $uphone = isset($input['uphone'])?trim($input['uphone']):"";
+        $name = isset($input['name'])?trim($input['name']):"";
+        $identification = isset($input['identification'])?trim($input['identification']) : "";
+        try{
+            Db::startTrans();
+            $saveData=array('update_date'=>date('Y-m-d H:i:s',now_time()));
+            if(!empty($uphone)){
+                $saveData['uphone']=$uphone;
+            }
+            if(!empty($identification)){
+                $saveData['identification']=$identification;
+            }
+            if(!empty($name)){
+                $saveData['name']=$name;
+            }
+            $res =Db::name("cmp_resident")
+                ->where([['id','=',$resident_id]])
+                ->data($saveData)->update();
+            if(!$res){
+                throw new ErrorException("更新失败".Db::name("cmp_resident")->getLastSql());
             }
             Db::commit();
         }catch (ErrorException $e){

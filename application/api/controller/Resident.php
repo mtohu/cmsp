@@ -102,4 +102,16 @@ class Resident extends  Base
         $res = $login->auditUserMembers($data);
         return $this->print_result($res);
     }
+    /******设置用户信息***/
+    public function setResident($input){
+        if(empty($input['token_resident_id'])){
+            $this->error_data['ErrorCode'] = 1;
+            $this->error_data['ErrorMsg'] = "未登录无法获取信息";
+            return $this->print_result($this->error_data);
+        }
+        $input['resident_id']=$input['token_resident_id'];
+        $login = Controller('Resident', 'logic');
+        $res = $login->setResident($input);
+        return $this->print_result($res);
+    }
 }
