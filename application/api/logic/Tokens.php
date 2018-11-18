@@ -1,6 +1,9 @@
 <?php
 namespace app\api\logic;
 require_once "../vendor/firebase/php-jwt/src/JWT.php";
+require_once "../vendor/firebase/php-jwt/src/ExpiredException.php";
+require_once "../vendor/firebase/php-jwt/src/BeforeValidException.php";
+require_once "../vendor/firebase/php-jwt/src/SignatureInvalidException.php";
 use \Firebase\JWT\JWT;
 use think\facade\Config;
 class Tokens extends Base{
@@ -42,7 +45,7 @@ class Tokens extends Base{
             return false;
         }catch(\Firebase\JWT\ExpiredException $e) {  // token过期
             return false;
-        }catch(Exception $e) {  //其他错误
+        }catch(\Exception $e) {  //其他错误
             return false;
         }
         $data = $arr['data'];

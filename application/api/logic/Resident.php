@@ -73,4 +73,27 @@ class Resident extends Base
         $this->error_data['ErrorCode'] = 0;
         return $this->error_data;
     }
+    /******用户信息*******/
+    public function residentInfo($input){
+        $resident_id = isset($input['resident_id']) ? $input['resident_id'] : 0;
+        $resident = Db::name("cmp_resident")->where('id',$resident_id)->find();
+        if(!isset($resident['id'])){
+            $this->error_data['ErrorCode'] = 1;
+            $this->error_data['ErrorMsg'] = "用户不存在";
+            return $this->error_data;
+        }
+        $resident['resident_name']=$resident['name'];
+        $resident['account_name']=$resident['account'];
+        $resident['resident_id']=$resident_id;
+        if(!empty($resident['face_img'])){
+            if(strpos(strtolower($resident['face_img']),"http") === false){
+                $resident['face_img']=get_newpic_url($resident['face_img']);
+            }
+        }
+        unset($resident['password']);
+        unset($resident['atoken']);
+        $this->error_data['ErrorCode'] = 0;
+        $this->error_data['Data'] = $resident;
+        return $this->error_data;
+    }
 }
