@@ -91,6 +91,9 @@ class Resident extends Base
                 $resident['face_img']=get_newpic_url($resident['face_img']);
             }
         }
+        if(!empty($resident['identification'])){
+            $resident['identification']=substr_replace($resident['identification'],'****',4,-4);
+        }
         unset($resident['password']);
         unset($resident['atoken']);
         $this->error_data['ErrorCode'] = 0;
@@ -149,6 +152,68 @@ class Resident extends Base
                      ->data(['is_verified'=>1,'update_date'=>date('Y-m-d H:i:s',now_time())])->update();
             if(!$res){
                 throw new ErrorException("审核失败");
+            }
+            Db::commit();
+        }catch (ErrorException $e){
+            Db::rollback();
+            $this->error_data['ErrorCode'] = 1;
+            $this->error_data['ErrorMsg'] = $e->getMessage();
+            return $this->error_data;
+        }
+        $this->error_data['ErrorCode'] = 0;
+        return $this->error_data;
+    }
+    /******设置用户信息***/
+    public function setResident($input){
+        $resident_id = isset($input['resident_id']) ? $input['resident_id'] : 0;
+        $uphone = isset($input['uphone'])?trim($input['uphone']):"";
+        $phone = isset($input['phone'])?trim($input['phone']):"";
+        $verify_code   = isset($input['verify_code'])?$input['verify_code']:"";
+        $name = isset($input['name'])?trim($input['name']):"";
+        $identification = isset($input['identification'])?trim($input['identification']) : "";
+        $is_maintenance_staff = isset($input['is_maintenance_staff'])?intval($input['is_maintenance_staff']) :-1;
+        try{
+            Db::startTrans();
+            $saveData=array('update_date'=>date('Y-m-d H:i:s',now_time()));
+            if(!empty($uphone)){
+                $saveData['uphone']=$uphone;
+            }
+            if(!empty($identification)){
+                $saveData['identification']=$identification;
+            }
+            if(!empty($name)){
+                $saveData['name']=$name;
+            }
+            if(!empty($is_maintenance_staff) && $is_maintenance_staff != -1){
+                $saveData['is_maintenance_staff']=$is_maintenance_staff;
+            }
+            if(!empty($phone)){
+                $resident=Db::name("cmp_resident")->where([['phone','=',$phone]])->find();
+                if(isset($resident['id'])){
+                    throw new ErrorException("手机号已经存在");
+                }
+                //验证码
+                $verify_code_arr = Db::name('cmp_verify')->where([['phone','=', $phone],['type','=',1]])->order('id','desc')->find();
+                if(!isset($verify_code_arr['id'])){
+                    throw new ErrorException("验证码错误");
+                }
+                if(isset($verify_code_arr['verify']) && ($verify_code_arr['period'] < now_time() || $verify_code_arr['is_use'] ==1)){
+                    throw new ErrorException("验证码过期或验证码已被使用");
+                }
+                if(isset($verify_code_arr['verify']) && $verify_code != $verify_code_arr['verify']){
+                    throw new ErrorException("验证码不正确");
+                }
+                $res=Db::name('cmp_verify')->where([['id','=',$verify_code_arr['id']]])->update(['is_use'=>1]);
+                if(!$res){
+                    throw new ErrorException("更新验证码状态错误");
+                }
+                $saveData['phone']=$phone;
+            }
+            $res =Db::name("cmp_resident")
+                ->where([['id','=',$resident_id]])
+                ->data($saveData)->update();
+            if(!$res){
+                throw new ErrorException("更新失败");
             }
             Db::commit();
         }catch (ErrorException $e){

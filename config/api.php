@@ -14,6 +14,7 @@ return [
     'resident_info/post'     => ['c'=>'Resident','a'=>'residentInfo','api_type'=>'','need_auth'=>'true','desc'=>'获取用户信息'],
     'resident_members/post'     => ['c'=>'Resident','a'=>'residentMembers','api_type'=>'','need_auth'=>'true','desc'=>'获取用户下面成员'],
     'audit_user_members/post'     => ['c'=>'Resident','a'=>'auditUserMembers','api_type'=>'','need_auth'=>'true','desc'=>'审核成员'],
+    'set_resident/post'     => ['c'=>'Resident','a'=>'setResident','api_type'=>'','need_auth'=>'true','desc'=>'设置更新用户信息'],
 
 
     'room_list/post'     => ['c'=>'Room','a'=>'roomlist','api_type'=>'','need_auth'=>'true','desc'=>'获取所有房号信息'],
