@@ -15,6 +15,12 @@ return [
     'resident_members/post'     => ['c'=>'Resident','a'=>'residentMembers','api_type'=>'','need_auth'=>'true','desc'=>'获取用户下面成员'],
     'audit_user_members/post'     => ['c'=>'Resident','a'=>'auditUserMembers','api_type'=>'','need_auth'=>'true','desc'=>'审核成员'],
 
+
+    'room_list/post'     => ['c'=>'Room','a'=>'roomlist','api_type'=>'','need_auth'=>'true','desc'=>'获取所有房号信息'],
+    'my_room_list/post'     => ['c'=>'Room','a'=>'myRoomList','api_type'=>'','need_auth'=>'true','desc'=>'获取自己关联的房号'],
+    'del_relation_room/post'     => ['c'=>'Room','a'=>'delRelationRoom','api_type'=>'','need_auth'=>'true','desc'=>'解除关联房号'],
+    'apply_relation_room/post'     => ['c'=>'Room','a'=>'applyRelationRoom','api_type'=>'','need_auth'=>'true','desc'=>'申请关联房号'],
+
     'sms_send/post'         => ['c'=>'Publics','a'=>'smsSend','api_type'=>'','need_auth'=>'false','desc' =>'发送短信'],
     'check_verify_code/post'=> ['c'=>'Publics','a'=>'checkVerifyCode','api_type'=>'','need_auth'=>'false','desc' =>'检查手机号验证码'],
     'banner_list/post'    => ['c'=>'Index','a'=>'bannerList','api_type'=>'','need_auth'=>'false','desc' =>'获取banner轮播'],

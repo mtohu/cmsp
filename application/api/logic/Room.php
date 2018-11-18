@@ -24,9 +24,81 @@ class Room extends Base
         if(isset($resident_room['id'])){
             $this->error_data['ErrorCode'] = 1;
             $this->error_data['ErrorMsg'] = "该房号已经绑定业主";
-            return $this->print_result($this->error_data);
+            return $this->error_data;
         }
 
+        $this->error_data['ErrorCode'] = 0;
+        return $this->error_data;
+    }
+    /****获取所有的房号信息****/
+    public function roomlist($input){
+        $resident_id = isset($input['resident_id']) ? $input['resident_id']:0;
+        $rooms=Db::name("cmp_room")
+                  ->where([['room_state','=',1]])
+                  ->order("order_sort desc,id desc")
+                  ->select();
+        $this->error_data['ErrorCode'] = 0;
+        $this->error_data['Data'] = ['rooms'=>$rooms,'resident_types'=>resident_type()];
+        return $this->error_data;
+    }
+    /*****获取自己设置的房号列表******/
+    public function myRoomList($input){
+        $resident_id = isset($input['resident_id']) ? $input['resident_id']:0;
+        $resident_rooms = Db::name("cmp_resident_room")->alias('rr')
+            ->field("rr.id as resident_room_id,rr.room_id,rr.resident_type,r.region,r.building,r.unit,r.room_no,r.lat,r.lng,r.coord_type,rr.update_date")
+            ->leftJoin("cmp_room r","r.id = rr.room_id")
+            ->where([['rr.resident_id','=',$resident_id],['rr.is_verified','=',1],['r.room_state','=',1]])
+            ->order("rr.id desc")
+            ->limit(100)
+            ->select();
+        foreach ($resident_rooms as $kk=>&$vv){
+            $vv['resident_type_name']=resident_type($vv['resident_type']);
+        }
+        $this->error_data['ErrorCode'] = 0;
+        $this->error_data['Data'] = $resident_rooms;
+        return $this->error_data;
+    }
+    /*****删除关联房号******/
+    public function delRelationRoom($input){
+        $resident_id = isset($input['resident_id']) ? $input['resident_id']:0;
+        $room_id = isset($input['room_id']) ? intval($input['room_id']):0;
+        $del=Db::name("cmp_resident_room")->where([['room_id','=',$room_id],['resident_id','=',$resident_id]])->delete();
+        $this->error_data['ErrorCode'] = 1;
+        $this->error_data['ErrorMsg'] = "解除失败";
+        if($del){
+            $this->error_data['ErrorMsg'] = "解除成功";
+            $this->error_data['ErrorCode'] = 0;
+        }
+        return $this->error_data;
+    }
+    /****申请关联房号*****/
+    public function applyRelationRoom($input){
+        $resident_id = isset($input['resident_id']) ? $input['resident_id']:0;
+        $room_id = isset($input['room_id']) ? intval($input['room_id']):0;
+        $resident_type = isset($input['resident_type']) ? intval($input['resident_type']):0;
+        try{
+            Db::startTrans();
+            $room=Db::name("cmp_room")->where('id',$room_id)->find();
+            if(!isset($room['id'])){
+                throw new ErrorException("房号不存在");
+            }
+            $resident_room= Db::name("cmp_resident_room")->where([['room_id','=',$room_id],['resident_id','=',$resident_id]])->find();
+            if(isset($resident_room['id'])){
+                throw new ErrorException("已经申请关联该房号请不要重复申请");
+            }
+            $saveData=array("room_id"=>$room_id,"room_id"=>$room_id,"resident_type"=>$resident_type,
+                      'update_date'=>date('Y-m-d H:i:s',now_time()));
+            $res=Db::name("cmp_resident_room")->insert($saveData);
+            if(!$res){
+                throw new ErrorException("申请失败");
+            }
+            Db::commit();
+        }catch (ErrorException $e){
+            Db::rollback();
+            $this->error_data['ErrorCode'] = 1;
+            $this->error_data['ErrorMsg'] = $e->getMessage();
+            return $this->error_data;
+        }
         $this->error_data['ErrorCode'] = 0;
         return $this->error_data;
     }
