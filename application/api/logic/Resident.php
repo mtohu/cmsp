@@ -118,12 +118,15 @@ class Resident extends Base
             $room_ids[]=$v['room_id'];
         }
         $residents = Db::name("cmp_resident_room")->alias('rr')
-                   ->field("rr.room_id,rr.resident_id,r.name,r.uphone,rr.is_verified,rr.update_date")
+                   ->field("rr.room_id,rr.resident_id,rr.resident_type,r.name,r.uphone,rr.is_verified,rr.update_date")
                    ->leftJoin("cmp_resident r","r.id = rr.resident_id")
                    ->where([['rr.room_id','in',$room_ids],['rr.resident_type','in',[2,3]]])
                    ->order("id desc")
                    ->limit(1000)
                    ->select();
+        foreach ($residents as $kk => &$vv){
+            $vv['resident_type_name']=resident_type($vv['resident_type']);//房屋类型
+        }
         $this->error_data['ErrorCode'] = 0;
         $this->error_data['Data'] = $residents;
         return $this->error_data;
