@@ -19,9 +19,9 @@ class Room extends Base
     public function checkRoomOwnerBind($input){
         $resident_id = isset($input['resident_id']) ? $input['resident_id']:0;
         $room_id = isset($input['room_id']) ? $input['room_id']:0;
-        $resident = Db::name("cmp_resident")
+        $resident_room = Db::name("cmp_resident_room")
                     ->where([['room_id','=',$room_id],['resident_type','=',1],['is_verified','=',1]])->find();
-        if(isset($resident['id'])){
+        if(isset($resident_room['id'])){
             $this->error_data['ErrorCode'] = 1;
             $this->error_data['ErrorMsg'] = "该房号已经绑定业主";
             return $this->print_result($this->error_data);
