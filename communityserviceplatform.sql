@@ -337,7 +337,7 @@ CREATE TABLE `cmp_image` (
   `image_location` varchar(100) NOT NULL DEFAULT '' COMMENT '存放位置',
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
-  `repair_id` int(11) NOT NULL DEFAULT '0' COMMENT '报修工单表id',
+  `repair_id` int(11) NOT NULL COMMENT '报修工单表id',
   PRIMARY KEY (`id`),
   KEY `cmp_image_repair_id_8e8de9b0_fk_cmp_repair_id` (`repair_id`),
   CONSTRAINT `cmp_image_repair_id_8e8de9b0_fk_cmp_repair_id` FOREIGN KEY (`repair_id`) REFERENCES `cmp_repair` (`id`)
@@ -497,18 +497,18 @@ CREATE TABLE `cmp_repair` (
   `content` longtext NOT NULL COMMENT '内容',
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新时间',
-  `status` smallint(6) NOT NULL DEFAULT '0' COMMENT '处理状态1=已提交2=已处理',
+  `status` smallint(6) NOT NULL DEFAULT '0' COMMENT '处理状态0=待提交1=已提交2=已处理',
   `result` longtext COMMENT '处理结果',
-  `repair_type_id` int(11) NOT NULL DEFAULT '0' COMMENT '维修类别id',
-  `resident_id` int(11) NOT NULL DEFAULT '0' COMMENT '报告人cmp_resident表id',
+  `repair_type_id` int(11) DEFAULT NULL COMMENT '维修类别id',
+  `resident_id` int(11) DEFAULT NULL COMMENT '报告人cmp_resident表id',
   PRIMARY KEY (`id`),
-  KEY `cmp_repair_repair_type_id_4707a3f6_fk_cmp_repair_type_id` (`repair_type_id`),
-  KEY `cmp_repair_resident_id_fda8c570_fk_cmp_resident_id` (`resident_id`),
   KEY `status` (`status`) USING BTREE,
   KEY `create_date` (`create_date`) USING BTREE,
+  KEY `cmp_repair_repair_type_id_4707a3f6_fk_cmp_repair_type_id` (`repair_type_id`),
+  KEY `cmp_repair_resident_id_fda8c570_fk_cmp_resident_id` (`resident_id`),
   CONSTRAINT `cmp_repair_repair_type_id_4707a3f6_fk_cmp_repair_type_id` FOREIGN KEY (`repair_type_id`) REFERENCES `cmp_repair_type` (`id`),
   CONSTRAINT `cmp_repair_resident_id_fda8c570_fk_cmp_resident_id` FOREIGN KEY (`resident_id`) REFERENCES `cmp_resident` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='报修工单';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='报修工单';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -517,6 +517,7 @@ CREATE TABLE `cmp_repair` (
 
 LOCK TABLES `cmp_repair` WRITE;
 /*!40000 ALTER TABLE `cmp_repair` DISABLE KEYS */;
+INSERT INTO `cmp_repair` VALUES (4,'','22','2018-11-18 15:19:12','2018-11-18 15:19:12',0,NULL,1,25);
 /*!40000 ALTER TABLE `cmp_repair` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -531,7 +532,7 @@ CREATE TABLE `cmp_repair_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type_name` varchar(45) NOT NULL COMMENT '维修类别',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='维修类别';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='维修类别';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -540,6 +541,7 @@ CREATE TABLE `cmp_repair_type` (
 
 LOCK TABLES `cmp_repair_type` WRITE;
 /*!40000 ALTER TABLE `cmp_repair_type` DISABLE KEYS */;
+INSERT INTO `cmp_repair_type` VALUES (1,'卫生间');
 /*!40000 ALTER TABLE `cmp_repair_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -557,7 +559,6 @@ CREATE TABLE `cmp_resident` (
   `name` varchar(45) NOT NULL DEFAULT '' COMMENT '姓名',
   `identification` varchar(18) NOT NULL DEFAULT '' COMMENT '身份证号',
   `phone` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '手机号',
-  `resident_type` smallint(6) NOT NULL DEFAULT '0' COMMENT '住户类型1=房屋所有者2=房屋所有者家人3=租客',
   `receive_notification` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否接收微信消息0=否1=是',
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
   `update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后更新日期',
@@ -586,7 +587,7 @@ CREATE TABLE `cmp_resident` (
 
 LOCK TABLES `cmp_resident` WRITE;
 /*!40000 ALTER TABLE `cmp_resident` DISABLE KEYS */;
-INSERT INTO `cmp_resident` VALUES (25,'huhu','ec5083f7bab7cd2abd79731fcc8804f1','','','13634175905',0,0,'2018-11-17 15:18:33','2018-11-17 15:52:23','','',1542456949,'127.0.0.1',1542439568,'127.0.0.1',3,0,0,0,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC93d3cuc3hjbXAubmV0IiwiYXVkIjoiaHR0cDpcL1wvd3d3LnN4Y21wLm5ldCIsImlhdCI6MTU0MjQ1Njk0OSwibmJmIjoxNTQyNDU2OTQ5LCJleHAiOjE1NDI0NjQxNDksImRhdGEiOnsidG9rZW5fcmVzaWRlbnRfaWQiOiIyNSIsInRva2VuX2NyZWF0ZWRfYXQiOjE1NDI0NTY5NDksInRva2VuX2V4cGlyZXNfYXQiOjE1NDI0NjQxNDksInRva2VuX2lwIjoyMTMwNzA2NDMzfX0.Uz9HJHOZ1PiG7At6tBcSaE4r7dxyBVtf1nVLGrtiD7A');
+INSERT INTO `cmp_resident` VALUES (25,'huhu','ec5083f7bab7cd2abd79731fcc8804f1','','','13634175905',0,'2018-11-17 15:18:33','2018-11-17 15:52:23','','',1542524984,'127.0.0.1',1542516040,'127.0.0.1',6,0,0,0,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC93d3cuc3hjbXAubmV0IiwiYXVkIjoiaHR0cDpcL1wvd3d3LnN4Y21wLm5ldCIsImlhdCI6MTU0MjUyNDk4NCwibmJmIjoxNTQyNTI0OTg0LCJleHAiOjE1NDI1MzIxODQsImRhdGEiOnsidG9rZW5fcmVzaWRlbnRfaWQiOiIyNSIsInRva2VuX2NyZWF0ZWRfYXQiOjE1NDI1MjQ5ODQsInRva2VuX2V4cGlyZXNfYXQiOjE1NDI1MzIxODQsInRva2VuX2lwIjoyMTMwNzA2NDMzfX0.I0xR-xICgHG3AV-g6HrkTeXNCgd2gP-fk7V8bx7w_x0');
 /*!40000 ALTER TABLE `cmp_resident` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -601,13 +602,15 @@ CREATE TABLE `cmp_resident_room` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `resident_id` int(11) NOT NULL DEFAULT '0' COMMENT 'cmp_resident表id',
   `room_id` int(11) NOT NULL DEFAULT '0' COMMENT 'cmp_room表id',
+  `resident_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '住户类型1=房屋所有者2=房屋所有者家人3=租客',
   `is_verified` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否已校验0=否1=是',
   `update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `resident_id` (`resident_id`) USING BTREE,
   KEY `room_id` (`room_id`) USING BTREE,
-  KEY `is_verified` (`is_verified`) USING BTREE
+  KEY `is_verified` (`is_verified`) USING BTREE,
+  KEY `resident_type` (`resident_type`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1031,4 +1034,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-17 23:44:54
+-- Dump completed on 2018-11-18 15:56:34
