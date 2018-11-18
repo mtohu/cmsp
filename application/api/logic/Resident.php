@@ -50,15 +50,16 @@ class Resident extends Base
             if(isset($rroom['id']) && intval($rroom['is_verified']) == 1){
                 throw new ErrorException("已经绑定请不要重复绑定");
             }
-            $saveData=array("resident_type"=>$resident_type,"identification"=>$identification,"uphone"=>$uphone);
-            //$saveData["room_id"]=$room_id;
+            $saveData=array("identification"=>$identification,"uphone"=>$uphone);
+            $saveData["name"]=$name;
             $saveData["is_maintenance_staff"]=$is_maintenance_staff;
             $saveData["update_date"]=date('Y-m-d H:i:s',now_time());
             $res = Db::name("cmp_resident")->where('id',$resident_id)->data($saveData)->update();
             if(!$res){
                 throw new ErrorException("保存失败");
             }
-            $resident_room_data=array("resident_id"=>$resident_id,"room_id"=>$room_id,"update_date"=>date('Y-m-d H:i:s',now_time()));
+            $resident_room_data=array("resident_id"=>$resident_id,"room_id"=>$room_id,'resident_type'=>$resident_type
+                           ,"update_date"=>date('Y-m-d H:i:s',now_time()));
             $res=Db::name("cmp_resident_room")->insert($resident_room_data);
             if(!$res){
                 throw new ErrorException("保存失败");
@@ -94,6 +95,37 @@ class Resident extends Base
         unset($resident['atoken']);
         $this->error_data['ErrorCode'] = 0;
         $this->error_data['Data'] = $resident;
+        return $this->error_data;
+    }
+    /******我下面成员******/
+    public function residentMembers($input){
+        $resident_id = isset($input['resident_id']) ? $input['resident_id'] : 0;
+        $resident = Db::name("cmp_resident")->where('id',$resident_id)->find();
+        if(!isset($resident['id'])){
+            $this->error_data['ErrorCode'] = 1;
+            $this->error_data['ErrorMsg'] = "用户不存在";
+            return $this->error_data;
+        }
+        $resident_rooms=Db::name("cmp_resident_room")->where([['resident_id','=',$resident_id],['resident_type','=',1]
+                      ,['is_verified','=',1]])->select();
+        if(!isset($resident[0])){
+            $this->error_data['ErrorCode'] = 1;
+            $this->error_data['ErrorMsg'] = "不是房主";
+            return $this->error_data;
+        }
+        $room_ids=array();
+        foreach ($resident_rooms as $k=>$v){
+            $room_ids[]=$v['room_id'];
+        }
+        $residents = Db::name("cmp_resident_room")->alias('rr')
+                   ->field("rr.room_id,rr.resident_id,r.name,r.uphone")
+                   ->leftJoin("cmp_resident r","r.id = rr.resident_id")
+                   ->where([['rr.room_id','in',$room_ids],['rr.resident_type','in',[2,3]]])
+                   ->order("id desc")
+                   ->limit(1000)
+                   ->select();
+        $this->error_data['ErrorCode'] = 0;
+        $this->error_data['Data'] = $residents;
         return $this->error_data;
     }
 }

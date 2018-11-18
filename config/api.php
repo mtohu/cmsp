@@ -12,6 +12,8 @@ return [
     'bind_community_room_present/post'     => ['c'=>'Resident','a'=>'bindCommunityRoomPresent','api_type'=>'','need_auth'=>'true','desc'=>'绑定社区和房号页面数据'],
     'save_bind_community_room/post'     => ['c'=>'Resident','a'=>'saveBindCommunityRoom','api_type'=>'','need_auth'=>'true','desc'=>'保存绑定信息'],
     'resident_info/post'     => ['c'=>'Resident','a'=>'residentInfo','api_type'=>'','need_auth'=>'true','desc'=>'获取用户信息'],
+    'resident_members/post'     => ['c'=>'Resident','a'=>'residentMembers','api_type'=>'','need_auth'=>'true','desc'=>'获取用户下面成员'],
+
     'sms_send/post'         => ['c'=>'Publics','a'=>'smsSend','api_type'=>'','need_auth'=>'false','desc' =>'发送短信'],
     'check_verify_code/post'=> ['c'=>'Publics','a'=>'checkVerifyCode','api_type'=>'','need_auth'=>'false','desc' =>'检查手机号验证码'],
     'banner_list/post'    => ['c'=>'Index','a'=>'bannerList','api_type'=>'','need_auth'=>'false','desc' =>'获取banner轮播'],

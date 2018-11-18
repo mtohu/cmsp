@@ -69,4 +69,17 @@ class Resident extends  Base
         $res = $login->residentInfo($data);
         return $this->print_result($res);
     }
+    /******我下面成员******/
+    public function residentMembers($input){
+        $data = array();
+        $data['resident_id'] = isset($input['token_resident_id']) ? $input['token_resident_id'] : 0;
+        if(empty($data['resident_id'])){
+            $this->error_data['ErrorCode'] = 1;
+            $this->error_data['ErrorMsg'] = "未登录无法获取信息";
+            return $this->print_result($this->error_data);
+        }
+        $login = Controller('Resident', 'logic');
+        $res = $login->residentMembers($data);
+        return $this->print_result($res);
+    }
 }
