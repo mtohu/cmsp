@@ -16,9 +16,12 @@ return [
     'check_verify_code/post'=> ['c'=>'Publics','a'=>'checkVerifyCode','api_type'=>'','need_auth'=>'false','desc' =>'检查手机号验证码'],
     'banner_list/post'    => ['c'=>'Index','a'=>'bannerList','api_type'=>'','need_auth'=>'false','desc' =>'获取banner轮播'],
     'notice_list/post'     => ['c'=>'Index','a'=>'noticeList','api_type'=>'','need_auth'=>'false','desc' =>'获取通知列表'],
-    'get_area/post'        => ['c'=>'Publics','a'=>'getArea','api_type'=>'','need_auth'=>'false','desc' =>'获取地区'],
-    'get_banner/post'      => ['c'=>'Index','a'=>'getBanner','api_type'=>'','need_auth'=>'false','desc' =>'获取轮播图'],
-    'get_category/post'    => ['c'=>'Index','a'=>'getCategory','api_type'=>'','need_auth'=>'false','desc' =>'获取分类'],
+
+
+    'add_repair_present/post'        => ['c'=>'Repair','a'=>'addRepairPresent','api_type'=>'','need_auth'=>'true','desc' =>'添加维修页面显示数据'],
+    'save_repair/post'      => ['c'=>'Repair','a'=>'saveRepair','api_type'=>'','need_auth'=>'true','desc' =>'保存维修信息'],
+    'repair_list/post'    => ['c'=>'Repair','a'=>'repairList','api_type'=>'','need_auth'=>'false','desc' =>'获取维修信息列表'],
+
     'get_category_more/post' => ['c'=>'Index','a'=>'getCategoryMore','api_type'=>'','need_auth'=>'false','desc' =>'获取分类'],
     'get_wxjsapi_sign/post'  => ['c'=>'Index','a'=>'getwxSignPackage','api_type'=>'','need_auth'=>'false','desc' =>'获取微信签名数据'],
     'goods_list/post'        => ['c'=>'Goods','a'=>'goodsList','api_type'=>'','need_auth'=>'false','desc' =>'获取小程序列表'],
