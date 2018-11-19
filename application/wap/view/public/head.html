@@ -24,10 +24,11 @@
         text-align: center;
         color: #fff;
     }
-
 </style>
 <div class="head">
     <a class="left-nav" href="{$head.left_nav.url}"><i class="iconfont {$head.left_nav.icon}"></i></a>
     {$head.title}
-    <a class="right-btn" href="{$head.right_btn.url}">{$head.right_btn.btn_name}</a>
+    {if $head['right_btn']['is_show'] == true}
+    <a  class="right-btn" href="{$head.right_btn.url}">{$head.right_btn.btn_name}</a>
+    {/if}
 </div>

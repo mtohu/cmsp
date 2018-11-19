@@ -24,7 +24,19 @@ class User extends Controller
      */
     public function orderList()
     {
-        $this->assign('head_title', '我的订单');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '我的订单',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         return $this->fetch();
     }
 
@@ -33,7 +45,19 @@ class User extends Controller
      */
     public function myFamily()
     {
-        $this->assign('head_title', '家庭成员/租客');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '家庭成员/租客',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         return $this->fetch();
     }
 
@@ -42,7 +66,19 @@ class User extends Controller
      */
     public function assess()
     {
-        $this->assign('head_title', '评价我们');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '评价我们',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         return $this->fetch();
     }
 
@@ -51,7 +87,19 @@ class User extends Controller
      */
     public function aboutUs()
     {
-        $this->assign('head_title', '关于我们');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '关于我们',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         return $this->fetch();
     }
 
@@ -60,7 +108,19 @@ class User extends Controller
      */
     public function userSet()
     {
-        $this->assign('head_title', '设置');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '设置',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         return $this->fetch();
     }
 
@@ -69,7 +129,19 @@ class User extends Controller
      */
     public function setRoomNo()
     {
-        $this->assign('head_title', '房间编号');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '房价编号',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         return $this->fetch();
     }
 
@@ -78,7 +150,19 @@ class User extends Controller
      */
     public function setPhone()
     {
-        $this->assign('head_title', '注册手机号码');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '注册手机号码',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         return $this->fetch();
     }
 
@@ -87,7 +171,19 @@ class User extends Controller
      */
     public function setBasicInfo()
     {
-        $this->assign('head_title', '基础信息');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '基础信息',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         return $this->fetch();
     }
 

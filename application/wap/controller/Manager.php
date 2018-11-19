@@ -26,7 +26,7 @@ class Manager extends Controller
     {
         $head = [
             'left_nav' => [
-                'icon' => 'icon-shouye',
+                'icon' => 'icon-fanhui',
                 'url' => url('Manager/index')
             ],
             'title' => '报修列表',
@@ -45,7 +45,19 @@ class Manager extends Controller
      */
     public function submitRepair()
     {
-        $this->assign('head_title', '报修报事');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Manager/repairList')
+            ],
+            'title' => '提交报修',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         return $this->fetch();
     }
 

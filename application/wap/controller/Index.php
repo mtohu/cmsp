@@ -39,7 +39,19 @@ class Index extends Controller
      */
     public function msgList()
     {
-        $this->assign('head_title', '消息');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '消息',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         return $this->fetch();
     }
 

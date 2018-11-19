@@ -18,7 +18,19 @@ class Login extends Controller {
      */
     public function pwdLogin()
     {
-        $this->assign('head_title', '账户登录');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '账户登录',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         return $this->fetch();
     }
 
@@ -27,7 +39,19 @@ class Login extends Controller {
      */
     public function findPwd()
     {
-        $this->assign('head_title', '找回密码');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '找回密码',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         return $this->fetch();
     }
 
@@ -36,7 +60,19 @@ class Login extends Controller {
      */
     public function checkFindPwdVerifyCode()
     {
-        $this->assign('head_title', '安全检测');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '安全检测',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         $this->assign('phone', input('phone'));
         return $this->fetch();
     }
@@ -46,7 +82,19 @@ class Login extends Controller {
      */
     public function resetPwd()
     {
-        $this->assign('head_title', '重置密码');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '重置密码',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         $this->assign('phone', input('phone'));
         $this->assign('verify_code', input('verify_code'));
         return $this->fetch();
@@ -57,7 +105,19 @@ class Login extends Controller {
      */
     public function register()
     {
-        $this->assign('head_title', '免费注册');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '免费注册',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         return $this->fetch();
     }
 
@@ -66,7 +126,19 @@ class Login extends Controller {
      */
     public function checkRegisterVerifyCode()
     {
-        $this->assign('head_title', '填写校验码');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '填写校验码',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         $phone = input('phone');
         $this->assign('phone', $phone);
         $this->assign('hide_phone', '*******' . substr($phone, -4));
@@ -78,7 +150,19 @@ class Login extends Controller {
      */
     public function setRegisterPwd()
     {
-        $this->assign('head_title', '账户设置');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '账户设置',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         $this->assign('verify_code', input('verify_code'));
         $this->assign('phone', input('phone'));
         return $this->fetch();
@@ -89,7 +173,19 @@ class Login extends Controller {
      */
     public function setRegisterInfo()
     {
-        $this->assign('head_title', '完善信息');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('Index/index')
+            ],
+            'title' => '完善信息',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
         return $this->fetch();
     }
 
