@@ -6,7 +6,7 @@ use think\Controller;
 
 use think\Db;
 
-class Index extends Base
+class Index extends Controller
 {
     public function initialize(){
         parent::initialize();

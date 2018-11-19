@@ -4,7 +4,7 @@ namespace app\wap\controller;
 use think\Controller;
 use app\wap\logic\Banner;
 
-class Manager extends Base
+class Manager extends Controller
 {
     public function index()
     {
@@ -24,7 +24,19 @@ class Manager extends Base
      */
     public function repairList()
     {
-        $this->assign('head_title', '报修列表');
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-shouye',
+                'url' => url('Manager/index')
+            ],
+            'title' => '报修列表',
+            'right_btn' => [
+                'is_show' => true,
+                'btn_name' => '报修',
+                'url' => url('Manager/submitRepair')
+            ]
+        ];
+        $this->assign('head', $head);
         return $this->fetch();
     }
 
