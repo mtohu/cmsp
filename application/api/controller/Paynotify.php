@@ -4,7 +4,7 @@
 ***/
 namespace app\api\controller;
 use think\Db;
-use services\WxPayService;
+use app\api\factory\PayFactory;
 class Paynotify extends  Base
 {
 
@@ -17,8 +17,8 @@ class Paynotify extends  Base
         if(!$xml){
             return 'FAIL';
         }
-        $wxpay = new WxPayService();
-        $retrun=$wxpay->wxNotify($xml);
+        $payObj=PayFactory::getInstance(['pay_mod'=>1]);
+        $retrun=$payObj->do_notify(['xml'=>$xml]);
         if(!$retrun) return 'FAIL';
         if($retrun['code'] == 1){
             write_log($retrun['code'].'========errror======='.$retrun['xml'],$file);
@@ -28,23 +28,23 @@ class Paynotify extends  Base
         //根据订单号更新状态
         $data  = $retrun['data'];
         $xml  = $retrun['xml'];
-        $order_sn = $data['out_trade_no'];
+        $pay_sn = $data['out_trade_no'];
         $transaction_id = $data['transaction_id'];
         $amount = $data['total_fee'] * 0.01;
-        $ordersLogic = Controller('Orders', 'logic');
-        $res = $ordersLogic->updatePayOrder(['order_sn'=>$order_sn,'transaction_id'=>$transaction_id,'amount'=>$amount]);
+        $payOrderLogic = Controller('Payorder', 'logic');
+        $res = $payOrderLogic->updatePayOrder(['pay_sn'=>$pay_sn,'transaction_id'=>$transaction_id,'amount'=>$amount]);
         if(isset($res['ErrorCode']) && $res['ErrorCode'] == 1){
             $data['return_code']='FAIL';
             $data['return_msg']=$res['ErrorMsg'];
             write_log("wxpaynotify=========error==".$res['ErrorMsg']."========",$file);
-            $xml=$wxpay->replyNotify($data);
+            $xml=$payObj->replyNotify($data);
             return XML($xml);
         }
         if(isset($res['ErrorCode']) && $res['ErrorCode'] == 2){
             $data['return_code']='SUCCESS';
             $data['return_msg']=$res['ErrorMsg'];
             write_log("wxpaynotify=========error==".$res['ErrorMsg']."========",$file);
-            $xml=$wxpay->replyNotify($data);
+            $xml=$payObj->replyNotify($data);
             return XML($xml);
         }
          write_log("wxpaynotify=========SUCCESS2222========",$file);

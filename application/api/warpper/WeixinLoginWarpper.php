@@ -6,8 +6,9 @@ use errors\ErrorException;
 class WeixinLoginWarpper extends ThirdLogin
 {
     protected $wechatService;
-    public function __construct($option=array())
+    public function __construct($input)
     {
+        $option = isset($input['option'])?$input['option']:[];
         $this->wechatService = new WeChatService($option);
     }
     /****微信公众号登录*****/

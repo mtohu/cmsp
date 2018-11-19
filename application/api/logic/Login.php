@@ -57,7 +57,7 @@ class Login extends Base
                 $uppdate=Db::name('cmp_resident')->where('id',$resident_sns['resident_id'])
                          ->data(['login_time'=>now_time(),'last_time'=>$resident['login_time'],'login_num'=>intval($resident['login_num'])+1,
                                           'login_ip'=>$ip,'last_ip'=>$resident['login_ip'],'update_date'=>date('Y-m-d H:i:s',now_time())])->update();
-                $token_data['resident_id']=$resident['id'];
+                $token_data['resident_id']=$return_data['resident_id']=$resident['id'];
                 $return_data['account_name']=$resident['account'];
                 $return_data['resident_name']=$resident['name'];
             } else {
@@ -78,7 +78,7 @@ class Login extends Base
                     $this->error_data['ErrorMsg'] = "创建帐号关联失败";
                     return $this->error_data;
                 }
-                $token_data['resident_id']=$auser_insert;
+                $token_data['resident_id']=$return_data['resident_id']=$auser_insert;
                 $return_data['account_name']='';
                 $return_data['resident_name']=$userdata['name'];
             }

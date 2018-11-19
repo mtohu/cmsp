@@ -11,14 +11,14 @@ use errors\ErrorException;
  */
 class ThirdLoginFactory
 {
-    private $sns_type;
+    private static $sns_type;
     /**
      * 初始时，传入第三方类型
      * @param $mode
      */
     public function __construct($snstype)
     {
-        $this->sns_type = $snstype;
+        self::$sns_type = $snstype;
     }
 
 
@@ -29,7 +29,7 @@ class ThirdLoginFactory
         }
         switch (self::$sns_type){
             case 1:
-                return new WeixinLoginWarpper($input['option']);
+                return new WeixinLoginWarpper($input);
                 break;
         }
         return null;
