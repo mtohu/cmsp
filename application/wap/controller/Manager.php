@@ -39,7 +39,11 @@ class Manager extends Base
         $this->assign('head', $head);
         //请求数据
         $request_api = new RequestApi();
-        $res = $request_api->request_ajax();
+        $request_api->api_action = 'repair_list';
+        $data = $request_api->request_ajax()->getData();
+        $repair_list = $data['Data'];
+        $this->assign('repair_list', $repair_list);
+
         return $this->fetch();
     }
 

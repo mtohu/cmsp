@@ -60,25 +60,25 @@
         请选择报修类型并输入详细信息：
     </div>
     <div class="repair-type">
-        <div class="type-item">
+        <div class="type-item" repair-type="1">
             <i class="iconfont icon-my-home"></i>
             <span>居家报修</span>
         </div>
-        <div class="type-item">
+        <div class="type-item" repair-type="2">
             <i class="iconfont icon-baohanxiaoqusvg"></i>
             <span>小区报修</span>
         </div>
-        <div class="type-item">
+        <div class="type-item" repair-type="3">
             <i class="iconfont icon-yiliaoweisheng-"></i>
             <span>小区卫生</span>
         </div>
-        <div class="type-item">
+        <div class="type-item" repair-type="4">
             <i class="iconfont icon-lvhua"></i>
             <span>小区绿化</span>
         </div>
     </div>
     <div class="repair-desc">
-        <textarea name="" id=""></textarea>
+        <textarea name="" placeholder="请描述报修内容" id="repair-desc"></textarea>
     </div>
     <div class="repair-imgs">
 
@@ -92,28 +92,50 @@
 <script>
     $(function(){
         var repair = {
+            data: {
+                repairType: 0,
+                repairDesc: ''
+            },
             init: function(){
                 this.selectRepairType();
             },
             selectRepairType: function(){
+                var that = this;
                 $('.repair-type .type-item').click(function(){
+                    that.data.repairType = $(this).attr('repair-type');
                     $('.repair-type .type-item').css({'color': '#333', 'border-color': '#999'});
                     $(this).css('color', 'red');
                     $(this).css('border-color', 'red');
                 });
             },
+            checkData: function(){
+                var that = this;
+                if(that.data.repairType == 0){
+                    myLayer.alert('请选择报修类型');
+                    return false;
+                }
+                if(that.data.repairDesc == ''){
+                    myLayer.alert('内容描述不能为空');
+                    return false;
+                }
+                return true;
+            },
             submitRepair: function(){
                 var that = this;
+                that.data.repairDesc = $('#repair-desc').val();
+                if(!that.checkData()){
+                    return;
+                }
                 myHttp.ajax({
                     url: "/api/save_repair",
                     data: {
                         token: myCookie.get('token'),
-                        repair_type_id: 1,
-                        content: 'sss',
+                        repair_type_id: that.data.repairType,
+                        content: that.data.repairDesc,
                         img_arr: []
                     },
                     success: function(){
-
+                        location.href = "{:url('Manager/repairList')}";
                     }
                 })
             }

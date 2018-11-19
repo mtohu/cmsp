@@ -27,7 +27,7 @@ class User extends Base
         $head = [
             'left_nav' => [
                 'icon' => 'icon-fanhui',
-                'url' => url('Index/index')
+                'url' => url('User/index')
             ],
             'title' => '我的订单',
             'right_btn' => [
@@ -48,7 +48,7 @@ class User extends Base
         $head = [
             'left_nav' => [
                 'icon' => 'icon-fanhui',
-                'url' => url('Index/index')
+                'url' => url('User/index')
             ],
             'title' => '家庭成员/租客',
             'right_btn' => [
@@ -69,7 +69,7 @@ class User extends Base
         $head = [
             'left_nav' => [
                 'icon' => 'icon-fanhui',
-                'url' => url('Index/index')
+                'url' => url('User/index')
             ],
             'title' => '评价我们',
             'right_btn' => [
@@ -90,7 +90,7 @@ class User extends Base
         $head = [
             'left_nav' => [
                 'icon' => 'icon-fanhui',
-                'url' => url('Index/index')
+                'url' => url('User/index')
             ],
             'title' => '关于我们',
             'right_btn' => [

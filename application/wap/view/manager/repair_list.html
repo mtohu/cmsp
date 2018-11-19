@@ -1,6 +1,30 @@
 {include file="public/head" /}
+<style>
+    .repair-item{
+        padding: 10px 15px;
+        border-bottom: 1px solid #ccc;
+    }
+    .repair-item .repair-title{
+        line-height: 30px;
+        font-weight: 600;
+    }
+    .repair-item .repair-content{
+        text-indent: 2em;
+        line-height: 24px;
+    }
+    .repair-item .repair-time{
+        text-align: right;
+        line-height: 24px;
+        font-size: 12px;
+        color: #666;
+    }
+</style>
 <div class="repair-list">
+    {volist name="repair_list" id="vo"}
     <div class="repair-item">
-        维修列表
+        <div class="repair-title">{$vo.type_name}</div>
+        <div class="repair-content">{$vo.content}</div>
+        <div class="repair-time">{$vo.create_date|date='Y-m-d H:i'}</div>
     </div>
+    {/volist}
 </div>
