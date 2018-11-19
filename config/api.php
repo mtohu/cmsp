@@ -33,8 +33,8 @@ return [
     'repair_list/post'    => ['c'=>'Repair','a'=>'repairList','api_type'=>'','need_auth'=>'false','desc' =>'获取维修信息列表'],
 
     'my_fee_list/post' => ['c'=>'Fee','a'=>'myFeeList','api_type'=>'','need_auth'=>'true','desc' =>'获取自己缴费记录'],
-    'pay_order/post'         => ['c'=>'Fee','a'=>'payOrder','api_type'=>'','need_auth'=>'true','desc' =>'支付订单'],
-    
+    'pay_order/post'         => ['c'=>'Fee','a'=>'payOrder','api_type'=>'','need_auth'=>'true','desc' =>'生成支付订单'],
+
     'get_wxjsapi_sign/post'  => ['c'=>'Index','a'=>'getwxSignPackage','api_type'=>'','need_auth'=>'false','desc' =>'获取微信签名数据'],
 
 
