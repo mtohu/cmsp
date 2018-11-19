@@ -85,10 +85,42 @@
     </div>
 </div>
 <div class="submit-repair">
-    <input type="button" value="提交">
+    <input type="button" value="提交" id="submit-repair">
 </div>
 {include file="plug_js/jquery" /}
 {include file="plug_js/layer" /}
 <script>
-    
+    $(function(){
+        var repair = {
+            init: function(){
+                this.selectRepairType();
+            },
+            selectRepairType: function(){
+                $('.repair-type .type-item').click(function(){
+                    $('.repair-type .type-item').css({'color': '#333', 'border-color': '#999'});
+                    $(this).css('color', 'red');
+                    $(this).css('border-color', 'red');
+                });
+            },
+            submitRepair: function(){
+                var that = this;
+                myHttp.ajax({
+                    url: "/api/save_repair",
+                    data: {
+                        token: myCookie.get('token'),
+                        repair_type_id: 1,
+                        content: 'sss',
+                        img_arr: []
+                    },
+                    success: function(){
+
+                    }
+                })
+            }
+        };
+        repair.init();
+        $('#submit-repair').click(function(){
+            repair.submitRepair();
+        });
+    })
 </script>

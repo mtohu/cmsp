@@ -4,7 +4,7 @@ namespace app\wap\controller;
 use think\Controller;
 use app\wap\logic\Banner;
 
-class Manager extends Controller
+class Manager extends Base
 {
     public function index()
     {
@@ -20,7 +20,16 @@ class Manager extends Controller
     }
 
     /**
-     * 报修
+     * 报修列表
+     */
+    public function repairList()
+    {
+        $this->assign('head_title', '报修列表');
+        return $this->fetch();
+    }
+
+    /**
+     * 提交报修
      */
     public function submitRepair()
     {
