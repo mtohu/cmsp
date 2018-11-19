@@ -2,6 +2,7 @@
 namespace app\wap\controller;
 
 use think\Controller;
+use think\facade\Cookie;
 use think\facade\Session;
 
 class Login extends Controller {
@@ -9,7 +10,25 @@ class Login extends Controller {
         parent::initialize();
     }
 
-    public function residentLogin(){
+    /**
+     * 设置cookie
+     */
+    public function setCookie()
+    {
+        $user_data = input('user_data');
+        $strCookie= $user_data['resident_id']."\t".$user_data['account_name']."\t".
+            $user_data['resident_name']."\t". $user_data["token"];
+        $encode=uc_authcode($strCookie,'ENCODE','sxcmp');
+        Cookie::set('sxcmpauths', $encode);
+        $error_data=['ErrorCode'=>0,'ErrorMsg'=>'','ErrorSql'=>'','Data'=>[]];
+        return json($error_data)->code(200)->header(['Content-Type' => 'application/json']);
+    }
+
+    /**
+     * 登录页
+     */
+    public function residentLogin()
+    {
         return $this->fetch();
     }
 
@@ -193,6 +212,6 @@ class Login extends Controller {
         Session::clear();
         Cookie::delete('sxcmpauths');
         Cookie::clear();
-        return $this->redirect('wap/index/center');
+        return $this->redirect('wap/index/index');
     }
 }

@@ -3,7 +3,7 @@ namespace app\wap\controller;
 
 use think\Controller;
 
-class User extends Controller
+class User extends Base
 {
     /**
      * 用户首页
@@ -111,7 +111,7 @@ class User extends Controller
         $head = [
             'left_nav' => [
                 'icon' => 'icon-fanhui',
-                'url' => url('Index/index')
+                'url' => url('User/index')
             ],
             'title' => '设置',
             'right_btn' => [
@@ -132,7 +132,7 @@ class User extends Controller
         $head = [
             'left_nav' => [
                 'icon' => 'icon-fanhui',
-                'url' => url('Index/index')
+                'url' => url('User/userSet')
             ],
             'title' => '房价编号',
             'right_btn' => [
@@ -153,7 +153,7 @@ class User extends Controller
         $head = [
             'left_nav' => [
                 'icon' => 'icon-fanhui',
-                'url' => url('Index/index')
+                'url' => url('User/userSet')
             ],
             'title' => '注册手机号码',
             'right_btn' => [
@@ -174,7 +174,7 @@ class User extends Controller
         $head = [
             'left_nav' => [
                 'icon' => 'icon-fanhui',
-                'url' => url('Index/index')
+                'url' => url('User/userSet')
             ],
             'title' => '基础信息',
             'right_btn' => [

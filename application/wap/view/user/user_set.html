@@ -11,6 +11,18 @@
     .set-item i{
         float: right;
     }
+    .login-out{
+        width: 100%;
+        padding: 0 15px;
+        margin-top: 80px;
+    }
+    .login-out input{
+        width: 100%;
+        line-height: 36px;
+        background-color: #07c6fd;
+        border: 0;
+        color: #fff;
+    }
 </style>
 <div class="set-list">
     <div class="set-item">
@@ -31,4 +43,9 @@
             <i class="iconfont icon-shezhi"></i>
         </a>
     </div>
+</div>
+<div class="login-out">
+    <form action="{:url('Login/loginOut')}">
+        <input type="submit" value="退出当前账号" id="login-out" />
+    </form>
 </div>

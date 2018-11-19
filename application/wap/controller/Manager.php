@@ -4,7 +4,7 @@ namespace app\wap\controller;
 use think\Controller;
 use app\wap\logic\Banner;
 
-class Manager extends Controller
+class Manager extends Base
 {
     public function index()
     {
@@ -37,6 +37,9 @@ class Manager extends Controller
             ]
         ];
         $this->assign('head', $head);
+        //请求数据
+        $request_api = new RequestApi();
+        $res = $request_api->request_ajax();
         return $this->fetch();
     }
 

@@ -191,9 +191,16 @@
                     url: '/api/resident_login',
                     data: post_data,
                     success: function(res){
-                        var token = res.Data.token;
-                        myCookie.set('token', token);
-                        location.href = "{:url('Index/index')}";
+                        var user_data = res.Data;
+                        myHttp.ajax({
+                            url: "{:url('Login/setCookie')}",
+                            data: {
+                                user_data: user_data
+                            },
+                            success: function(res){
+                                location.href = "{:url('Index/index')}";
+                            }
+                        })
                     },
                     error: function(res){
                         myLayer.alert(res.ErrorMsg);
