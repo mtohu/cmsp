@@ -90,6 +90,7 @@ class Payorder extends Base{
             }
             $update = Db::name('cmp_fee')->where('id',$payOrder['fee_id'])
                       ->data(['payment_status'=>1,'payment_date'=>date('Y-m-d H:i:s',$now_time),
+                          'is_online_payment'=>1,'payment_method'=>1,'transaction_number'=>$transaction_id,
                           'update_date'=>date('Y-m-d H:i:s',$now_time)])
                       ->update();
             if(!$update){

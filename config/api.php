@@ -32,15 +32,13 @@ return [
     'save_repair/post'      => ['c'=>'Repair','a'=>'saveRepair','api_type'=>'','need_auth'=>'true','desc' =>'保存维修信息'],
     'repair_list/post'    => ['c'=>'Repair','a'=>'repairList','api_type'=>'','need_auth'=>'false','desc' =>'获取维修信息列表'],
 
-    'get_category_more/post' => ['c'=>'Index','a'=>'getCategoryMore','api_type'=>'','need_auth'=>'false','desc' =>'获取分类'],
+    'my_fee_list/post' => ['c'=>'Fee','a'=>'myFeeList','api_type'=>'','need_auth'=>'true','desc' =>'获取自己缴费记录'],
+    'pay_order/post'         => ['c'=>'Fee','a'=>'payOrder','api_type'=>'','need_auth'=>'true','desc' =>'支付订单'],
+    
     'get_wxjsapi_sign/post'  => ['c'=>'Index','a'=>'getwxSignPackage','api_type'=>'','need_auth'=>'false','desc' =>'获取微信签名数据'],
-    'goods_list/post'        => ['c'=>'Goods','a'=>'goodsList','api_type'=>'','need_auth'=>'false','desc' =>'获取小程序列表'],
-    'goods_details/post'     => ['c'=>'Goods','a'=>'goodsDetails','api_type'=>'','need_auth'=>'false','desc' =>'获取小程序模版详情'],
-    'pay_goods_details/post' => ['c'=>'Goods','a'=>'payGoodsDetails','api_type'=>'','need_auth'=>'true','desc' =>'支付小程序模版清单'],
-    'orders_list/post'       => ['c'=>'Orders','a'=>'ordersList','api_type'=>'','need_auth'=>'true','desc' =>'获取小程序模版订单列表'],
-    'pay_order/post'         => ['c'=>'Orders','a'=>'payOrder','api_type'=>'','need_auth'=>'true','desc' =>'支付订单'],
-    'join_agent_detail/post'       => ['c'=>'Joinagent','a'=>'joinAgentDetail','api_type'=>'','need_auth'=>'true','desc' =>'加盟代理商详情'],
-    'pay_join_agent_order/post'       => ['c'=>'Joinagent','a'=>'payJoinAgentOrder','api_type'=>'','need_auth'=>'true','desc' =>'生成代理商支付订单'],
+
+
+
 
 
 ];
