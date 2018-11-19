@@ -15,11 +15,11 @@ function get_resident_pwd($str){
     return md5('sxcmp'.$str);
 }
 /**
-生成订单编号
-ws 特殊字符 比如m主库youma_xcx下的订单标示符
+生成支付订单编号
+ws 特殊字符 比如的订单标示符
 no 序号
  **/
-function create_order_no($ws='m',$no=0){
+function create_pay_order_no($ws='p',$no=0){
     $num = 100000+$no;
     if(strlen($num) > 6){
         $s = strlen($num)-6;
@@ -30,38 +30,7 @@ function create_order_no($ws='m',$no=0){
     $sn = $ws.$dates.$num.$rand;
     return $sn;
 }
-/**
-生成小程序编号
-ws 特殊字符
-no 序号
- **/
-function create_xcx_no($ws='x',$no=0){
-    $num = 100000+$no;
-    if(strlen($num) > 6){
-        $s = strlen($num)-6;
-        $num = substr($num,$s,strlen($num));
-    }
-    $rand = rand(100, 999);
-    $dates=date('ymd');
-    $sn = $ws.$dates.$num.$rand;
-    return $sn;
-}
-/**
-生成商品编号
-ws 特殊字符
-no 序号
- **/
-function create_goods_no($ws='g',$no=0){
-    $num = 100000+$no;
-    if(strlen($num) > 5){
-        $s = strlen($num)-5;
-        $num = substr($num,$s,strlen($num));
-    }
-    $rand = rand(100, 999);
-    $dates=date('ymd');
-    $sn = $ws.$dates.$num.$rand;
-    return $sn;
-}
+
 /**加解密**/
 function uc_authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
     $ckey_length = 4;
