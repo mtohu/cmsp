@@ -25,12 +25,17 @@ class User extends Base
      */
     public function orderList()
     {
+        $source = input('source');
+        $back_url = url('User/index');
+        if(!empty($source)){
+            $back_url = url(str_replace('__', '/',$source));
+        }
         $head = [
             'left_nav' => [
                 'icon' => 'icon-fanhui',
-                'url' => url('User/index')
+                'url' => $back_url
             ],
-            'title' => '我的订单',
+            'title' => '我的账单',
             'right_btn' => [
                 'is_show' => false,
                 'btn_name' => '',
