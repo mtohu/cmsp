@@ -13,7 +13,7 @@ class WxPayWarpper implements IPay
     /*****微信支付****/
     public function do_pay($input)
     {
-        $order_arr=['out_trade_no'=>$input['pay_sn'],'body'=>$input['fee_description'],'attach'=>'石祥物业',
+        $order_arr=['out_trade_no'=>$input['pay_sn'],'body'=>$input['fee_name'],'attach'=>'石祥物业',
             'total_fee'=>$input['amount'] * 100,'time_start'=>date("YmdHis"),
             'time_expire'=>date("YmdHis", time() + 600),
             'product_id'=>$input['fee_id'],'spbill_create_ip'=>get_ips()];

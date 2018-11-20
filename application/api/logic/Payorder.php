@@ -39,7 +39,7 @@ class Payorder extends Base{
             if(!$sn){
                 throw new ErrorException("生成支付订单编号失败");
             }
-
+            $fee_item = Db::name("cmp_fee_item")->where([['id','=',$fee['fee_item_id_id']]])->find();
             $pay_sn = create_pay_order_no('p',$sn);
             $order_data=array('resident_id'=>$resident_id,'pay_mod_id'=>$pay_mod_id,'discount_amount'=>$discount_amount,
                 'create_date'=>date('Y-m-d H:i:s',$now_time),'trade_type'=>$trade_type,'amount'=>$amount,'fee_id'=>$fee['id']);
@@ -56,7 +56,7 @@ class Payorder extends Base{
         }
         $this->error_data['ErrorMsg'] = "成功";
         $this->error_data['Data'] =['pay_sn'=>$order_data['pay_sn'],'amount'=>$amount,'discount_amount'=>$discount_amount,
-            'fee_description'=>$fee['fee_description'], 'fee_id'=>$fee['id'],'pay_mod_id'=>$pay_mod_id,
+            'fee_description'=>$fee['fee_description'],'fee_name'=>isset($fee_item['id'])?$fee_item['name']:"", 'fee_id'=>$fee['id'],'pay_mod_id'=>$pay_mod_id,
             'pay_nid'=>'wxpay','trade_type'=>$trade_type,
             'pay_scene'=>'gzh','resident_id'=>$resident_id];
         $this->error_data['ErrorCode']=0;
@@ -90,6 +90,8 @@ class Payorder extends Base{
             }
             $update = Db::name('cmp_fee')->where('id',$payOrder['fee_id'])
                       ->data(['payment_status'=>1,'payment_date'=>date('Y-m-d H:i:s',$now_time),
+                          'is_online_payment'=>1,'payment_method'=>1,'transaction_number'=>$transaction_id,
+                          'actual_payment_amount'=>$payOrder['amount'],'resident_id_id'=>$payOrder['resident_id'],
                           'update_date'=>date('Y-m-d H:i:s',$now_time)])
                       ->update();
             if(!$update){

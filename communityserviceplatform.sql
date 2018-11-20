@@ -271,7 +271,12 @@ CREATE TABLE `cmp_fee` (
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `payment_status` smallint(6) NOT NULL DEFAULT '0' COMMENT '付款状态0=未付款1=已付款',
+  `is_online_payment` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否线上支付 0=否1=是',
+  `payment_method` smallint(6) NOT NULL DEFAULT '0' COMMENT '支付方式0=现金1=微信2=支付宝3=POS4=其它',
+  `transaction_number` varchar(50) NOT NULL DEFAULT '' COMMENT '交易号',
   `payment_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '付款时间',
+  `actual_payment_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '实际付款金额',
+  `notes` varchar(100) NOT NULL DEFAULT '' COMMENT '备注',
   `fee_item_id_id` int(11) NOT NULL COMMENT '缴费项目',
   `resident_id_id` int(11) NOT NULL DEFAULT '0' COMMENT '缴费人',
   `room_id` int(11) DEFAULT '0' COMMENT '房号room表id',
@@ -284,6 +289,9 @@ CREATE TABLE `cmp_fee` (
   KEY `resident_id` (`resident_id_id`) USING BTREE,
   KEY `payment_date` (`payment_date`) USING BTREE,
   KEY `create_date` (`create_date`) USING BTREE,
+  KEY `is_online_payment` (`is_online_payment`) USING BTREE,
+  KEY `payment_method` (`payment_method`) USING BTREE,
+  KEY `transaction_number` (`transaction_number`) USING BTREE,
   CONSTRAINT `cmp_fee_fee_item_id_id_0cac0b4c_fk_cmp_fee_item_id` FOREIGN KEY (`fee_item_id_id`) REFERENCES `cmp_fee_item` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='缴费记录';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -323,6 +331,33 @@ CREATE TABLE `cmp_fee_item` (
 LOCK TABLES `cmp_fee_item` WRITE;
 /*!40000 ALTER TABLE `cmp_fee_item` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cmp_fee_item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cmp_generat_no`
+--
+
+DROP TABLE IF EXISTS `cmp_generat_no`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmp_generat_no` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `add_date` int(11) NOT NULL DEFAULT '0' COMMENT '添加日期',
+  `add_time` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `add_date` (`add_date`) USING BTREE,
+  KEY `add_time` (`add_time`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cmp_generat_no`
+--
+
+LOCK TABLES `cmp_generat_no` WRITE;
+/*!40000 ALTER TABLE `cmp_generat_no` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cmp_generat_no` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -458,6 +493,7 @@ CREATE TABLE `cmp_pay_order` (
   `discount_amount` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '优惠金额',
   `trade_type` varchar(20) NOT NULL DEFAULT '' COMMENT '交易类型返回',
   `transaction_id` varchar(32) NOT NULL DEFAULT '' COMMENT '支付平台订单号',
+  `pay_mod_id` int(11) NOT NULL DEFAULT '0' COMMENT '支付方式 1=微信',
   `pay_state` tinyint(1) NOT NULL DEFAULT '0' COMMENT '支付状态0=待支付1=支付成功-1=支付失败',
   `pay_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '支付时间',
   `pay_time` int(11) NOT NULL DEFAULT '0' COMMENT '支付时间',
@@ -587,7 +623,7 @@ CREATE TABLE `cmp_resident` (
 
 LOCK TABLES `cmp_resident` WRITE;
 /*!40000 ALTER TABLE `cmp_resident` DISABLE KEYS */;
-INSERT INTO `cmp_resident` VALUES (25,'huhu','ec5083f7bab7cd2abd79731fcc8804f1','','','13634175905',0,'2018-11-17 15:18:33','2018-11-17 15:52:23','','',1542524984,'127.0.0.1',1542516040,'127.0.0.1',6,0,0,0,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC93d3cuc3hjbXAubmV0IiwiYXVkIjoiaHR0cDpcL1wvd3d3LnN4Y21wLm5ldCIsImlhdCI6MTU0MjUyNDk4NCwibmJmIjoxNTQyNTI0OTg0LCJleHAiOjE1NDI1MzIxODQsImRhdGEiOnsidG9rZW5fcmVzaWRlbnRfaWQiOiIyNSIsInRva2VuX2NyZWF0ZWRfYXQiOjE1NDI1MjQ5ODQsInRva2VuX2V4cGlyZXNfYXQiOjE1NDI1MzIxODQsInRva2VuX2lwIjoyMTMwNzA2NDMzfX0.I0xR-xICgHG3AV-g6HrkTeXNCgd2gP-fk7V8bx7w_x0');
+INSERT INTO `cmp_resident` VALUES (25,'huhu','ec5083f7bab7cd2abd79731fcc8804f1','1','','13634175905',0,'2018-11-17 15:18:33','2018-11-18 20:56:22','','',1542545673,'127.0.0.1',1542524984,'127.0.0.1',7,0,0,0,'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC93d3cuc3hjbXAubmV0IiwiYXVkIjoiaHR0cDpcL1wvd3d3LnN4Y21wLm5ldCIsImlhdCI6MTU0MjU0NTY3MywibmJmIjoxNTQyNTQ1NjczLCJleHAiOjE1NDI1NTI4NzMsImRhdGEiOnsidG9rZW5fcmVzaWRlbnRfaWQiOiIyNSIsInRva2VuX2NyZWF0ZWRfYXQiOjE1NDI1NDU2NzMsInRva2VuX2V4cGlyZXNfYXQiOjE1NDI1NTI4NzMsInRva2VuX2lwIjoyMTMwNzA2NDMzfX0.2wiV-iclWiUEBlIMMUyKHVrYJaW1d3PUQS8tn8Am94k');
 /*!40000 ALTER TABLE `cmp_resident` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -611,7 +647,7 @@ CREATE TABLE `cmp_resident_room` (
   KEY `room_id` (`room_id`) USING BTREE,
   KEY `is_verified` (`is_verified`) USING BTREE,
   KEY `resident_type` (`resident_type`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -620,6 +656,7 @@ CREATE TABLE `cmp_resident_room` (
 
 LOCK TABLES `cmp_resident_room` WRITE;
 /*!40000 ALTER TABLE `cmp_resident_room` DISABLE KEYS */;
+INSERT INTO `cmp_resident_room` VALUES (1,0,1,2,0,'2018-11-18 16:48:53');
 /*!40000 ALTER TABLE `cmp_resident_room` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1034,4 +1071,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-18 15:56:34
+-- Dump completed on 2018-11-19 21:07:44
