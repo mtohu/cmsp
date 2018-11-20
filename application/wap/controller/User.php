@@ -2,6 +2,7 @@
 namespace app\wap\controller;
 
 use think\Controller;
+use think\facade\Session;
 
 class User extends Base
 {
@@ -155,7 +156,7 @@ class User extends Base
                 'icon' => 'icon-fanhui',
                 'url' => url('User/userSet')
             ],
-            'title' => '注册手机号码',
+            'title' => '修改手机号码',
             'right_btn' => [
                 'is_show' => false,
                 'btn_name' => '',
@@ -163,6 +164,9 @@ class User extends Base
             ]
         ];
         $this->assign('head', $head);
+
+        $resident_account = Session::get('ResidentAccount');
+        $this->assign('token', $resident_account['Token']);
         return $this->fetch();
     }
 
@@ -184,6 +188,23 @@ class User extends Base
             ]
         ];
         $this->assign('head', $head);
+        //获取用户信息
+        $request_api = new RequestApi();
+        $request_api->api_action = 'resident_info';
+        $resident_account = Session::get('ResidentAccount');
+        $request_api->params['token'] = $resident_account['Token'];
+        $return_data = $request_api->request_ajax()->getData();
+        $user_info = [
+            'name' => '',
+            'identification' => '',
+            'uphone' => ''
+        ];
+        if(isset($return_data['Data']) && isset($return_data['Data']['id'])){
+            $user_info = $return_data['Data'];
+        }
+
+        $this->assign('token', $resident_account['Token']);
+        $this->assign('user_info', $user_info);
         return $this->fetch();
     }
 

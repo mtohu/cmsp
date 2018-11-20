@@ -19,7 +19,8 @@
         color: #666;
     }
 </style>
-<div class="repair-list">
+{if count($repair_list) > 0}
+<div class="repair-list" >
     {volist name="repair_list" id="vo"}
     <div class="repair-item">
         <div class="repair-title">{$vo.type_name}</div>
@@ -28,3 +29,5 @@
     </div>
     {/volist}
 </div>
+{/if}
+

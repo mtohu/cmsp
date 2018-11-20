@@ -2,19 +2,19 @@
 <div class="form-item">
     <div class="form-label">姓名</div>
     <div class="form-input">
-        <input type="text" placeholder="请输入姓名" id="name" />
+        <input type="text" value="{$user_info.name}" placeholder="请输入姓名" id="name" />
     </div>
 </div>
 <div class="form-item">
     <div class="form-label">身份证号</div>
     <div class="form-input">
-        <input type="text" placeholder="请输入身份证号" id="id-card-no" />
+        <input type="text" value="{$user_info.identification}" placeholder="请输入身份证号" id="id-card-no" />
     </div>
 </div>
 <div class="form-item">
     <div class="form-label">预留手机号</div>
     <div class="form-input">
-        <input type="text" placeholder="请输入预留手机号" id="user-phone" />
+        <input type="text" value="{$user_info.uphone}" placeholder="请输入预留手机号" id="user-phone" />
     </div>
 </div>
 <div class="form-submit">
@@ -26,8 +26,7 @@
     $(function(){
         var set_info = {
             data: {
-                token: '',
-                userId: '',
+                token: "{$token}",
                 idCardNo: '',
                 name: '',
                 userPhone: '',
@@ -62,17 +61,13 @@
                     identification: that.data.idCardNo,
                     uphone: that.data.userPhone,
                     name: that.data.name,
-                    is_maintenance_staff: that.data.isStaff
                 };
-                if(that.data.isStaff == 0){
-                    post_data.room_id = 1;
-                    post_data.resident_type = 1;
-                }
+
                 myHttp.ajax({
-                    url: '/api/save_bind_community_room',
+                    url: '/api/set_resident',
                     data: post_data,
                     success: function(){
-                        location.href = "{:url('Index/index')}";
+                        location.href = "{:url('User/userSet')}";
                     }
                 })
             }
