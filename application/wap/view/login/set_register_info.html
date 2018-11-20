@@ -59,15 +59,15 @@
     </div>
 </div>
 <div class="form-item tab-service">
-    <div class="form-label">身份证号码</div>
-    <div class="form-input">
-        <input type="text" placeholder="请输入房屋登记人身份证号" id="id-card-no" />
-    </div>
-</div>
-<div class="form-item tab-service">
     <div class="form-label">姓名</div>
     <div class="form-input">
         <input type="text" placeholder="请输入姓名" id="name" />
+    </div>
+</div>
+<div class="form-item tab-service">
+    <div class="form-label">身份证号码</div>
+    <div class="form-input">
+        <input type="text" placeholder="请输入房屋登记人身份证号" id="id-card-no" />
     </div>
 </div>
 <div class="form-item tab-service">
@@ -117,16 +117,16 @@ $(function(){
         },
         checkData: function(){
             var that = this;
+            if(that.data.name == ''){
+                myLayer.alert('姓名不能为空');
+                return false;
+            }
             if(that.data.idCardNo == ''){
                 myLayer.alert('身份证号不能为空');
                 return false;
             }
             if(that.data.userPhone == ''){
                 myLayer.alert('手机号不能为空');
-                return false;
-            }
-            if(that.data.name == ''){
-                myLayer.alert('姓名不能为空');
                 return false;
             }
             return true;
