@@ -21,7 +21,7 @@ class Fee extends Base
             $where[]=['fi.name','like',"%".$search_name."%"];
         }
         $field  ="f.fee_description,f.id,f.fee_amount,f.start_date,f.end_date,f.create_date,f.payment_status,
-                   f.payment_date,f.fee_item_id_id,f.room_id,fi.name,fi.cycle";
+                   f.payment_date,f.fee_item_id,f.room_id,fi.name,fi.cycle";
         $field .= " ,(CASE 
                      WHEN (f.payment_status = 1) THEN
                      1
@@ -35,7 +35,7 @@ class Fee extends Base
                      ) as sort_orders  ";
         $feeList = Db::name("cmp_fee")->alias('f')
                    ->field($field)
-                   ->leftJoin("cmp_fee_item fi","f.fee_item_id_id = fi.id")
+                   ->leftJoin("cmp_fee_item fi","f.fee_item_id = fi.id")
                    ->leftJoin("cmp_resident_room rr","rr.room_id = f.room_id ")
                    ->where($where)
                    ->order("sort_orders desc,id desc")
