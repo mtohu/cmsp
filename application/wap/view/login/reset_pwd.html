@@ -57,8 +57,9 @@
                 return;
             }
             myHttp.ajax({
-                url: "/api/find_pwd",
+                url: "{:url('RequestApi/request_ajax')}",
                 data: {
+                    api_action: 'find_pwd',
                     user_name: "{$phone}",
                     password: that.data.password,
                     cure_password: that.data.confirmPassword,

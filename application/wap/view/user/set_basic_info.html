@@ -26,7 +26,6 @@
     $(function(){
         var set_info = {
             data: {
-                token: "{$token}",
                 idCardNo: '',
                 name: '',
                 userPhone: '',
@@ -56,7 +55,7 @@
                     return;
                 }
                 var post_data = {
-                    token: that.data.token,
+                    api_action: 'set_resident',
                     resident_id: that.data.userId,
                     identification: that.data.idCardNo,
                     uphone: that.data.userPhone,
@@ -64,10 +63,13 @@
                 };
 
                 myHttp.ajax({
-                    url: '/api/set_resident',
+                    url: "{:url('RequestApi/request_ajax')}",
                     data: post_data,
                     success: function(){
-                        location.href = "{:url('User/userSet')}";
+                        myLayer.alert('修改成功');
+                        setTimeout(function(){
+                            location.href = "{:url('User/userSet')}";
+                        }, 2000);
                     }
                 })
             }

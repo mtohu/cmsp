@@ -26,7 +26,7 @@ class RequestApi extends Base{
                 $this->loginsn($data);
                 break;
                 case "resident_logout":
-                $this->logoutsn();
+                $this->logoutsn($data);
                 break;
                 case "resident_user":
                 $udata = $data["Data"];
@@ -42,7 +42,7 @@ class RequestApi extends Base{
             }
         }
         if(intval($data["ErrorCode"]) == 5 || intval($data["ErrorCode"]) == 401){
-            $this->logoutsn();
+            $this->logoutsn($data);
             $data['Data']['third_code'] = $this->third_code;
         }
         return $this->print_result($data);
@@ -50,16 +50,16 @@ class RequestApi extends Base{
     private function loginsn($input){
         $data =array();
         if(isset($input['Data']['resident_id'])){
-            $data['ResidentID'] = $input['resident_id'];
+            $data['ResidentID'] = $input['Data']['resident_id'];
         }
         if(isset($input['Data']['account_name'])){
-            $data['AccountName'] = $input['account_name'];
+            $data['AccountName'] = $input['Data']['account_name'];
         }
         if(isset($input['Data']['resident_name'])){
-            $data['ResidentName'] = $input['resident_name'];
+            $data['ResidentName'] = $input['Data']['resident_name'];
         }
         if(isset($input['Data']['token'])){
-            $data['Token'] = $input['token'];
+            $data['Token'] = $input['Data']['token'];
         }
         $this->ResidentAccount=$data;
         Session::set('ResidentAccount',$this->ResidentAccount);

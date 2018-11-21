@@ -59,9 +59,9 @@
                 ,btn: ['是', '否']
                 ,yes: function(index){
                     myHttp.ajax({
-                        url: '/api/del_relation_room',
+                        url: "{:url('RequestApi/request_ajax')}",
                         data: {
-                            token: "{$token}",
+                            api_action: 'del_relation_room',
                             room_id: room_id
                         },
                         success: function(){

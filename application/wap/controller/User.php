@@ -67,7 +67,6 @@ class User extends Base
         //获取数据
         $request_api = new RequestApi();
         $request_api->api_action = 'resident_members';
-        $request_api->params['token'] = $this->getToken();
         $return_data = $request_api->request_ajax()->getData();
         $members_list = [];
         if(isset($return_data['ErrorCode']) && $return_data['ErrorCode'] == 0){
@@ -162,14 +161,12 @@ class User extends Base
         //房间列表
         $request_api = new RequestApi();
         $request_api->api_action = 'my_room_list';
-        $request_api->params['token'] = $this->getToken();
         $return_res = $request_api->request_ajax()->getData();
         $room_list = [];
         if($return_res['ErrorCode'] == 0){
             $room_list = $return_res['Data'];
         }
 
-        $this->assign('token', $this->getToken());
         $this->assign('room_list', $room_list);
         return $this->fetch();
     }
@@ -241,8 +238,6 @@ class User extends Base
         //获取用户信息
         $request_api = new RequestApi();
         $request_api->api_action = 'resident_info';
-        $resident_account = Session::get('ResidentAccount');
-        $request_api->params['token'] = $resident_account['Token'];
         $return_data = $request_api->request_ajax()->getData();
         $user_info = [
             'name' => '',
@@ -253,7 +248,6 @@ class User extends Base
             $user_info = $return_data['Data'];
         }
 
-        $this->assign('token', $resident_account['Token']);
         $this->assign('user_info', $user_info);
         return $this->fetch();
     }

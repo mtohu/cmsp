@@ -174,6 +174,7 @@
                     return;
                 }
                 var post_data = {
+                    api_action: 'resident_login',
                     login_mod: that.data.loginMod
                 };
                 if(that.data.loginMod == 1){
@@ -184,19 +185,10 @@
                     post_data.password = that.data.password;
                 }
                 myHttp.ajax({
-                    url: '/api/resident_login',
+                    url: "{:url('RequestApi/request_ajax')}",
                     data: post_data,
                     success: function(res){
-                        var user_data = res.Data;
-                        myHttp.ajax({
-                            url: "{:url('Login/setCookie')}",
-                            data: {
-                                user_data: user_data
-                            },
-                            success: function(res){
-                                location.href = "{:url('Index/index')}";
-                            }
-                        })
+                        location.href = "{:url('Index/index')}";
                     },
                     error: function(res){
                         myLayer.alert(res.ErrorMsg);
@@ -257,19 +249,20 @@
                     return;
                 }
                 that.resetVerifyTxt();
-                // myHttp.ajax({
-                //     url: "{:url('/api/sms_send')}",
-                //     data: {
-                //         phone: that.data.phone,
-                //         type: 1
-                //     },
-                //     success: function(){
-                //
-                //     },
-                //     error: function(res){
-                //         myLayer.alert(res.ErrorMsg);
-                //     }
-                // });
+                myHttp.ajax({
+                    url: "{:url('RequestApi/request_ajax')}",
+                    data: {
+                        api_action: 'sms_send',
+                        phone: that.data.phone,
+                        type: 1
+                    },
+                    success: function(){
+
+                    },
+                    error: function(res){
+                        myLayer.alert(res.ErrorMsg);
+                    }
+                });
             }
         };
         verify.init();

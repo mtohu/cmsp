@@ -140,6 +140,7 @@ $(function(){
                 return;
             }
             var post_data = {
+                api_action: 'save_bind_community_room',
                 token: that.data.token,
                 resident_id: that.data.userId,
                 identification: that.data.idCardNo,
@@ -152,7 +153,7 @@ $(function(){
                 post_data.resident_type = 1;
             }
             myHttp.ajax({
-                url: '/api/save_bind_community_room',
+                url: "{:url('RequestApi/request_ajax')}",
                 data: post_data,
                 success: function(){
                     location.href = "{:url('Index/index')}";

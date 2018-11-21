@@ -72,8 +72,9 @@
                     return;
                 }
                 myHttp.ajax({
-                    url: '/api/register_resient',
+                    url: "{:url('RequestApi/request_ajax')}",
                     data: {
+                        api_action: 'register_resient',
                         phone: that.data.phone,
                         user_name: that.data.userName,
                         password: that.data.password,

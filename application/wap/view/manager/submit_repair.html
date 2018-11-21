@@ -127,8 +127,9 @@
                     return;
                 }
                 myHttp.ajax({
-                    url: "/api/save_repair",
+                    url: "{:url('RequestApi/request_ajax')}",
                     data: {
+                        api_action: 'save_repair',
                         token: myCookie.get('token'),
                         repair_type_id: that.data.repairType,
                         content: that.data.repairDesc,

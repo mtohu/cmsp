@@ -73,8 +73,9 @@
                 }
                 that.resetVerifyTxt();
                 myHttp.ajax({
-                    url: "{:url('/api/sms_send')}",
+                    url: "{:url('RequestApi/request_ajax')}",
                     data: {
+                        api_action: 'sms_send',
                         phone: that.data.phone,
                         type: 1
                     },
@@ -94,8 +95,9 @@
                     return;
                 }
                 myHttp.ajax({
-                    url: "/api/check_verify_code",
+                    url: "{:url('RequestApi/request_ajax')}",
                     data: {
+                        api_action: 'check_verify_code',
                         phone: that.data.phone,
                         verify_code: verify_code,
                         type: 1

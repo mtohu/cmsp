@@ -52,7 +52,6 @@
     $(function(){
         var apply = {
             data: {
-                token: "{$token}",
                 roomId: 4,
                 residentType: 1,
             },
@@ -65,9 +64,9 @@
                 that.data.residentType = $('#resident-type').val();
                 console.log(that.data.residentType);
                 myHttp.ajax({
-                    url: '/api/apply_relation_room',
+                    url: "{:url('RequestApi/request_ajax')}",
                     data: {
-                        token: that.data.token,
+                        api_action: 'apply_relation_room',
                         room_id: that.data.roomId,
                         resident_type: that.data.residentType
                     },

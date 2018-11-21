@@ -31,8 +31,9 @@
     $(function(){
         $('#check').click(function(){
             myHttp.ajax({
-                url: '/api/check_account_isexit',
+                url: "{:url('RequestApi/request_ajax')}",
                 data: {
+                    api_action: 'check_account_isexit',
                     user_name: $('#user-name').val(),
                     type: 1
                 },

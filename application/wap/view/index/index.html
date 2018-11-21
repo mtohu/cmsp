@@ -138,7 +138,10 @@
 <script>
     $(function(){
         myHttp.ajax({
-            url: '/api/notice_list',
+            url: "{:url('RequestApi/request_ajax')}",
+            data: {
+                api_action: 'notice_list'
+            },
             success: function(res){
                 $('#notice-list').show();
                 var notice_list = res.Data;

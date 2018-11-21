@@ -65,8 +65,9 @@
             },
             checkNewPhone: function(newPhone, successCallBack){
                 myHttp.ajax({
-                    url: "{:url('/api/check_account_isexit')}",
+                    url: "{:url('RequestApi/request_ajax')}",
                     data: {
+                        api_action: 'check_account_isexit',
                         user_name: newPhone,
                         type: 1
                     },
@@ -88,8 +89,9 @@
                 that.checkNewPhone(that.data.phone, function(){
                     that.resetVerifyTxt();
                     myHttp.ajax({
-                        url: "{:url('/api/sms_send')}",
+                        url: "{:url('RequestApi/request_ajax')}",
                         data: {
+                            api_action: 'sms_send',
                             phone: that.data.phone,
                             type: 1
                         },
@@ -105,7 +107,6 @@
         };
         var set_phone = {
             data: {
-                token: "{$token}",
                 phone: '',
                 verifyCode: ''
             },
@@ -134,9 +135,9 @@
                 }
                 verify.checkNewPhone(that.data.phone, function(){
                     myHttp.ajax({
-                        url: "/api/set_resident",
+                        url: "{:url('RequestApi/request_ajax')}",
                         data: {
-                            token: that.data.token,
+                            api_action: 'set_resident',
                             phone: that.data.phone,
                             verify_code: that.data.verifyCode,
                             type: 1
