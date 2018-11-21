@@ -104,6 +104,16 @@ class Manager extends Base
             ]
         ];
         $this->assign('head', $head);
+        //账单
+        $request_api = new RequestApi();
+        $request_api->api_action = 'my_fee_list';
+        $return_data = $request_api->request_ajax()->getData();
+        $fee_list = [];
+        if(isset($return_data['Data'])){
+            $fee_list = $return_data['Data'];
+        }
+//        dump($fee_list);
+        $this->assign('fee_list', $fee_list);
         return $this->fetch();
     }
 
