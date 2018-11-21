@@ -21,32 +21,6 @@ class User extends Base
     }
 
     /**
-     * 我的订单
-     */
-    public function orderList()
-    {
-        $source = input('source');
-        $back_url = url('User/index');
-        if(!empty($source)){
-            $back_url = url(str_replace('__', '/',$source));
-        }
-        $head = [
-            'left_nav' => [
-                'icon' => 'icon-fanhui',
-                'url' => $back_url
-            ],
-            'title' => '我的账单',
-            'right_btn' => [
-                'is_show' => false,
-                'btn_name' => '',
-                'url' => ''
-            ]
-        ];
-        $this->assign('head', $head);
-        return $this->fetch();
-    }
-
-    /**
      * 我的家庭成员/租客
      */
     public function myFamily()

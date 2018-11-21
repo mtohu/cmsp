@@ -81,4 +81,30 @@ class Manager extends Base
         return $this->fetch();
     }
 
+    /**
+     * 账单列表
+     */
+    public function feeList()
+    {
+        $source = input('source');
+        $back_url = url('User/index');
+        if(!empty($source)){
+            $back_url = url(str_replace('__', '/',$source));
+        }
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => $back_url
+            ],
+            'title' => '我的账单',
+            'right_btn' => [
+                'is_show' => false,
+                'btn_name' => '',
+                'url' => ''
+            ]
+        ];
+        $this->assign('head', $head);
+        return $this->fetch();
+    }
+
 }
