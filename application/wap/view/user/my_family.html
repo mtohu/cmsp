@@ -18,11 +18,8 @@
         float: right;
         color: green;
     }
-    .member-item .other-info .phone{
-        float: left;
-    }
-    .member-item .other-info .user-phone{
-        float: right;
+    .member-item .phone{
+        color: #07c6fd;
     }
 </style>
 {if count($members_list) == 0}
@@ -49,8 +46,11 @@
             </span>
         </div>
         <div class="other-info">
+            {if !empty($vo.uphone)}
+            <span class="phone">{$vo.uphone}</span>
+            {else/}
             <span class="phone">{$vo.phone}</span>
-            <span class="user-phone">{$vo.uphone}</span>
+            {/if}
         </div>
     </div>
     {/volist}
