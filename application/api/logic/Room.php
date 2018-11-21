@@ -83,12 +83,18 @@ class Room extends Base
                 throw new ErrorException("房号不存在");
             }
             $resident_room= Db::name("cmp_resident_room")->where([['room_id','=',$room_id],['resident_id','=',$resident_id]])->find();
-            if(isset($resident_room['id'])){
+            if(isset($resident_room['id']) && $resident_room['resident_type'] == $resident_type){
                 throw new ErrorException("已经申请关联该房号请不要重复申请");
             }
+
             $saveData=array("room_id"=>$room_id,"room_id"=>$room_id,"resident_type"=>$resident_type,
                       'update_date'=>date('Y-m-d H:i:s',now_time()));
-            $res=Db::name("cmp_resident_room")->insert($saveData);
+            if(!isset($resident_room['id'])){
+                $res=Db::name("cmp_resident_room")->insert($saveData);
+            }else{
+                $saveData['is_verified']=0;
+                $res=Db::name("cmp_resident_room")->where('id',$resident_room['id'])->data($saveData)->update();
+            }
             if(!$res){
                 throw new ErrorException("申请失败");
             }
