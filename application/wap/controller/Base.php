@@ -35,11 +35,11 @@ class Base extends Controller{
                     $this->ResidentAccount['ResidentName']=$ResidentName;
                     $this->ResidentAccount['Token']=$Token;
                     Session::set('ResidentAccount',$this->ResidentAccount);
-                    $strJson = request_data($this->api_url."admin_user",["token"=>$Token]);
+                    $strJson = request_data($this->api_url."resident_info",["token"=>$Token]);
                     $dataMsg = @json_decode($strJson,1);
                     $data = isset($dataMsg["Data"])?$dataMsg["Data"]:[];
                     $data["token"] = $Token;
-                    if(isset($data['ResidentID'])){
+                    if(isset($data['resident_id'])){
                         Session::set('ResidentAccount',$this->ResidentAccount);
                     }
                 }
@@ -91,10 +91,10 @@ class Base extends Controller{
         //write_log($json_str);
         $json_arr = @json_decode($json_str,1);
         if(isset($json_arr["ErrorCode"]) && $json_arr["ErrorCode"]==0 && isset($json_arr["Data"]["Token"])){
-            $this->ResidentAccount['ResidentID']=$json_arr["Data"]['ResidentID'];
-            $this->ResidentAccount['AccountName']=$json_arr["Data"]['AccountName'];
-            $this->ResidentAccount['ResidentName']=$json_arr["Data"]['ResidentName'];
-            $this->ResidentAccount['Token']=$json_arr["Data"]['Token'];
+            $this->ResidentAccount['ResidentID']=$json_arr["Data"]['resident_id'];
+            $this->ResidentAccount['AccountName']=$json_arr["Data"]['account_name'];
+            $this->ResidentAccount['ResidentName']=$json_arr["Data"]['resident_name'];
+            $this->ResidentAccount['Token']=$json_arr["Data"]['token'];
             Session::set('ResidentAccount',$this->ResidentAccount);
             $strCookie= $this->ResidentAccount['ResidentID']."\t".$this->ResidentAccount['AccountName']."\t".
                         $this->ResidentAccount['ResidentName']."\t". $this->ResidentAccount["Token"];
