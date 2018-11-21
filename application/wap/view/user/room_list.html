@@ -42,9 +42,41 @@
             {/switch}
         </div>
         <div class="room-action">
-            <a href="javascript:;" class="del-room">删除</a>
+            <a href="javascript:;" class="del-room" room-id="{$vo.room_id}">删除</a>
         </div>
     </div>
     {/volist}
 </div>
 {/if}
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+    $(function(){
+        $('.del-room').click(function(){
+            var room_id = $(this).attr('room-id');
+            layer.open({
+                content: '您确定要删除吗？'
+                ,btn: ['是', '否']
+                ,yes: function(index){
+                    myHttp.ajax({
+                        url: '/api/del_relation_room',
+                        data: {
+                            token: "{$token}",
+                            room_id: room_id
+                        },
+                        success: function(){
+                            myLayer.alert('删除成功');
+                            setTimeout(function(){
+                                location.reload();
+                            }, 2000);
+                        },
+                        error: function(res){
+                            myLayer.alert(res.ErrorMsg);
+                        }
+                    });
+                    layer.close(index);
+                }
+            });
+        });
+    });
+</script>

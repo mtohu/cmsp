@@ -158,6 +158,7 @@ class User extends Base
             $room_list = $return_res['Data'];
         }
 
+        $this->assign('token', $this->getToken());
         $this->assign('room_list', $room_list);
         return $this->fetch();
     }
