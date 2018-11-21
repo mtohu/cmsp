@@ -131,16 +131,48 @@ class User extends Base
     }
 
     /**
-     * 设置房间编号
+     * 房间列表
      */
-    public function setRoomNo()
+    public function roomList()
     {
         $head = [
             'left_nav' => [
                 'icon' => 'icon-fanhui',
                 'url' => url('User/userSet')
             ],
-            'title' => '房价编号',
+            'title' => '房号设置',
+            'right_btn' => [
+                'is_show' => true,
+                'btn_name' => '添加',
+                'url' => url('User/applyUserRoom')
+            ]
+        ];
+        $this->assign('head', $head);
+        //房间列表
+        $request_api = new RequestApi();
+        $request_api->api_action = 'my_room_list';
+        $request_api->params['token'] = $this->getToken();
+        $return_res = $request_api->request_ajax()->getData();
+        $room_list = [];
+        if($return_res['ErrorCode'] == 0){
+            $room_list = $return_res['Data'];
+        }
+
+        $this->assign('room_list', $room_list);
+        return $this->fetch();
+    }
+
+    /**
+     * 申请房间
+     */
+    public function applyUserRoom()
+    {
+        $head = [
+            'left_nav' => [
+                'icon' => 'icon-fanhui',
+                'url' => url('User/roomList')
+            ],
+            'title' => '申请绑定房间',
             'right_btn' => [
                 'is_show' => false,
                 'btn_name' => '',
@@ -148,6 +180,8 @@ class User extends Base
             ]
         ];
         $this->assign('head', $head);
+
+        $this->assign('token', $this->getToken());
         return $this->fetch();
     }
 
@@ -170,8 +204,7 @@ class User extends Base
         ];
         $this->assign('head', $head);
 
-        $resident_account = Session::get('ResidentAccount');
-        $this->assign('token', $resident_account['Token']);
+        $this->assign('token', $this->getToken());
         return $this->fetch();
     }
 

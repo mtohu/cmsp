@@ -40,13 +40,14 @@ class Manager extends Base
         //请求数据
         $request_api = new RequestApi();
         $request_api->api_action = 'repair_list';
-        $data = $request_api->request_ajax()->getData();
+        $request_api->params['token'] = $this->getToken();
+        $return_data = $request_api->request_ajax()->getData();
         $repair_list = [];
         if(isset($data['Data'])){
-            $repair_list = $data['Data'];
+            $repair_list = $return_data['Data'];
         }
-        $this->assign('repair_list', $repair_list);
 
+        $this->assign('repair_list', $repair_list);
         return $this->fetch();
     }
 

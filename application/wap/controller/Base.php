@@ -106,4 +106,13 @@ class Base extends Controller{
         return $this->redirect('wap/login/residentLogin');
     }
 
+    public function getToken()
+    {
+        $resident_account = Session::get('ResidentAccount');
+        if(isset($resident_account['Token'])){
+            return $resident_account['Token'];
+        }
+        return '';
+    }
+
 }
