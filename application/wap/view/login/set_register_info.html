@@ -156,7 +156,13 @@ $(function(){
                 url: "{:url('RequestApi/request_ajax')}",
                 data: post_data,
                 success: function(){
-                    location.href = "{:url('Index/index')}";
+                    myLayer.alert('注册成功');
+                    setTimeout(function(){
+                        location.href = "{:url('Index/index')}";
+                    }, 2000);
+                },
+                error: function(res){
+                    myLayer.alert(res.ErrorMsg);
                 }
             })
         }

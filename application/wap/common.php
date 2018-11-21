@@ -13,8 +13,8 @@ function request_data($url,$postData='',$headers=''){
     curl_setopt($curl,CURLOPT_RETURNTRANSFER,1);
     curl_setopt($curl, CURLOPT_HEADER, 0);
     curl_setopt($curl,CURLOPT_HTTPHEADER, $str);
-    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 3); //timeout on connect
-    curl_setopt($curl, CURLOPT_TIMEOUT, 5); //timeout on response
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30); //timeout on connect
+    curl_setopt($curl, CURLOPT_TIMEOUT, 30); //timeout on response
     if(is_array($postData)){
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);

@@ -134,7 +134,7 @@ class Login extends Controller {
         $head = [
             'left_nav' => [
                 'icon' => 'icon-fanhui',
-                'url' => url('Index/index')
+                'url' => url('Login/register')
             ],
             'title' => '填写校验码',
             'right_btn' => [

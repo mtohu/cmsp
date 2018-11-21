@@ -13,7 +13,7 @@
     }
 </style>
 <div class="form-item check-desc">
-    <span style="font-size: 12px">我们已发送了验证码到您的手机</span>
+    <span id="send-txt" style="font-size: 12px">请点击发送验证码</span>
     <span>{$hide_phone}</span>
 </div>
 <div class="form-item">
@@ -37,7 +37,8 @@
                 phone: "{$phone}",
                 verifyTxt: '获取验证码',
                 secondInit: 0,
-                second: 60
+                second: 60,
+                sendTxt: '请点击发送验证码'
             },
             init: function(){
                 var that = this;
@@ -71,7 +72,6 @@
                 if(!that.checkSendAuth()){
                     return;
                 }
-                that.resetVerifyTxt();
                 myHttp.ajax({
                     url: "{:url('RequestApi/request_ajax')}",
                     data: {
@@ -80,7 +80,8 @@
                         type: 1
                     },
                     success: function(){
-
+                        that.resetVerifyTxt();
+                        $('#send-txt').val('我们已发送了验证码到您的手机');
                     },
                     error: function(res){
                         myLayer.alert(res.ErrorMsg);

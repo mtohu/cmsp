@@ -1,13 +1,18 @@
 <?php
 namespace app\wap\logic;
 
+use app\wap\controller\RequestApi;
 use think\Db;
 
 class Banner
 {
     public static function getBanners()
     {
-        $banners = Db::name("cmp_banner")->where([['banner_state','=',1], ['show_type','=',1]])->order("order_sort desc,id desc")->select();
+        $request_api = new RequestApi();
+        $request_api->api_action = 'banner_list';
+        $return_data = $request_api->request_ajax()->getData();
+
+        $banners = $return_data['Data'];
         if(count($banners) == 0){
             $banners = [
                 [

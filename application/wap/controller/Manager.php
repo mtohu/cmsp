@@ -42,7 +42,7 @@ class Manager extends Base
         $request_api->api_action = 'repair_list';
         $return_data = $request_api->request_ajax()->getData();
         $repair_list = [];
-        if(isset($data['Data'])){
+        if(isset($return_data['Data'])){
             $repair_list = $return_data['Data'];
         }
 
@@ -68,6 +68,16 @@ class Manager extends Base
             ]
         ];
         $this->assign('head', $head);
+        //报修类型
+        $request_api = new RequestApi();
+        $request_api->api_action = 'add_repair_present';
+        $return_data = $request_api->request_ajax()->getData();
+        $repair_type = [];
+        if(isset($return_data['Data']) && isset($return_data['Data']['repair_type'])){
+            $repair_type = $return_data['Data']['repair_type'];
+        }
+
+        $this->assign('repair_type', $repair_type);
         return $this->fetch();
     }
 

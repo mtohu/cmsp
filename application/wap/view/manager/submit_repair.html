@@ -7,7 +7,7 @@
         line-height: 30px;
     }
     .repair-type{
-        margin-top: 15px;
+        margin: 15px 0 15px 0;
         overflow: hidden;
     }
     .repair-type .type-item{
@@ -18,13 +18,13 @@
         border-radius: 100%;
         margin-right: 10px;
     }
-    .repair-type .type-item i{
-        line-height: 24px;
-        display: block;
-        text-align: center;
-    }
+    /*.repair-type .type-item i{*/
+        /*line-height: 24px;*/
+        /*display: block;*/
+        /*text-align: center;*/
+    /*}*/
     .repair-type .type-item span{
-        line-height: 24px;
+        line-height: 56px;
         display: block;
         text-align: center;
         font-size: 10px;
@@ -60,22 +60,13 @@
         请选择报修类型并输入详细信息：
     </div>
     <div class="repair-type">
-        <div class="type-item" repair-type="1">
-            <i class="iconfont icon-my-home"></i>
-            <span>居家报修</span>
+        {if count($repair_type) > 0}
+        {volist name="repair_type" id="vo"}
+        <div class="type-item" repair-type="{$vo.id}">
+            <span>{$vo.type_name}</span>
         </div>
-        <div class="type-item" repair-type="2">
-            <i class="iconfont icon-baohanxiaoqusvg"></i>
-            <span>小区报修</span>
-        </div>
-        <div class="type-item" repair-type="3">
-            <i class="iconfont icon-yiliaoweisheng-"></i>
-            <span>小区卫生</span>
-        </div>
-        <div class="type-item" repair-type="4">
-            <i class="iconfont icon-lvhua"></i>
-            <span>小区绿化</span>
-        </div>
+        {/volist}
+        {/if}
     </div>
     <div class="repair-desc">
         <textarea name="" placeholder="请描述报修内容" id="repair-desc"></textarea>
@@ -136,7 +127,13 @@
                         img_arr: []
                     },
                     success: function(){
-                        location.href = "{:url('Manager/repairList')}";
+                        myLayer.alert('提交成功');
+                        setTimeout(function(){
+                            location.href = "{:url('Manager/repairList')}";
+                        }, 2000);
+                    },
+                    error: function(res){
+                        myLayer.alert(res.ErrorMsg);
                     }
                 })
             }
