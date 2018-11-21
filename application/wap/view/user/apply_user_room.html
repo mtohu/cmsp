@@ -1,0 +1,90 @@
+{include file="public/head" /}
+<style>
+    .room-item{
+        padding: 10px 15px;
+        line-height: 30px;
+    }
+    .room-content{
+        text-align: right;
+    }
+</style>
+<div class="room-item">
+    <div class="room-label">
+        房间号
+    </div>
+    <div class="room-content">
+        <select name="">
+            <option value="">阳光</option>
+        </select>
+        小区
+        <select name="">
+            <option value="">1</option>
+        </select>
+        栋
+        <select name="">
+            <option value="">1</option>
+        </select>
+        单元
+        <select name="">
+            <option value="">101</option>
+            <option value="">102</option>
+        </select>
+    </div>
+</div>
+<div class="room-item">
+    <div class="room-label">
+        房间类型
+    </div>
+    <div class="room-content">
+            <select id="resident-type">
+                <option value="1">房屋所有者</option>
+                <option value="2">房屋所有者家人</option>
+                <option value="3">租客</option>
+            </select>
+    </div>
+</div>
+<div class="form-submit">
+    <input type="button" value="提交" id="apply-submit" />
+</div>
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+    $(function(){
+        var apply = {
+            data: {
+                token: "{$token}",
+                roomId: 4,
+                residentType: 1,
+            },
+            checkData: function(){
+                var that = this;
+
+            },
+            submit: function(){
+                var that = this;
+                that.data.residentType = $('#resident-type').val();
+                console.log(that.data.residentType);
+                myHttp.ajax({
+                    url: '/api/apply_relation_room',
+                    data: {
+                        token: that.data.token,
+                        room_id: that.data.roomId,
+                        resident_type: that.data.residentType
+                    },
+                    success: function(){
+                        myLayer.alert('提交申请成功，请耐心等待');
+                        setTimeout(function(){
+                            location.href = "{:url('User/roomList')}";
+                        }, 2000);
+                    },
+                    error: function(res){
+                        myLayer.alert(res.ErrorMsg);
+                    }
+                });
+            }
+        };
+        $('#apply-submit').click(function(){
+            apply.submit();
+        });
+    });
+</script>
