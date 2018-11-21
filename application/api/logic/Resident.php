@@ -121,7 +121,7 @@ class Resident extends Base
             $room_ids[]=$v['room_id'];
         }
         $residents = Db::name("cmp_resident_room")->alias('rr')
-                   ->field("rr.room_id,rr.resident_id,rr.resident_type,r.name,r.uphone,rr.is_verified,rr.update_date")
+                   ->field("rr.room_id,rr.resident_id,rr.resident_type,r.name,r.uphone,r.phone,rr.is_verified,rr.update_date")
                    ->leftJoin("cmp_resident r","r.id = rr.resident_id")
                    ->where([['rr.room_id','in',$room_ids],['rr.resident_type','in',[2,3]]])
                    ->order("id desc")
