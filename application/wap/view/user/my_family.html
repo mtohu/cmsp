@@ -1,1 +1,58 @@
 {include file="public/head" /}
+<style>
+    .no-member{
+        line-height: 160px;
+        text-align: center;
+        color: red;
+        font-size: 16px;
+    }
+    .member-item{
+        padding: 5px 15px;
+        line-height: 30px;
+        overflow: hidden;
+        border-bottom: 1px solid #ccc;
+    }
+    .member-item .resident-type{
+        font-size: 12px;
+        font-weight: bold;
+        float: right;
+        color: green;
+    }
+    .member-item .other-info .phone{
+        float: left;
+    }
+    .member-item .other-info .user-phone{
+        float: right;
+    }
+</style>
+{if count($members_list) == 0}
+<div class="no-member">
+    您还不是房主，点击提交申请
+</div>
+<div class="form-submit">
+    <input type="button" value="申请" />
+</div>
+{/if}
+{if count($members_list) > 0}
+<div class="member-list">
+    {volist name="members_list" id="vo"}
+    <div class="member-item">
+        <div class="member-info">
+            <span class="member-name">{$vo.name}</span>
+            <span class="resident-type">
+                {switch $vo['resident_type'] }
+                {case 1}<div class="resident-type">所有者</div>{/case}
+                {case 2}<div class="resident-type">家属</div>{/case}
+                {case 3}<div class="resident-type">租客</div>{/case}
+                {default /}<div class="resident-type">未知</div>
+                {/switch}
+            </span>
+        </div>
+        <div class="other-info">
+            <span class="phone">{$vo.phone}</span>
+            <span class="user-phone">{$vo.uphone}</span>
+        </div>
+    </div>
+    {/volist}
+</div>
+{/if}

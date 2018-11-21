@@ -111,7 +111,7 @@ class Resident extends Base
         }
         $resident_rooms=Db::name("cmp_resident_room")->where([['resident_id','=',$resident_id],['resident_type','=',1]
                       ,['is_verified','=',1]])->select();
-        if(!isset($resident[0])){
+        if(!isset($resident_rooms[0])){
             $this->error_data['ErrorCode'] = 1;
             $this->error_data['ErrorMsg'] = "不是房主";
             return $this->error_data;
@@ -120,13 +120,14 @@ class Resident extends Base
         foreach ($resident_rooms as $k=>$v){
             $room_ids[]=$v['room_id'];
         }
-        $residents = Db::name("cmp_resident_room")->alias('rr')
-                   ->field("rr.room_id,rr.resident_id,rr.resident_type,r.name,r.uphone,r.phone,rr.is_verified,rr.update_date")
-                   ->leftJoin("cmp_resident r","r.id = rr.resident_id")
-                   ->where([['rr.room_id','in',$room_ids],['rr.resident_type','in',[2,3]]])
-                   ->order("id desc")
-                   ->limit(1000)
-                   ->select();
+        $residents = Db::name("cmp_resident_room")
+            ->alias('rr')
+            ->field("rr.room_id,rr.resident_id,rr.resident_type,r.name,r.uphone,r.phone,rr.is_verified,rr.update_date")
+            ->leftJoin("cmp_resident r","r.id = rr.resident_id")
+            ->where([['rr.room_id','in',$room_ids],['rr.resident_type','in',[2,3]]])
+            ->order("rr.id desc")
+            ->limit(1000)
+            ->select();
         foreach ($residents as $kk => &$vv){
             $vv['resident_type_name']=resident_type($vv['resident_type']);//房屋类型
         }

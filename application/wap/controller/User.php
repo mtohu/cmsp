@@ -64,6 +64,17 @@ class User extends Base
             ]
         ];
         $this->assign('head', $head);
+        //获取数据
+        $request_api = new RequestApi();
+        $request_api->api_action = 'resident_members';
+        $request_api->params['token'] = $this->getToken();
+        $return_data = $request_api->request_ajax()->getData();
+        $members_list = [];
+        if(isset($return_data['ErrorCode']) && $return_data['ErrorCode'] == 0){
+            $members_list = $return_data['Data'];
+        }
+
+        $this->assign('members_list', $members_list);
         return $this->fetch();
     }
 
