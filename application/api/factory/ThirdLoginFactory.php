@@ -1,6 +1,7 @@
 <?php
 namespace app\api\factory;
 use app\api\warpper\WeixinLoginWarpper;
+use think\facade\Config;
 use errors\ErrorException;
 /**
  * Created by IntelliJ IDEA.
@@ -29,7 +30,8 @@ class ThirdLoginFactory
         }
         switch (self::$sns_type){
             case 1:
-                return new WeixinLoginWarpper($input);
+                $options = Config::get("wechat.")[Config::get("wechat.default_options_name")];
+                return new WeixinLoginWarpper(['option'=>$options]);
                 break;
         }
         return null;

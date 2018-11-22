@@ -61,7 +61,7 @@ class Login extends Base
                 $return_data['account_name']=$resident['account'];
                 $return_data['resident_name']=$resident['name'];
             } else {
-                $userdata = ['name'=>$userInfo['nickname'],'face_img'=>$userInfo['headimgurl'],'create_date'=>date('Y-m-d H:i:s',now_time()),
+                $userdata = ['name'=>'','face_img'=>$userInfo['headimgurl'],'create_date'=>date('Y-m-d H:i:s',now_time()),
                            'login_time'=>now_time(),'login_ip'=>$ip,'login_num'=>1];
                 $auser_insert=Db::name('cmp_resident')->insertGetId($userdata);
                 if(!$auser_insert){
