@@ -5,7 +5,7 @@ use think\facade\Cookie;
 use think\facade\Session;
 use think\facade\Url;
 class Base extends Controller{
-    public $action_no = array("resident_login","third_resident_login");//这里填写不需要验证登录调的接口
+    public $action_no = array("resident_login","third_resident_login","register_resient");//这里填写不需要验证登录调的接口
     public $error_data=['ErrorCode'=>1,'ErrorMsg'=>'','ErrorSql'=>'','Data'=>[]];
     public $nopage=array("cmplogin","cmpsuccess","loginout");//这里填写不需要验证登录能打开的页面
     public $ResidentAccount=[];
