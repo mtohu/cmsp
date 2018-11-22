@@ -24,6 +24,13 @@
     }
     /******************** top end *******************/
     /******************** user-info start *******************/
+    #change-face-img{
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 100;
+    }
     .user-info{
         width: calc(100% - 30px);
         margin: 0 auto;
@@ -97,7 +104,8 @@
 </div>
 <div class="user-info">
     <div class="face-img">
-        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1542878685250&di=710d3294da184336a7e79af86f782b37&imgtype=0&src=http%3A%2F%2Fimg5q.duitang.com%2Fuploads%2Fitem%2F201502%2F08%2F20150208135955_M55QZ.jpeg" alt="" />
+        <input type="file" id="change-face-img" />
+        <img src="{$user_info.face_img}" alt="" />
     </div>
     <div class="detail-info">
         <div class="user-name">
@@ -156,3 +164,44 @@
     </a>
 </div>
 {include file="public/bottom_nav" /}
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+    $(function(){
+        var upload_face_img = {
+            toBase64: function(file, callBack){
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = function ()
+                {
+                    callBack(reader.result);
+                };
+            },
+            upload: function(){
+                var that = this;
+                var fileList = document.getElementById("change-face-img").files;
+                for (var i = 0; i < fileList.length; i++) {
+                    that.toBase64(fileList[i], function(base64_txt){
+                        myHttp.ajax({
+                            url: "{:url('User/changeFaceImg')}",
+                            data: {
+                                base64_txt: base64_txt
+                            },
+                            success: function(res){
+                                myLayer.alert("修改头像成功");
+                                $('.face-img').children('img').attr('src', res.Data.face_img);
+                            },
+                            error: function(res){
+                                myLayer.alert(res.ErrorMsg);
+                            }
+                        })
+                    });
+                    return;
+                }
+            }
+        };
+        $('#change-face-img').change(function(){
+            upload_face_img.upload();
+        });
+    });
+</script>

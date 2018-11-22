@@ -1,6 +1,7 @@
 <?php
 namespace app\wap\controller;
 
+use app\wap\logic\Img;
 use think\Controller;
 use think\facade\Session;
 
@@ -25,14 +26,66 @@ class User extends Base
             'name' => $this->ResidentAccount['ResidentName'],
             'identification' => '',
             'uphone' => '',
-            'phone' => '111'
+            'phone' => '111',
+            'face_img' => ''
         ];
         if(isset($return_data['ErrorCode']) && $return_data['ErrorCode'] == 0){
             $user_info = $return_data['Data'];
         }
+        if($user_info['face_img'] == ''){
+            $user_info['face_img'] = '/static/img/face-img.jpg';
+        }
 
         $this->assign('user_info', $user_info);
         return $this->fetch();
+    }
+
+    /**
+     * 修改头像
+     */
+    public function changeFaceImg()
+    {
+        $base64_txt = input('base64_txt');
+        if(empty($base64_txt)){
+            $this->error_data['ErrorCode'] = 1;
+            $this->error_data['ErrorMsg'] = '上传的图片错误';
+            return $this->print_result($this->error_data);
+        }
+        if(preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64_txt, $result)){
+            $type = $result[2];
+            if(!in_array($type,array('pjpeg','jpeg','jpg','gif','bmp','png'))){
+                //文件类型错误
+                $this->error_data['ErrorCode'] = 1;
+                $this->error_data['ErrorMsg'] = '上传的图片类型错误';
+                return $this->print_result($this->error_data);
+            }
+        }else{
+            //文件错误
+            $this->error_data['ErrorCode'] = 1;
+            $this->error_data['ErrorMsg'] = '上传的图片错误';
+            return $this->print_result($this->error_data);
+        }
+        $img_cls = new Img(150, 150);
+        $img_url = $img_cls->createNewImg($base64_txt);
+        if(!empty($img_url)){
+            //获取数据
+            $request_api = new RequestApi();
+            $request_api->api_action = 'set_resident';
+            $request_api->params['face_img'] = $img_url;
+            $return_data = $request_api->request_ajax()->getData();
+            if(isset($return_data['ErrorCode']) && $return_data['ErrorCode'] != 0){
+                $this->error_data['ErrorCode'] = 1;
+                $this->error_data['ErrorMsg'] = '修改失败';
+                return $this->print_result($this->error_data);
+            }
+
+            $this->error_data['ErrorCode'] = 0;
+            $this->error_data['Data']['face_img'] = $img_url;
+            return $this->print_result($this->error_data);
+        }
+        $this->error_data['ErrorCode'] = 1;
+        $this->error_data['ErrorMsg'] = '修改失败';
+        return $this->print_result($this->error_data);
     }
 
     /**

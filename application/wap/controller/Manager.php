@@ -1,6 +1,7 @@
 <?php
 namespace app\wap\controller;
 
+use app\wap\logic\Img;
 use think\Controller;
 use app\wap\logic\Banner;
 
@@ -58,32 +59,28 @@ class Manager extends Base
         if($this->request->isAjax()){
             $imgs = input('imgs/a');
             $repair_imgs = [];
+            $img_cls = new Img();
             if(!empty($imgs) && count($imgs) > 0){
-                $date = date('Ymd');
-                $up_dir = '../uploads/' . $date . '/';//存放在当前目录的upload文件夹下
-                if(!file_exists($up_dir)){
-                    mkdir($up_dir, 0777, true);
-                }
                 foreach($imgs as $k => $v){
                     if(preg_match('/^(data:\s*image\/(\w+);base64,)/', $v, $result)){
                         $type = $result[2];
-                        if(in_array($type,array('pjpeg','jpeg','jpg','gif','bmp','png'))){
-                            $file_name = md5(date('Y-m-d H:i:s') . rand(0, 999999)) . '.'.$type;
-                            $new_file = $up_dir . $file_name;
-                            if(file_put_contents($new_file, base64_decode(str_replace($result[1], '', $v)))){
-                                $repair_imgs[] = '/uploads/' . $date . '/' . $file_name;
-                            }
-                        }else{
+                        if(!in_array($type,array('pjpeg','jpeg','jpg','gif','bmp','png'))){
                             //文件类型错误
                             $this->error_data['ErrorCode'] = 1;
-                            $this->error_data['ErrorMsg'] = '图片上传类型错误';
+                            $this->error_data['ErrorMsg'] = '上传的第' . ($k + 1) . '张图片类型错误';
                             return $this->print_result($this->error_data);
                         }
                     }else{
                         //文件错误
                         $this->error_data['ErrorCode'] = 1;
-                        $this->error_data['ErrorMsg'] = '上传图片错误';
+                        $this->error_data['ErrorMsg'] = '上传的第' . ($k + 1) . '张图片错误';
                         return $this->print_result($this->error_data);
+                    }
+                }
+                foreach($imgs as $k => $v){
+                    $img_url = $img_cls->createNewImg($v);
+                    if(!empty($img_url)){
+                        $repair_imgs[] = $img_url;
                     }
                 }
             }

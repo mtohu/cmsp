@@ -86,11 +86,11 @@ class Resident extends Base
         $resident['resident_name']=$resident['name'];
         $resident['account_name']=$resident['account'];
         $resident['resident_id']=$resident_id;
-        if(!empty($resident['face_img'])){
-            if(strpos(strtolower($resident['face_img']),"http") === false){
-                $resident['face_img']=get_newpic_url($resident['face_img']);
-            }
-        }
+//        if(!empty($resident['face_img'])){
+//            if(strpos(strtolower($resident['face_img']),"http") === false){
+//                $resident['face_img']=get_newpic_url($resident['face_img']);
+//            }
+//        }
         if(!empty($resident['identification'])){
             $resident['identification']=substr_replace($resident['identification'],'****',4,-4);
         }
@@ -171,6 +171,7 @@ class Resident extends Base
         $phone = isset($input['phone'])?trim($input['phone']):"";
         $verify_code   = isset($input['verify_code'])?$input['verify_code']:"";
         $name = isset($input['name'])?trim($input['name']):"";
+        $face_img = isset($input['face_img'])?trim($input['face_img']):"";
         $identification = isset($input['identification'])?trim($input['identification']) : "";
         $is_maintenance_staff = isset($input['is_maintenance_staff'])?intval($input['is_maintenance_staff']) :-1;
         try{
@@ -184,6 +185,9 @@ class Resident extends Base
             }
             if(!empty($name)){
                 $saveData['name']=$name;
+            }
+            if(!empty($face_img)){
+                $saveData['face_img']=$face_img;
             }
             if(!empty($is_maintenance_staff) && $is_maintenance_staff != -1){
                 $saveData['is_maintenance_staff']=$is_maintenance_staff;
