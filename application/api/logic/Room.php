@@ -45,9 +45,9 @@ class Room extends Base
     public function myRoomList($input){
         $resident_id = isset($input['resident_id']) ? $input['resident_id']:0;
         $resident_rooms = Db::name("cmp_resident_room")->alias('rr')
-            ->field("rr.id as resident_room_id,rr.room_id,rr.resident_type,r.region,r.building,r.unit,r.room_no,r.lat,r.lng,r.coord_type,rr.update_date")
+            ->field("rr.id as resident_room_id,rr.room_id,rr.resident_type,rr.is_verified,r.region,r.building,r.unit,r.room_no,r.lat,r.lng,r.coord_type,rr.update_date")
             ->leftJoin("cmp_room r","r.id = rr.room_id")
-            ->where([['rr.resident_id','=',$resident_id],['rr.is_verified','=',1],['r.room_state','=',1]])
+            ->where([['rr.resident_id','=',$resident_id],['rr.is_verified','=',[0,1]],['r.room_state','=',1]])
             ->order("rr.id desc")
             ->limit(100)
             ->select();
