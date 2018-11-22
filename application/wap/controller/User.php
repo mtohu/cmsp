@@ -303,6 +303,7 @@ class User extends Base
         $user_info = [
             'name' => '',
             'identification' => '',
+            'identification_view' => '',
             'uphone' => ''
         ];
         if(isset($return_data['Data']) && isset($return_data['Data']['id'])){

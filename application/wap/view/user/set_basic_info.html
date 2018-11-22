@@ -8,7 +8,7 @@
 <div class="form-item">
     <div class="form-label">身份证号</div>
     <div class="form-input">
-        <input type="text" value="{$user_info.identification}" placeholder="请输入身份证号" id="id-card-no" />
+        <input type="text" value="{$user_info.identification_view}" placeholder="请输入身份证号" id="id-card-no" />
     </div>
 </div>
 <div class="form-item">
@@ -29,15 +29,12 @@
                 idCardNo: '',
                 name: '',
                 userPhone: '',
+                idCardNoChange: false
             },
             checkData: function(){
                 var that = this;
                 if(that.data.name == ''){
                     myLayer.alert('姓名不能为空');
-                    return false;
-                }
-                if(that.data.idCardNo == ''){
-                    myLayer.alert('身份证号不能为空');
                     return false;
                 }
                 if(that.data.userPhone == ''){
@@ -48,7 +45,6 @@
             },
             submit: function(){
                 var that = this;
-                that.data.idCardNo = $('#id-card-no').val();
                 that.data.userPhone = $('#user-phone').val();
                 that.data.name = $('#name').val();
                 if(!that.checkData()){
@@ -57,10 +53,12 @@
                 var post_data = {
                     api_action: 'set_resident',
                     resident_id: that.data.userId,
-                    identification: that.data.idCardNo,
                     uphone: that.data.userPhone,
                     name: that.data.name,
                 };
+                if(that.data.idCardNoChange){
+                    post_data.identification = $('#id-card-no').val();
+                }
 
                 myHttp.ajax({
                     url: "{:url('RequestApi/request_ajax')}",
@@ -68,12 +66,15 @@
                     success: function(){
                         myLayer.alert('修改成功');
                         setTimeout(function(){
-                            location.href = "{:url('User/userSet')}";
+                            // location.href = "{:url('User/userSet')}";
                         }, 2000);
                     }
                 })
             }
         };
+        $('#id-card-no').change(function(){
+            set_info.data.idCardNoChange = true;
+        });
         $('#set-info').click(function(){
             set_info.submit();
         });
