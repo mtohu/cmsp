@@ -50,6 +50,10 @@
                 if(!that.checkData()){
                     return;
                 }
+                if($('#id-card-no').val() == ''){
+                    myLayer.alert('身份证号不能为空');
+                    return false;
+                }
                 var post_data = {
                     api_action: 'set_resident',
                     resident_id: that.data.userId,
@@ -72,6 +76,9 @@
                 })
             }
         };
+        $('#id-card-no').focus(function(){
+            $(this).val('');
+        });
         $('#id-card-no').change(function(){
             set_info.data.idCardNoChange = true;
         });
