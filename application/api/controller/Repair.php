@@ -51,15 +51,14 @@ class Repair extends  Base
     }
     /******维修列表******/
     public function repairList($input){
-        $data = array();
-        $data['resident_id'] = isset($input['token_resident_id']) ? $input['token_resident_id'] : 0;
-        if(empty($data['resident_id'])){
+        $input['resident_id'] = isset($input['token_resident_id']) ? $input['token_resident_id'] : 0;
+        if(empty($input['resident_id'])){
             $this->error_data['ErrorCode'] = 1;
             $this->error_data['ErrorMsg'] = "未登录无法获取信息";
             return $this->print_result($this->error_data);
         }
         $login = Controller('Repair', 'logic');
-        $res = $login->repairList($data);
+        $res = $login->repairList($input);
         return $this->print_result($res);
     }
 }
