@@ -40,7 +40,7 @@
 {if count($members_list) > 0}
 <div class="member-list">
     {volist name="members_list" id="vo"}
-    <div class="member-item" room-id="{$vo.room_id}" cover-resident-id="{$vo.resident_id}">
+    <div class="member-item">
         <div class="member-info">
             <span class="member-name">{$vo.name}</span>
             <span class="resident-type">
@@ -60,11 +60,11 @@
             {$vo.phone}
             {/if}
             </span>
-            <div class="is-verified">
             {if $vo.is_verified == 0}
+            <div class="is-verified" room-id="{$vo.room_id}" cover-resident-id="{$vo.resident_id}">
             审核
-            {/if}
             </div>
+            {/if}
         </div>
     </div>
     {/volist}
@@ -74,7 +74,7 @@
 {include file="plug_js/layer" /}
 <script>
     $(function(){
-        $('.member-item').click(function(){
+        $('.is-verified').click(function(){
             var room_id = $(this).attr('room-id');
             var cover_resident_id = $(this).attr('cover-resident-id');
             layer.open({
