@@ -30,6 +30,29 @@
         position: relative;
         top: -30px;
         background-color: #fff;
+        overflow: hidden;
+    }
+    .user-info .face-img{
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        float: left;
+    }
+    .user-info .face-img img{
+        width: 100%;
+        height: 100%;
+    }
+    .user-info .detail-info{
+        float: left;
+        line-height: 24px;
+        padding: 6px 0 6px 10px;
+    }
+    .user-info .detail-info .set-detail{
+        font-size: 12px;
+    }
+    .user-info .detail-info .set-detail span{
+        font-weight: bold;
     }
     .menu-item{
         padding: 0 15px;
@@ -51,7 +74,22 @@
     </div>
 </div>
 <div class="user-info">
-    {$resident_account.ResidentName}
+    <div class="face-img">
+        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1542878685250&di=710d3294da184336a7e79af86f782b37&imgtype=0&src=http%3A%2F%2Fimg5q.duitang.com%2Fuploads%2Fitem%2F201502%2F08%2F20150208135955_M55QZ.jpeg" alt="" />
+    </div>
+    <div class="detail-info">
+        <div class="user-name"><a href="">{$user_info.name}</a></div>
+        <div class="set-detail">
+            <a href="{:url('User/setBasicInfo')}?source=User__index">
+                基础设置：
+            {if empty($user_info['name'])}
+                <span style="color:red;">未设置</span>
+            {else/}
+                <span style="color: green;">已设置</span>
+            {/if}
+            </a>
+        </div>
+    </div>
 </div>
 <div class="menu-item">
     <a href="{:url('Manager/feeList')}">

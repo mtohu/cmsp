@@ -17,7 +17,17 @@ class User extends Base
             'user' => 'nav-item-active'
         ];
         $this->assign('nav_item', $nav_item);
-        $this->assign('resident_account', $this->ResidentAccount);
+        //用户信息
+        $request_api = new RequestApi();
+        $request_api->api_action = 'resident_info';
+        $return_data = $request_api->request_ajax()->getData();
+        $user_info = [
+            'name' => $this->ResidentAccount['ResidentName']
+        ];
+        if(isset($return_data['ErrorCode']) && $return_data['ErrorCode'] == 0){
+            $user_info = $return_data['Data'];
+        }
+        $this->assign('user_info', $user_info);
         return $this->fetch();
     }
 
@@ -197,10 +207,15 @@ class User extends Base
      */
     public function setBasicInfo()
     {
+        $source = input('source');
+        $back_url = url('User/userSet');
+        if(!empty($source)){
+            $back_url = url(str_replace('__', '/',$source));
+        }
         $head = [
             'left_nav' => [
                 'icon' => 'icon-fanhui',
-                'url' => url('User/userSet')
+                'url' => $back_url
             ],
             'title' => '基础信息',
             'right_btn' => [
