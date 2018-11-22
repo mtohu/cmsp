@@ -179,9 +179,9 @@ class Login extends Base
             $this->error_data['ErrorMsg'] = "帐号被加入黑名单,请联系客服人员";
             return $this->error_data;
         }
-        $expiresAt = now_time() + 3600 * 7;
+        $expiresAt = now_time() + 3600 * 24 * 7;
         $token_data = [
-            'expires_in' => 3600 * 7,
+            'expires_in' => 3600 * 24 * 7,
             'ip' => request()->ip(),
             'resident_id' => $login_info['id'],
             'created_at' => now_time(),
@@ -240,9 +240,9 @@ class Login extends Base
             if(!$rid){
                 throw new ErrorException("注册失败");
             }
-            $expiresAt = now_time() + 3600 * 7;
+            $expiresAt = now_time() + 3600 * 24 * 7;
             $token_data = [
-                'expires_in' => 3600 * 7,
+                'expires_in' => 3600 * 24 * 7,
                 'ip' => $ip,
                 'resident_id' => $rid,
                 'created_at' => now_time(),
@@ -310,9 +310,9 @@ class Login extends Base
             if(!$res){
                 throw new ErrorException("更新验证码状态错误");
             }
-            $expiresAt = now_time() + 3600 * 7;
+            $expiresAt = now_time() + 3600 * 24 * 7;
             $token_data = [
-                'expires_in' => 3600 * 7,
+                'expires_in' => 3600 * 24 * 7,
                 'ip' => $ip,
                 'resident_id' => $rpuser['id'],
                 'created_at' => now_time(),
