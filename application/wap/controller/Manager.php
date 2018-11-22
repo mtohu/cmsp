@@ -56,32 +56,29 @@ class Manager extends Base
     public function submitRepair()
     {
         if($this->request->isAjax()){
-            $imgs = input('imgs');
+            $imgs = input('imgs/a');
+            $repair_imgs = [];
             if(!empty($imgs) && count($imgs) > 0){
-                $up_dir = ROOT_PATH . './upload/';//存放在当前目录的upload文件夹下
+                $date = date('Ymd');
+                $up_dir = '../uploads/' . $date . '/';//存放在当前目录的upload文件夹下
                 if(!file_exists($up_dir)){
-                    mkdir($up_dir,0777);
+                    mkdir($up_dir, 0777, true);
                 }
                 foreach($imgs as $k => $v){
                     if(preg_match('/^(data:\s*image\/(\w+);base64,)/', $v, $result)){
                         $type = $result[2];
                         if(in_array($type,array('pjpeg','jpeg','jpg','gif','bmp','png'))){
-
-//                            $new_file = $up_dir.date('YmdHis_').'.'.$type;
-//                            if(file_put_contents($new_file, base64_decode(str_replace($result[1], '', $base64_img)))){
-//                                $img_path = str_replace('../../..', '', $new_file);
-//                                echo '图片上传成功</br>![](' .$img_path. ')';
-//                            }else{
-//                                echo '图片上传失败</br>';
-//
-//                            }
+                            $file_name = md5(date('Y-m-d H:i:s') . rand(0, 999999)) . '.'.$type;
+                            $new_file = $up_dir . $file_name;
+                            if(file_put_contents($new_file, base64_decode(str_replace($result[1], '', $v)))){
+                                $repair_imgs[] = '/' . $date . '/' . $file_name;
+                            }
                         }else{
                             //文件类型错误
                             $this->error_data['ErrorCode'] = 1;
                             $this->error_data['ErrorMsg'] = '图片上传类型错误';
                             return $this->print_result($this->error_data);
                         }
-
                     }else{
                         //文件错误
                         $this->error_data['ErrorCode'] = 1;
@@ -90,7 +87,19 @@ class Manager extends Base
                     }
                 }
             }
+            //报修类型
+            $request_api = new RequestApi();
+            $request_api->api_action = 'save_repair';
+            $request_api->params['repair_type_id'] = input('repair_type_id');
+            unset($request_api->params['imgs']);
+            $request_api->params['content'] = input('content');
+            $request_api->params['img_arr'] = json_encode($repair_imgs);
+            $return_data = $request_api->request_ajax()->getData();
+            if($return_data['ErrorCode'] != 0){
+                return $this->print_result($return_data);
+            }
 
+            $this->error_data['ErrorCode'] = 0;
             return $this->print_result($this->error_data);
         }
         $head = [

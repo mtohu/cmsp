@@ -28,7 +28,7 @@ class Repair extends  Base
         $data['resident_id'] = isset($input['token_resident_id']) ? $input['token_resident_id'] : 0;
         $data['repair_type_id'] = isset($input['repair_type_id'])?intval($input['repair_type_id']):0;
         $data['content'] = isset($input['content'])?trim($input['content']):"";
-        $data['img_arr'] = isset($input['img_arr'])?$input['img_arr']:[];
+        $data['img_arr'] = isset($input['img_arr'])?json_decode($input['img_arr'], true):[];
         if(empty($data['resident_id'])){
             $this->error_data['ErrorCode'] = 1;
             $this->error_data['ErrorMsg'] = "未登录无法获取信息";

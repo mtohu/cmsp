@@ -123,9 +123,6 @@
                 <i class="iconfont icon-tianjia"></i>
                 <input type="file" id="select-img" />
             </div>
-            <div class="img-item">
-                <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1543460953&di=9fc3c9dea74167fb1de6468913247c09&imgtype=jpg&er=1&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimgad%2Fpic%2Fitem%2F34fae6cd7b899e51ec89f83949a7d933c8950d9c.jpg" alt="">
-            </div>
         </div>
     </div>
 </div>
@@ -171,39 +168,23 @@
                 if(!that.checkData()){
                     return;
                 }
-                // myHttp.ajax({
-                //     url: "{:url('RequestApi/request_ajax')}",
-                //     data: {
-                //         api_action: 'save_repair',
-                //         token: myCookie.get('token'),
-                //         repair_type_id: that.data.repairType,
-                //         content: that.data.repairDesc,
-                //         img_arr: []
-                //     },
-                //     success: function(){
-                //         myLayer.alert('提交成功');
-                //         setTimeout(function(){
-                //             location.href = "{:url('Manager/repairList')}";
-                //         }, 2000);
-                //     },
-                //     error: function(res){
-                //         myLayer.alert(res.ErrorMsg);
-                //     }
-                // })
-                console.log(repair_img.data.imgs);
+                layer.open({type: 2});
                 myHttp.ajax({
                     url: "",
                     data: {
-                        // api_action: 'save_repair',
-                        // token: myCookie.get('token'),
                         repair_type_id: that.data.repairType,
                         content: that.data.repairDesc,
                         imgs: repair_img.data.imgs
                     },
                     success: function(){
-
+                        layer.closeAll();
+                        myLayer.alert('提交成功');
+                        setTimeout(function(){
+                            location.href = "{:url('Manager/repairList')}";
+                        }, 200);
                     },
                     error: function(res){
+                        layer.closeAll();
                         myLayer.alert(res.ErrorMsg);
                     }
                 })
@@ -223,8 +204,6 @@
                 reader.readAsDataURL(file);
                 reader.onloadend = function ()
                 {
-                    //输出结果
-                    // console.log(reader.result);
                     that.data.imgs.push(reader.result);
                 };
             },
@@ -235,7 +214,6 @@
                 for (var i = 0; i < fileList.length; i++) {
                     var imgUrl = window.URL.createObjectURL(fileList[i]);
                     that.toBase64(fileList[i]);
-                    // console.log(imgUrl);
                     imgArr.push(imgUrl);
                     var img = document.createElement("img");
                     img.setAttribute("src", imgArr[i]);
@@ -244,7 +222,6 @@
                     imgAdd.appendChild(img);
                     document.getElementsByClassName("img-list")[0].appendChild(imgAdd);
                 }
-                // console.log(fileList);
             },
             remove: function(){
 
