@@ -30,7 +30,7 @@
 </div>
 <div class="form-submit">
     <!--<a href="{:url('Login/checkRegisterVerifyCode')}"><input type="button" value="同意协议并注册" /></a>-->
-    <input type="button" value="同意协议并注册" id="next" />
+    <div class="input" id="next">同意协议并注册</div>
 </div>
 {include file="plug_js/jquery" /}
 {include file="plug_js/layer" /}
@@ -57,7 +57,7 @@
                     location.href = "{:url('Login/checkRegisterVerifyCode')}?phone=" + phone;
                 },
                 error: function(res){
-                    myLayer.alert('该手机号未注册');
+                    myLayer.alert('该手机号已注册');
                 }
             });
         });

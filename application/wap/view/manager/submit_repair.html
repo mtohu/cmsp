@@ -90,12 +90,13 @@
         border-top: 1px solid #eee;
         background-color: #fff;
     }
-    .submit-repair input{
+    .submit-repair .input{
         border: 0;
         width: 100%;
-        height: 100%;
+        line-height: 38px;
         background-color: #07c6fd;
         color: #fff;
+        text-align: center;
     }
 </style>
 <div class="repair">
@@ -127,7 +128,7 @@
     </div>
 </div>
 <div class="submit-repair">
-    <input type="button" value="提交" id="submit-repair">
+    <div class="input" id="submit-repair">提交</div>
 </div>
 {include file="plug_js/jquery" /}
 {include file="plug_js/layer" /}

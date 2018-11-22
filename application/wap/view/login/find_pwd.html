@@ -30,6 +30,11 @@
 <script>
     $(function(){
         $('#check').click(function(){
+            var user_name = $('#user-name').val();
+            if(user_name == ''){
+                myLayer.alert('手机号不能为空');
+                return;
+            }
             myHttp.ajax({
                 url: "{:url('RequestApi/request_ajax')}",
                 data: {
