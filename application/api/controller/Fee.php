@@ -14,6 +14,7 @@ class Fee extends  Base
     public function myFeeList($input){
         $data = array();
         $data['resident_id'] = isset($input['token_resident_id']) ? $input['token_resident_id'] : 0;
+        $data['search_name'] = $input['search_name'];
         if(empty($data['resident_id'])){
             $this->error_data['ErrorCode'] = 1;
             $this->error_data['ErrorMsg'] = "未登录无法获取信息";

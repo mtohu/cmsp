@@ -17,8 +17,8 @@
     .top .search{
         width: calc(100% - 100px);
         padding: 2px 0;
-        /*float: left;*/
         margin: 0 auto;
+        position: relative;
     }
     .top .search input{
         width: 100%;
@@ -26,6 +26,16 @@
         line-height: 32px;
         border: 0;
         float: left;
+    }
+    .top .search i{
+        display: block;
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        text-align: center;
+        position: absolute;
+        right: 0;
+        top: 2;
     }
     .top .msg{
         width: 50px;
@@ -102,7 +112,9 @@
         <!--<i class="iconfont icon-weizhi"></i>-->
     </a>
     <div class="search">
-        <a href="{:url('Manager/feeList')}?source=Index__index"><input type="text" /></a>
+        <!--<a href="{:url('Manager/feeList')}?source=Index__index"><input type="text" /></a>-->
+        <input type="text" id="search-txt" />
+        <i class="iconfont icon-chazhao" id="search-fee"></i>
     </div>
     <div class="msg">
         <!--<a href="{:url('Index/msgList')}"><i class="iconfont icon-xiaoxi"></i></a>-->
@@ -173,6 +185,11 @@
                     }
                 })
             }
+        });
+        //搜索
+        $('#search-fee').click(function(){
+            var search_txt = $('#search-txt').val();
+            location.href = "{:url('Manager/feeList')}?source=Index__index&search_txt=" + search_txt;
         });
     });
 </script>

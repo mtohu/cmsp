@@ -1,5 +1,19 @@
 {include file="public/head" /}
 <style>
+    .no-fee{
+        padding: 50px 15px;
+        text-align: center;
+    }
+    .no-fee i{
+        display: block;
+        width: 100%;
+        font-size: 40px;
+    }
+    .no-fee span{
+        display: block;
+        line-height: 30px;
+        margin-top: 20px;
+    }
     .order-list .order-item{
         padding: 10px 15px;
         line-height: 30px;
@@ -14,6 +28,12 @@
         font-size: 12px;
     }
 </style>
+{if count($fee_list) == 0}
+<div class="no-fee">
+    <i class="iconfont icon-wukong"></i>
+    <span>暂无缴费记录</span>
+</div>
+{/if}
 {if count($fee_list) > 0}
 <div class="order-list">
     {volist name="fee_list" id="vo"}

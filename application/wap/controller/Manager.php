@@ -87,6 +87,7 @@ class Manager extends Base
     public function feeList()
     {
         $source = input('source');
+        $search_txt = input('search_txt');
         $back_url = url('User/index');
         if(!empty($source)){
             $back_url = url(str_replace('__', '/',$source));
@@ -107,6 +108,7 @@ class Manager extends Base
         //账单
         $request_api = new RequestApi();
         $request_api->api_action = 'my_fee_list';
+        $request_api->params['search_name'] = $search_txt;
         $return_data = $request_api->request_ajax()->getData();
         $fee_list = [];
         if(isset($return_data['Data'])){
