@@ -91,8 +91,15 @@ class Resident extends Base
 //                $resident['face_img']=get_newpic_url($resident['face_img']);
 //            }
 //        }
+        $resident['identification_view']="";
         if(!empty($resident['identification'])){
-            $resident['identification']=substr_replace($resident['identification'],'****',4,-4);
+            $resident['identification_view']=substr_replace($resident['identification'],'****',4,-4);
+        }
+        $resident['is_fangzhu']=0;
+        $resident_rooms=Db::name("cmp_resident_room")->where([['resident_id','=',$resident_id],['resident_type','=',1]
+            ,['is_verified','=',1]])->select();
+        if(isset($resident_rooms['id'])){
+            $resident['is_fangzhu']=1;
         }
         unset($resident['password']);
         unset($resident['atoken']);
