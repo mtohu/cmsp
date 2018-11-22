@@ -6,6 +6,10 @@
         overflow: hidden;
         border-bottom: 1px solid #ccc;
     }
+    .room-item .room-name .is-verified{
+        float: right;
+        font-size: 12px;
+    }
     .room-item .resident-type{
         font-size: 12px;
         font-weight: bold;
@@ -32,6 +36,11 @@
     <div class="room-item">
         <div class="room-name">
             {$vo.region}区{$vo.building}栋{$vo.unit}单元{$vo.room_no}
+            {if $vo['is_verified'] == 1}
+            <span class="is-verified" style="color:green;">已审核</span>
+            {else/}
+            <span class="is-verified" style="color:red;">未审核</span>
+            {/if}
         </div>
         <div class="room-info">
             {switch $vo['resident_type'] }

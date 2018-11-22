@@ -25,36 +25,40 @@
     <div class="tab" id="tab-house" style="border-right: 1px solid #d0d0d0;">绑定房屋产业</div>
     <div class="tab no-active" id="tab-service">我是维修人员</div>
 </div>
-<div class="form-item tab-house">
-    <div class="form-label">小区</div>
-    <div class="form-input">
-        <select name="" id="" style="padding: 0 20px;">
-            <option value="">亲情鼎苑</option>
-        </select>
+<div id="house">
+    <div class="form-item tab-house">
+        <div class="form-label">小区</div>
+        <div class="form-input">
+            <select name="" @change="regionChange(regionName)" v-model="regionName">
+                <option v-for="region in regions" :value="region">{{region}}</option>
+            </select>
+        </div>
     </div>
-</div>
-<div class="form-item tab-house">
-    <div class="form-label">房号</div>
-    <div class="form-input">
-        <select name="" id="">
-            <option value="">1</option>
-        </select>
-        栋
-        <select name="" id="">
-            <option value="">1</option>
-        </select>
-        单元
-        <select name="" id="">
-            <option value="">101</option>
-        </select>
-        室
+    <div class="form-item tab-house">
+        <div class="form-label">房号</div>
+        <div class="form-input">
+            <select name="" @change="buildingChange(buildingName)" v-model="buildingName">
+                <option v-for="building in buildings" :value="building">{{building}}</option>
+            </select>
+            栋
+            <select name="" @change="unitChange(unitName)" v-model="unitName">
+                <option v-for="unit in units" :value="unit">{{unit}}</option>
+            </select>
+            单元
+            <select name="" @change="roomChange(roomName)" v-model="roomName">
+                <option v-for="room in rooms" :value="room.room_no">{{room.room_no}}</option>
+            </select>
+            室
+        </div>
     </div>
 </div>
 <div class="form-item tab-house">
     <div class="form-label">用户类型</div>
     <div class="form-input">
-        <select name="" id="" style="padding: 0 20px;">
-            <option value="">我是房主</option>
+        <select id="resident-type">
+            <option value="1">房屋所有者</option>
+            <option value="2">房屋所有者家人</option>
+            <option value="3">租客</option>
         </select>
     </div>
 </div>
@@ -81,8 +85,96 @@
 </div>
 {include file="plug_js/jquery" /}
 {include file="plug_js/layer" /}
+{include file="plug_js/vue" /}
 <script>
+    var regions = [];
+    var buildings = [];
+    var units = [];
+    var rooms = [];
+    {volist name="regions" id="vo"}
+    regions.push('{$vo}');
+    {/volist}
+        {volist name="buildings" id="vo"}
+        buildings.push('{$vo}');
+        {/volist}
+            {volist name="units" id="vo"}
+            units.push('{$vo}');
+            {/volist}
+                {volist name="rooms" id="vo"}
+                rooms.push({id:{$vo.id},room_no:{$vo.room_no}});
+                {/volist}
 $(function(){
+    var room_id = rooms[0].id;
+    //房间列表
+    var room = new Vue({
+        el: '#house',
+        data: {
+            regions: regions,
+            regionName: regions[0],
+            buildings: buildings,
+            buildingName: buildings[0],
+            units: units,
+            unitName: units[0],
+            rooms: rooms,
+            roomName: rooms[0].room_no,
+        },
+        methods: {
+            regionChange: function(regionName){
+                var that = this;
+                myHttp.ajax({
+                    url: "{:url('Room/getBuildings')}",
+                    data: {
+                        region: that.regionName
+                    },
+                    success: function(res){
+                        that.buildings = res.Data.buildings;
+                        that.buildingName = that.buildings[0];
+                        that.units = res.Data.units;
+                        that.unitName = that.units[0];
+                        that.rooms = res.Data.rooms;
+                        that.roomName = that.rooms[0].room_no;
+                        room_id = that.rooms[0].id;
+                    }
+                })
+            },
+            buildingChange: function(buildingName){
+                var that = this;
+                myHttp.ajax({
+                    url: "{:url('Room/getUnits')}",
+                    data: {
+                        region: that.regionName,
+                        building: that.buildingName
+                    },
+                    success: function(res){
+                        that.units = res.Data.units;
+                        that.unitName = that.units[0];
+                        that.rooms = res.Data.rooms;
+                        that.roomName = that.rooms[0].room_no;
+                        room_id = that.rooms[0].id;
+                    }
+                })
+            },
+            unitChange: function(unitName){
+                var that = this;
+                myHttp.ajax({
+                    url: "{:url('Room/getRooms')}",
+                    data: {
+                        region: that.regionName,
+                        building: that.buildingName,
+                        unit: that.unitName
+                    },
+                    success: function(res){
+                        that.rooms = res.Data.rooms;
+                        that.roomName = that.rooms[0].room_no;
+                        room_id = that.rooms[0].id;
+                    }
+                })
+            },
+            roomChange: function(roomName){
+
+            }
+        }
+    });
     /*****************  选项卡 start ***************/
     var tab = {
         init: function(){
@@ -149,8 +241,8 @@ $(function(){
                 is_maintenance_staff: that.data.isStaff
             };
             if(that.data.isStaff == 0){
-                post_data.room_id = 1;
-                post_data.resident_type = 1;
+                post_data.room_id = room_id;
+                post_data.resident_type = $('#resident-type').val();
             }
             myHttp.ajax({
                 url: "{:url('RequestApi/request_ajax')}",
