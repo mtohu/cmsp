@@ -106,7 +106,7 @@
         <div class="set-detail">
             <a href="{:url('User/setBasicInfo')}?source=User__index">
                 <i class="iconfont icon-shezhi1"></i>
-            {if empty($user_info['name'])}
+            {if empty($user_info['name']) || empty($user_info['identification']) || empty($user_info['uphone'])}
                 <span style="color: red;">未设置</span>
             {else/}
                 <span style="color: green;">已设置</span>

@@ -23,11 +23,14 @@ class User extends Base
         $return_data = $request_api->request_ajax()->getData();
         $user_info = [
             'name' => $this->ResidentAccount['ResidentName'],
+            'identification' => '',
+            'uphone' => '',
             'phone' => '111'
         ];
         if(isset($return_data['ErrorCode']) && $return_data['ErrorCode'] == 0){
             $user_info = $return_data['Data'];
         }
+
         $this->assign('user_info', $user_info);
         return $this->fetch();
     }
