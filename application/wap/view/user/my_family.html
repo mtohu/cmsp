@@ -22,9 +22,14 @@
         color: #07c6fd;
     }
     .member-item .other-info .is-verified{
+        width: 50px;
+        line-height: 24px;
+        text-align: center;
         color: red;
+        border: 1px solid red;
+        display: inline-block;
+        border-radius: 5px;
         float: right;
-        font-size: 12px;
     }
 </style>
 {if count($members_list) == 0}
@@ -55,11 +60,11 @@
             {$vo.phone}
             {/if}
             </span>
-            <span class="is-verified">
+            <div class="is-verified">
             {if $vo.is_verified == 0}
-            未审核
+            审核
             {/if}
-            </span>
+            </div>
         </div>
     </div>
     {/volist}
