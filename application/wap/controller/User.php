@@ -17,6 +17,7 @@ class User extends Base
             'user' => 'nav-item-active'
         ];
         $this->assign('nav_item', $nav_item);
+        $this->assign('resident_account', $this->ResidentAccount);
         return $this->fetch();
     }
 

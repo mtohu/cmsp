@@ -27,7 +27,9 @@
     您还不是房主，点击提交申请
 </div>
 <div class="form-submit">
-    <input type="button" value="申请" />
+    <a href="{:url('User/applyUserRoom')}">
+        <input type="button" value="申请" />
+    </a>
 </div>
 {/if}
 {if count($members_list) > 0}
