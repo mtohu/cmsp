@@ -22,7 +22,8 @@ class User extends Base
         $request_api->api_action = 'resident_info';
         $return_data = $request_api->request_ajax()->getData();
         $user_info = [
-            'name' => $this->ResidentAccount['ResidentName']
+            'name' => $this->ResidentAccount['ResidentName'],
+            'phone' => '111'
         ];
         if(isset($return_data['ErrorCode']) && $return_data['ErrorCode'] == 0){
             $user_info = $return_data['Data'];
@@ -184,10 +185,15 @@ class User extends Base
      */
     public function setPhone()
     {
+        $source = input('source');
+        $back_url = url('User/userSet');
+        if(!empty($source)){
+            $back_url = url(str_replace('__', '/',$source));
+        }
         $head = [
             'left_nav' => [
                 'icon' => 'icon-fanhui',
-                'url' => url('User/userSet')
+                'url' => $back_url
             ],
             'title' => '修改手机号码',
             'right_btn' => [
