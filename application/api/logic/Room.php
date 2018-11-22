@@ -87,7 +87,7 @@ class Room extends Base
                 throw new ErrorException("已经申请关联该房号请不要重复申请");
             }
 
-            $saveData=array("room_id"=>$room_id,"room_id"=>$room_id,"resident_type"=>$resident_type,
+            $saveData=array("resident_id"=>$resident_id,"room_id"=>$room_id,"resident_type"=>$resident_type,
                       'update_date'=>date('Y-m-d H:i:s',now_time()));
             if(!isset($resident_room['id'])){
                 $res=Db::name("cmp_resident_room")->insert($saveData);

@@ -139,6 +139,7 @@
         </div>
     </a>
 </div>
+{if $user_info['is_fangzhu'] == 1}
 <div class="menu-item">
     <a href="{:url('User/myFamily')}">
         <div class="menu-name">我的家庭成员/租客</div>
@@ -147,6 +148,7 @@
         </div>
     </a>
 </div>
+{/if}
 <!--<div class="menu-item">-->
     <!--<a href="{:url('User/assess')}">-->
         <!--<div class="menu-name">评价我们</div>-->

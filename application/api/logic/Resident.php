@@ -98,7 +98,7 @@ class Resident extends Base
         $resident['is_fangzhu']=0;
         $resident_rooms=Db::name("cmp_resident_room")->where([['resident_id','=',$resident_id],['resident_type','=',1]
             ,['is_verified','=',1]])->select();
-        if(isset($resident_rooms['id'])){
+        if(count($resident_rooms) > 0){
             $resident['is_fangzhu']=1;
         }
         unset($resident['password']);

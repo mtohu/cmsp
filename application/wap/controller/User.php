@@ -2,6 +2,7 @@
 namespace app\wap\controller;
 
 use app\wap\logic\Img;
+use app\wap\logic\Room;
 use think\Controller;
 use think\facade\Session;
 
@@ -231,8 +232,16 @@ class User extends Base
             ]
         ];
         $this->assign('head', $head);
+        //获取房间数据
+        $regions = \app\wap\logic\Room::getRegions();
+        $buildings = $buildings = \app\wap\logic\Room::getBuildings($regions[0]);
+        $units = \app\wap\logic\Room::getUnits($regions[0], $buildings[0]);
+        $rooms = \app\wap\logic\Room::getRooms($regions[0], $buildings[0], $units[0]);
 
-        $this->assign('token', $this->getToken());
+        $this->assign('regions', $regions);
+        $this->assign('buildings', $buildings);
+        $this->assign('units', $units);
+        $this->assign('rooms', $rooms);
         return $this->fetch();
     }
 
