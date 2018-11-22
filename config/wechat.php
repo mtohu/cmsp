@@ -3,8 +3,8 @@ return [
     "default_options_name"=>"wechat_options",
     "wechat_options"=>[
         'token'=>'****',
-        'appid'=>'wxab0a577057dc9089 11',
-        'appsecret'=>'ff1d86d55b1c362f4259481d38a99d16',
+        'appid'=>'wx3c18ccee2edb4b85',
+        'appsecret'=>'48c7542ec45e9e6ab00032f2f8593a37',
         'encodingaeskey'=>'*********************************************',
     ],
 
