@@ -19,6 +19,25 @@ class Login extends Controller {
     }
 
     /**
+     * 微信登录
+     */
+    public function wechatLogin()
+    {
+        $user_agent=$this->request->header('user-agent');
+        if(strpos($user_agent, 'MicroMessenger') === false){
+            $error_msg="<h1>请使用微信扫码</h1>";
+            return response()->data($error_msg)->code(200)->header(['Content-Type' =>'text/html']);
+        }
+        Session::clear();
+        Cookie::delete('sxcmpauths');
+        Cookie::clear();
+        $url = "http://www.g3-logistics.com:8081/wap/index/index";
+        $url = urlencode($url);
+        $url ="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxab0a577057dc9089&redirect_uri=".$url."&response_type=code&scope=snsapi_userinfo#wechat_redirect";
+        return $this->redirect($url,301);
+    }
+
+    /**
      * 账号密码登录
      */
     public function pwdLogin()

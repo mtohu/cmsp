@@ -2,6 +2,8 @@
 <style>
     .repair{
         padding: 15px;
+        overflow: hidden;
+        margin-bottom: 80px;
     }
     .repair-tips{
         line-height: 30px;
@@ -18,11 +20,6 @@
         border-radius: 100%;
         margin-right: 10px;
     }
-    /*.repair-type .type-item i{*/
-        /*line-height: 24px;*/
-        /*display: block;*/
-        /*text-align: center;*/
-    /*}*/
     .repair-type .type-item span{
         line-height: 56px;
         display: block;
@@ -38,9 +35,26 @@
         padding: 15px;
         line-height: 24px;
     }
-    .add-repair-img{
+    .repair-imgs{
+        margin-top: 10px;
+    }
+    .repair-imgs .img-tips{
+        line-height: 30px;
+    }
+    .repair-imgs .img-list{
+        margin-top: 5px;
+    }
+    .repair-imgs .img-list .img-item{
+        width: 50px;
+        height: 50px;
+        float: left;
+        margin: 0 10px 10px 0;
+    }
+    .repair-imgs .img-list .img-item img{
         width: 100%;
-        height: 150px;
+        height: 100%;
+    }
+    .add-repair-img{
         position: relative;
         text-align: center;
         border: 1px solid #ccc;
@@ -63,7 +77,7 @@
         left: 0;
         top: 0;
         width: 100%;
-        height: 150px;
+        height: 100%;
         opacity: 0;
     }
     .submit-repair{
@@ -74,6 +88,7 @@
         left: 0;
         padding: 5px 15px;
         border-top: 1px solid #eee;
+        background-color: #fff;
     }
     .submit-repair input{
         border: 0;
@@ -100,9 +115,17 @@
         <textarea name="" placeholder="请描述报修内容" id="repair-desc"></textarea>
     </div>
     <div class="repair-imgs">
-        <div class="add-repair-img">
-            <i class="iconfont icon-tianjia"></i>
-            <input type="file" />
+        <div class="img-tips">
+            上传报修图片（选填）：
+        </div>
+        <div class="img-list">
+            <div class="img-item add-repair-img">
+                <i class="iconfont icon-tianjia"></i>
+                <input type="file" id="select-img" />
+            </div>
+            <div class="img-item">
+                <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1543460953&di=9fc3c9dea74167fb1de6468913247c09&imgtype=jpg&er=1&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimgad%2Fpic%2Fitem%2F34fae6cd7b899e51ec89f83949a7d933c8950d9c.jpg" alt="">
+            </div>
         </div>
     </div>
 </div>
@@ -148,20 +171,37 @@
                 if(!that.checkData()){
                     return;
                 }
+                // myHttp.ajax({
+                //     url: "{:url('RequestApi/request_ajax')}",
+                //     data: {
+                //         api_action: 'save_repair',
+                //         token: myCookie.get('token'),
+                //         repair_type_id: that.data.repairType,
+                //         content: that.data.repairDesc,
+                //         img_arr: []
+                //     },
+                //     success: function(){
+                //         myLayer.alert('提交成功');
+                //         setTimeout(function(){
+                //             location.href = "{:url('Manager/repairList')}";
+                //         }, 2000);
+                //     },
+                //     error: function(res){
+                //         myLayer.alert(res.ErrorMsg);
+                //     }
+                // })
+                console.log(repair_img.data.imgs);
                 myHttp.ajax({
-                    url: "{:url('RequestApi/request_ajax')}",
+                    url: "",
                     data: {
-                        api_action: 'save_repair',
-                        token: myCookie.get('token'),
+                        // api_action: 'save_repair',
+                        // token: myCookie.get('token'),
                         repair_type_id: that.data.repairType,
                         content: that.data.repairDesc,
-                        img_arr: []
+                        imgs: repair_img.data.imgs
                     },
                     success: function(){
-                        myLayer.alert('提交成功');
-                        setTimeout(function(){
-                            location.href = "{:url('Manager/repairList')}";
-                        }, 2000);
+
                     },
                     error: function(res){
                         myLayer.alert(res.ErrorMsg);
@@ -173,5 +213,46 @@
         $('#submit-repair').click(function(){
             repair.submitRepair();
         });
+        var repair_img = {
+            data: {
+                imgs: []
+            },
+            toBase64: function(file){
+                var that = this;
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = function ()
+                {
+                    //输出结果
+                    // console.log(reader.result);
+                    that.data.imgs.push(reader.result);
+                };
+            },
+            add: function(){
+                var that = this;
+                var fileList = document.getElementById("select-img").files;
+                var imgArr = [];
+                for (var i = 0; i < fileList.length; i++) {
+                    var imgUrl = window.URL.createObjectURL(fileList[i]);
+                    that.toBase64(fileList[i]);
+                    // console.log(imgUrl);
+                    imgArr.push(imgUrl);
+                    var img = document.createElement("img");
+                    img.setAttribute("src", imgArr[i]);
+                    var imgAdd = document.createElement("div");
+                    imgAdd.setAttribute("class", "img-item");
+                    imgAdd.appendChild(img);
+                    document.getElementsByClassName("img-list")[0].appendChild(imgAdd);
+                }
+                // console.log(fileList);
+            },
+            remove: function(){
+
+            }
+        };
+        $('#select-img').change(function() {
+            repair_img.add();
+        });
+
     })
 </script>
