@@ -71,7 +71,7 @@ class Manager extends Base
                             $file_name = md5(date('Y-m-d H:i:s') . rand(0, 999999)) . '.'.$type;
                             $new_file = $up_dir . $file_name;
                             if(file_put_contents($new_file, base64_decode(str_replace($result[1], '', $v)))){
-                                $repair_imgs[] = '/' . $date . '/' . $file_name;
+                                $repair_imgs[] = '/uploads/' . $date . '/' . $file_name;
                             }
                         }else{
                             //文件类型错误
