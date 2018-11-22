@@ -16,12 +16,14 @@
         padding: 0 15px;
         margin-top: 80px;
     }
-    .login-out input{
+    .login-out a{
         width: 100%;
+        display: block;
         line-height: 36px;
         background-color: #07c6fd;
         border: 0;
         color: #fff;
+        text-align: center;
     }
 </style>
 <div class="set-list">
@@ -45,7 +47,5 @@
     </div>
 </div>
 <div class="login-out">
-    <form action="{:url('Login/loginOut')}">
-        <input type="submit" value="退出当前账号" id="login-out" />
-    </form>
+        <a href="{:url('Login/loginOut')}">退出当前账号</a>
 </div>
