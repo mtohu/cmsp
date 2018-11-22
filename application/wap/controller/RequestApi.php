@@ -25,6 +25,9 @@ class RequestApi extends Base{
                 case "resident_login":
                 $this->loginsn($data);
                 break;
+                case "register_resient":
+                $this->loginsn($data);
+                break;
                 case "resident_logout":
                 $this->logoutsn($data);
                 break;
