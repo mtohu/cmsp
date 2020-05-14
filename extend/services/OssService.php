@@ -5,10 +5,10 @@ require_once "../vendor/aliyun-oss-php-sdk/autoload.php";
 use OSS\OssClient;
 use OSS\Core\OssException;
 class OssService{
-   const accessKeyId="LTAIsL6tu4w74UxV";
-   const accessKeySecret="nbuf6qwfD88XK0a0FrrenVi6BJqNRk";
-   const endpoint="oss-cn-shenzhen.aliyuncs.com";
-   const bucket = "yedexcx";
+   const accessKeyId="";
+   const accessKeySecret="";
+   const endpoint="";
+   const bucket = "";
    public $options = null;
    public function __construct(){
        $this->options = array();
