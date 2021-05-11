@@ -1,0 +1,209 @@
+<style>
+    body{
+        padding-bottom: 150px;
+    }
+    /******************** top start *******************/
+    .top{
+        width: 100%;
+        background-color: #07c6fd;
+        height: 80px;
+        position: relative;
+    }
+    .top .user-set{
+        position: absolute;
+        left: 15px;
+        top: 15px;
+    }
+    .top .user-set a{
+        color: #fff;
+    }
+    .top .user-set i{
+        width: 30px;
+        height: 30px;
+        display: block;
+    }
+    /******************** top end *******************/
+    /******************** user-info start *******************/
+    #change-face-img{
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 100;
+    }
+    .user-info{
+        width: calc(100% - 30px);
+        margin: 0 auto;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 10px;
+        position: relative;
+        top: -30px;
+        background-color: #fff;
+        overflow: hidden;
+    }
+    .user-info .face-img{
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        float: left;
+        position: absolute;
+        top: 14px;
+    }
+    .user-info .face-img img{
+        width: 100%;
+        height: 100%;
+    }
+    .user-info .detail-info{
+        width: calc(100% - 60px);
+        float: left;
+        line-height: 24px;
+        padding: 0 0 0 10px;
+        margin-left: 60px;
+    }
+    .user-info .bind-phone{
+        font-size: 12px;
+    }
+    .user-info .detail-info div{
+        width: 100%;
+    }
+    .user-info .detail-info .set-detail{
+        font-size: 12px;
+    }
+    .user-info .detail-info .set-detail a{
+        font-size: 12px;
+    }
+    .user-info .detail-info .set-detail a i{
+        vertical-align: middle;
+    }
+    .user-info .detail-info .set-detail span{
+        font-weight: bold;
+    }
+    /******************** user-info end *******************/
+    /******************** menu-item start *******************/
+    .menu-item{
+        padding: 0 15px;
+        border-bottom: 1px solid #ccc;
+        line-height: 48px;
+        position: relative;
+    }
+    .menu-item .icon{
+        position: absolute;
+        top: 0;
+        right: 15px;
+    }
+    /******************** menu-item end *******************/
+</style>
+<div class="top">
+    <div class="user-set">
+        <a href="{:url('User/userSet')}">
+            <i class="iconfont icon-shezhi"></i>
+        </a>
+    </div>
+</div>
+<div class="user-info">
+    <div class="face-img">
+        <input type="file" id="change-face-img" />
+        <img src="{$user_info.face_img}" alt="" />
+    </div>
+    <div class="detail-info">
+        <div class="user-name">
+            <a href="{:url('User/setBasicInfo')}?source=User__index">{$user_info.name}</a>
+        </div>
+        <div class="set-detail">
+            <a href="{:url('User/setBasicInfo')}?source=User__index">
+                <i class="iconfont icon-shezhi1"></i>
+            {if empty($user_info['name']) || empty($user_info['identification']) || empty($user_info['uphone'])}
+                <span style="color: red;">未设置</span>
+            {else/}
+                <span style="color: green;">已设置</span>
+            {/if}
+            </a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="{:url('User/setPhone')}?source=User__index">
+                <i class="iconfont icon-shouji1"></i>
+                {if $user_info['phone'] == '111'}
+                <span style="color: red;">未绑定</span>
+                {else/}
+                <span style="color: green;">已绑定</span>
+                {/if}
+            </a>
+        </div>
+    </div>
+</div>
+<div class="menu-item">
+    <a href="{:url('Manager/feeList')}">
+        <div class="menu-name">我的账单</div>
+        <div class="icon">
+            <i class="iconfont icon-dingdan"></i>
+        </div>
+    </a>
+</div>
+{if $user_info['is_fangzhu'] == 1}
+<div class="menu-item">
+    <a href="{:url('User/myFamily')}">
+        <div class="menu-name">我的家庭成员/租客</div>
+        <div class="icon">
+            <i class="iconfont icon-hunyinjiating"></i>
+        </div>
+    </a>
+</div>
+{/if}
+<!--<div class="menu-item">-->
+    <!--<a href="{:url('User/assess')}">-->
+        <!--<div class="menu-name">评价我们</div>-->
+        <!--<div class="icon">-->
+            <!--<i class="iconfont icon-pingjia"></i>-->
+        <!--</div>-->
+    <!--</a>-->
+<!--</div>-->
+<div class="menu-item">
+    <a href="{:url('User/aboutUs')}">
+        <div class="menu-name">关于我们</div>
+        <div class="icon">
+            <i class="iconfont icon-about"></i>
+        </div>
+    </a>
+</div>
+{include file="public/bottom_nav" /}
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+    $(function(){
+        var upload_face_img = {
+            toBase64: function(file, callBack){
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = function ()
+                {
+                    callBack(reader.result);
+                };
+            },
+            upload: function(){
+                var that = this;
+                var fileList = document.getElementById("change-face-img").files;
+                for (var i = 0; i < fileList.length; i++) {
+                    that.toBase64(fileList[i], function(base64_txt){
+                        myHttp.ajax({
+                            url: "{:url('User/changeFaceImg')}",
+                            data: {
+                                base64_txt: base64_txt
+                            },
+                            success: function(res){
+                                myLayer.alert("修改头像成功");
+                                $('.face-img').children('img').attr('src', res.Data.face_img);
+                            },
+                            error: function(res){
+                                myLayer.alert(res.ErrorMsg);
+                            }
+                        })
+                    });
+                    return;
+                }
+            }
+        };
+        $('#change-face-img').change(function(){
+            upload_face_img.upload();
+        });
+    });
+</script>

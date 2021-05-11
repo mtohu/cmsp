@@ -1,0 +1,34 @@
+<style>
+    .head{
+        text-align: center;
+        line-height: 36px;
+        position: relative;
+        border-bottom: 1px solid #d0d0d0;
+    }
+    .head a.left-nav{
+        position: absolute;
+        left: 15px;
+        display: inline-block;
+        width: 36px;
+        line-height: 36px;
+        text-align: left;
+    }
+    .head a.right-btn{
+        position: absolute;
+        right: 15px;
+        top: 6px;
+        width: 50px;
+        height: 24px;
+        line-height: 24px;
+        background-color: #07c6fd;
+        text-align: center;
+        color: #fff;
+    }
+</style>
+<div class="head">
+    <a class="left-nav" href="{$head.left_nav.url}"><i class="iconfont {$head.left_nav.icon}"></i></a>
+    {$head.title}
+    {if $head['right_btn']['is_show'] == true}
+    <a  class="right-btn" href="{$head.right_btn.url}">{$head.right_btn.btn_name}</a>
+    {/if}
+</div>

@@ -1,0 +1,106 @@
+{include file="public/head" /}
+<style>
+    .no-member{
+        line-height: 160px;
+        text-align: center;
+        color: red;
+        font-size: 16px;
+    }
+    .member-item{
+        padding: 5px 15px;
+        line-height: 30px;
+        overflow: hidden;
+        border-bottom: 1px solid #ccc;
+    }
+    .member-item .resident-type{
+        font-size: 12px;
+        font-weight: bold;
+        float: right;
+        color: green;
+    }
+    .member-item .phone{
+        color: #07c6fd;
+    }
+    .member-item .other-info .is-verified{
+        width: 50px;
+        line-height: 24px;
+        text-align: center;
+        color: red;
+        border: 1px solid red;
+        display: inline-block;
+        border-radius: 5px;
+        float: right;
+    }
+</style>
+{if count($members_list) == 0}
+<div class="no-member">
+    暂无家庭成员
+</div>
+{/if}
+{if count($members_list) > 0}
+<div class="member-list">
+    {volist name="members_list" id="vo"}
+    <div class="member-item">
+        <div class="member-info">
+            <span class="member-name">{$vo.name}</span>
+            <span class="resident-type">
+                {switch $vo['resident_type'] }
+                {case 1}<div class="resident-type">所有者</div>{/case}
+                {case 2}<div class="resident-type">家属</div>{/case}
+                {case 3}<div class="resident-type">租客</div>{/case}
+                {default /}<div class="resident-type">未知</div>
+                {/switch}
+            </span>
+        </div>
+        <div class="other-info">
+            <span class="phone">
+            {if !empty($vo.uphone)}
+            {$vo.uphone}
+            {else/}
+            {$vo.phone}
+            {/if}
+            </span>
+            {if $vo.is_verified == 0}
+            <div class="is-verified" room-id="{$vo.room_id}" cover-resident-id="{$vo.resident_id}">
+            审核
+            </div>
+            {/if}
+        </div>
+    </div>
+    {/volist}
+</div>
+{/if}
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+    $(function(){
+        $('.is-verified').click(function(){
+            var room_id = $(this).attr('room-id');
+            var cover_resident_id = $(this).attr('cover-resident-id');
+            layer.open({
+                content: '您确定审核通过吗？'
+                ,btn: ['确定', '取消']
+                ,yes: function(index){
+                    myHttp.ajax({
+                        url: "{:url('RequestApi/request_ajax')}",
+                        data: {
+                            api_action: 'audit_user_members',
+                            room_id: room_id,
+                            cover_resident_id: cover_resident_id
+                        },
+                        success: function(){
+                            myLayer.alert('审核成功');
+                            setTimeout(function(){
+                                location.reload();
+                            }, 1000);
+                        },
+                        error: function(res){
+                            myLayer.alert(res.ErrorMsg);
+                        }
+                    });
+                    layer.close(index);
+                }
+            });
+        });
+    });
+</script>

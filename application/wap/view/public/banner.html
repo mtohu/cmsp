@@ -1,0 +1,21 @@
+<div class="touchslider">
+    <div class="touchslider-viewport"  style="width: 100%;height: 100px;overflow: hidden;">
+        {volist name="banners" id="vo"}
+        <div class="touchslider-item">
+            <img class="touchslider-img" src="{$vo.pics}" alt="">
+        </div>
+        {/volist}
+    </div>
+</div>
+{include file="plug_js/jquery" /}
+<script src="__PLUG__/jquery-toucher-slider/slider.js"></script>
+<script>
+    var win_width = window.innerWidth;
+    $(function(){
+        $('.touchslider-img').width(win_width);
+        $(".touchslider").touchSlider({
+            autoplay: true
+        });
+    });
+
+</script>

@@ -1,0 +1,83 @@
+{include file="public/head" /}
+<style>
+    .form-item{
+        padding: 0;
+    }
+    .form-item input{
+        width: 100%;
+        height: 48px;
+        line-height: 48px;
+        border: 0;
+        padding: 0 15px;
+    }
+    .form-desc{
+        padding: 10px 15px;
+        line-height: 24px;
+        font-size: 12px;
+        color: #999;
+    }
+</style>
+<div class="form-item">
+    <input type="password" placeholder="输入新密码" id="password" />
+</div>
+<div class="form-item">
+    <input type="password" placeholder="确认新密码" id="confirm-password" />
+</div>
+<div class="form-desc">
+    密码提示：请输入长度至少大于8位密码包含大写、小写字母和数字
+</div>
+<div class="form-submit">
+    <div class="input" id="submit">下一步</div>
+</div>
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+    var reset = {
+        data: {
+            password: '',
+            confirmPassword: '',
+        },
+        checkData: function(){
+            var that = this;
+            if(that.data.password == ''){
+                myLayer.alert('请输入要重置的密码');
+                return false;
+            }
+            if(that.data.confirmPassword == ''){
+                myLayer.alert('请输入要重置的确认密码');
+                return false;
+            }
+            return true;
+        },
+        submit: function(){
+            var that = this;
+            that.data.password = $('#password').val();
+            that.data.confirmPassword = $('#confirm-password').val();
+            if(!that.checkData()){
+                return;
+            }
+            myHttp.ajax({
+                url: "{:url('RequestApi/request_ajax')}",
+                data: {
+                    api_action: 'find_pwd',
+                    user_name: "{$phone}",
+                    password: that.data.password,
+                    cure_password: that.data.confirmPassword,
+                    verify_code: "{$verify_code}"
+                },
+                success: function(){
+                    myLayer.alert('重置密码成功');
+                    setTimeout(function(){
+                        location.href = "{:url('Index/index')}";
+                    }, 2000);
+                },
+                error: function(res){
+                    myLayer.alert(res.ErrorMsg);
+                }
+            });
+        }
+    };
+    $('#submit').click(function(){
+        reset.submit();
+    });
+</script>

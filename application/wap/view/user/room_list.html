@@ -1,0 +1,91 @@
+{include file="public/head" /}
+<style>
+    .room-item{
+        padding: 5px 15px;
+        line-height: 30px;
+        overflow: hidden;
+        border-bottom: 1px solid #ccc;
+    }
+    .room-item .room-name .is-verified{
+        float: right;
+        font-size: 12px;
+    }
+    .room-item .resident-type{
+        font-size: 12px;
+        font-weight: bold;
+        width: 60px;
+        float: left;
+        color: green;
+    }
+    .room-action{
+        float: right;
+    }
+    .room-action .del-room{
+        width: 50px;
+        line-height: 24px;
+        text-align: center;
+        color: red;
+        border: 1px solid red;
+        display: inline-block;
+        border-radius: 5px;
+    }
+</style>
+{if count($room_list) > 0}
+<div class="room-list">
+    {volist name="room_list" id="vo"}
+    <div class="room-item">
+        <div class="room-name">
+            {$vo.region}区{$vo.building}栋{$vo.unit}单元{$vo.room_no}
+            {if $vo['is_verified'] == 1}
+            <span class="is-verified" style="color:green;">已审核</span>
+            {else/}
+            <span class="is-verified" style="color:red;">未审核</span>
+            {/if}
+        </div>
+        <div class="room-info">
+            {switch $vo['resident_type'] }
+            {case 1}<div class="resident-type">所有者</div>{/case}
+            {case 2}<div class="resident-type">家属</div>{/case}
+            {case 3}<div class="resident-type">租客</div>{/case}
+            {default /}<div class="resident-type">未知</div>
+            {/switch}
+        </div>
+        <div class="room-action">
+            <a href="javascript:;" class="del-room" room-id="{$vo.room_id}">删除</a>
+        </div>
+    </div>
+    {/volist}
+</div>
+{/if}
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+    $(function(){
+        $('.del-room').click(function(){
+            var room_id = $(this).attr('room-id');
+            layer.open({
+                content: '您确定要删除吗？'
+                ,btn: ['是', '否']
+                ,yes: function(index){
+                    myHttp.ajax({
+                        url: "{:url('RequestApi/request_ajax')}",
+                        data: {
+                            api_action: 'del_relation_room',
+                            room_id: room_id
+                        },
+                        success: function(){
+                            myLayer.alert('删除成功');
+                            setTimeout(function(){
+                                location.reload();
+                            }, 2000);
+                        },
+                        error: function(res){
+                            myLayer.alert(res.ErrorMsg);
+                        }
+                    });
+                    layer.close(index);
+                }
+            });
+        });
+    });
+</script>

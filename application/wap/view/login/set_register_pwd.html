@@ -1,0 +1,102 @@
+{include file="public/head" /}
+<style>
+    .form-itema{
+        padding: 0;
+    }
+    .form-item input{
+        width: 100%;
+        height: 48px;
+        line-height: 48px;
+        border: 0;
+        padding: 0 15px;
+    }
+    .form-submit{
+        margin-bottom: 50px;
+    }
+</style>
+<div class="form-item">
+    <div class="form-label">用户名</div>
+    <div class="form-input">
+        <input type="text" placeholder="名称提示：小明" id="user-name"/>
+    </div>
+</div>
+<div class="form-item">
+    <div class="form-label">设置密码</div>
+    <div class="form-input">
+        <input type="password" placeholder="密码提示：237sdkf347w23w" id="password"/>
+    </div>
+</div>
+<div class="form-item">
+    <div class="form-label">确认密码</div>
+    <div class="form-input">
+        <input type="password" placeholder="再次输入密码" id="confirm-pasword"/>
+    </div>
+</div>
+<div class="form-submit">
+    <div class="input" id="next">下一步</div>
+</div>
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+    $(function(){
+        var register = {
+            data: {
+                userName: '',
+                password: '',
+                confirmPassword: '',
+                verifyCode: "{$verify_code}",
+                phone: "{$phone}"
+            },
+            checkData: function(){
+                var that = this;
+                if(that.data.userName == ''){
+                    myLayer.alert('用户名不能为空');
+                    return false;
+                }
+                if(that.data.password == ''){
+                    myLayer.alert('密码不能为空');
+                    return false;
+                }
+                if(that.data.confirmPassword == ''){
+                    myLayer.alert('确认密码不能为空');
+                    return false;
+                }
+                return true;
+            },
+            submit: function(){
+                var that = this;
+                that.data.userName = $('#user-name').val();
+                that.data.password = $('#password').val();
+                that.data.confirmPassword = $('#confirm-pasword').val();
+                if(!that.checkData()){
+                    return;
+                }
+                myHttp.ajax({
+                    url: "{:url('RequestApi/request_ajax')}",
+                    data: {
+                        api_action: 'register_resient',
+                        phone: that.data.phone,
+                        user_name: that.data.userName,
+                        password: that.data.password,
+                        cure_password: that.data.confirmPassword,
+                        verify_code: that.data.verifyCode
+                    },
+                    success: function(res){
+                        console.log(res);
+                        var user_id = res.Data.resident_id;
+                        var token = res.Data.token;
+                        myCookie.set('user_id', user_id);
+                        myCookie.set('token', token);
+                        location.href = "{:url('Login/setRegisterInfo')}";
+                    },
+                    error: function(res){
+                        myLayer.alert(res.ErrorMsg);
+                    }
+                })
+            }
+        };
+        $('#next').click(function(){
+            register.submit();
+        });
+    });
+</script>

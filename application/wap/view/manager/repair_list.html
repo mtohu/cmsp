@@ -1,0 +1,70 @@
+{include file="public/head" /}
+<style>
+    .repair-item{
+        padding: 10px 15px;
+        border-bottom: 1px solid #ccc;
+    }
+    .repair-item .repair-title{
+        line-height: 30px;
+        font-weight: 600;
+    }
+    .repair-item .repair-content{
+        text-indent: 2em;
+        line-height: 24px;
+    }
+    .repair-item .repair-time{
+        text-align: right;
+        line-height: 24px;
+        font-size: 12px;
+        color: #666;
+    }
+    .repair-img{
+        overflow: hidden;
+        margin-top: 5px;
+    }
+    .repair-img img{
+        width: 50px;
+        height: 50px;
+        float: left;
+        margin: 0 10px 10px 0;
+    }
+    /***********************layer弹窗层****************/
+    .layui-m-layercont{
+        padding: 20px;
+    }
+    .layui-m-layercont img{
+        width: 100%;
+    }
+</style>
+{if count($repair_list) > 0}
+<div class="repair-list" >
+    {volist name="repair_list" id="vo"}
+    <div class="repair-item">
+        <div class="repair-title">{$vo.type_name}</div>
+        <div class="repair-content">{$vo.content}</div>
+        {if count($vo['img_arr']) > 0}
+        <div class="repair-img">
+            {volist name="vo['img_arr']" id="vo_img"}
+            <img src="{$vo_img.image_location}" alt="">
+            {/volist}
+        </div>
+        {/if}
+        <div class="repair-time">{$vo.create_date|date='Y-m-d H:i'}</div>
+    </div>
+    {/volist}
+</div>
+{/if}
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+    $('.repair-img img').click(function(){
+        var img_src = $(this).attr('src');
+        layer.open({
+            type: 1
+            ,content: '<img src="' + img_src + '" alt="">'
+            ,anim: 'up'
+            ,style: 'position:fixed; top: 0; left:0; width: 100%; padding:10px 0; border:none;'
+        });
+    });
+</script>
+

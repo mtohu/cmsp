@@ -1,0 +1,50 @@
+<style>
+    body{
+        padding-bottom: 150px;
+    }
+    .top{
+        width: 100%;
+        background-color: #07c6fd;
+        line-height: 36px;
+        color: #fff;
+        text-align: center;
+    }
+    /**-------------------menu start-------------**/
+    .menu{
+        padding: 20px 0;
+        overflow: hidden;
+    }
+    .menu ul li{
+        width: 100px;
+        float: left;
+        text-align: center;
+    }
+    .menu ul li a i{
+        font-size: 24px;
+        width: 100%;
+        line-height: 30px;
+        display: inline-block;
+    }
+    .menu ul li a span{
+        font-size: 14px;
+        width: 100%;
+        line-height: 30px;
+        display: inline-block;
+    }
+    /**-------------------menu end-------------**/
+</style>
+<div class="top">
+    管家
+</div>
+{include file="public/banner" /}
+<div class="menu">
+    <ul>
+        <li>
+            <a href="{:url('Manager/repairList')}">
+                <i class="iconfont icon-wodejiaofei"></i>
+                <span>报修报事</span>
+            </a>
+        </li>
+    </ul>
+</div>
+{include file="public/bottom_nav" /}

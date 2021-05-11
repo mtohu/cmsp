@@ -1,0 +1,178 @@
+{include file="public/head" /}
+<style>
+    .room-item{
+        padding: 10px 15px;
+        line-height: 30px;
+    }
+    .room-content{
+        text-align: right;
+    }
+</style>
+<div class="room-item" id="room">
+    <div class="room-label">
+        房间号
+    </div>
+    <div class="room-content">
+        <select name="" @change="regionChange(regionName)" v-model="regionName">
+            <option v-for="region in regions" :value="region">{{region}}</option>
+        </select>
+        小区
+        <select name="" @change="buildingChange(buildingName)" v-model="buildingName">
+            <option v-for="building in buildings" :value="building">{{building}}</option>
+        </select>
+        栋
+        <select name="" @change="unitChange(unitName)" v-model="unitName">
+            <option v-for="unit in units" :value="unit">{{unit}}</option>
+        </select>
+        单元
+        <select name="" @change="roomChange(roomName)" v-model="roomName">
+            <option v-for="room in rooms" :value="room.room_no">{{room.room_no}}</option>
+        </select>
+    </div>
+</div>
+<div class="room-item">
+    <div class="room-label">
+        房间类型
+    </div>
+    <div class="room-content">
+            <select id="resident-type">
+                <option value="1">房屋所有者</option>
+                <option value="2">房屋所有者家人</option>
+                <option value="3">租客</option>
+            </select>
+    </div>
+</div>
+<div class="form-submit">
+    <div class="input" id="apply-submit">提交</div>
+</div>
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+{include file="plug_js/vue" /}
+<script>
+    var regions = [];
+    var buildings = [];
+    var units = [];
+    var rooms = [];
+    {volist name="regions" id="vo"}
+    regions.push('{$vo}');
+    {/volist}
+        {volist name="buildings" id="vo"}
+        buildings.push('{$vo}');
+        {/volist}
+            {volist name="units" id="vo"}
+            units.push('{$vo}');
+            {/volist}
+                {volist name="rooms" id="vo"}
+                rooms.push({id:{$vo.id},room_no:{$vo.room_no}});
+                {/volist}
+    $(function(){
+        var room_id = rooms[0].id;
+        //房间列表
+        var room = new Vue({
+            el: '#room',
+            data: {
+                regions: regions,
+                regionName: regions[0],
+                buildings: buildings,
+                buildingName: buildings[0],
+                units: units,
+                unitName: units[0],
+                rooms: rooms,
+                roomName: rooms[0].room_no,
+            },
+            methods: {
+                regionChange: function(regionName){
+                    var that = this;
+                    myHttp.ajax({
+                        url: "{:url('Room/getBuildings')}",
+                        data: {
+                            region: that.regionName
+                        },
+                        success: function(res){
+                            that.buildings = res.Data.buildings;
+                            that.buildingName = that.buildings[0];
+                            that.units = res.Data.units;
+                            that.unitName = that.units[0];
+                            that.rooms = res.Data.rooms;
+                            that.roomName = that.rooms[0].room_no;
+                            room_id = that.rooms[0].id;
+                        }
+                    })
+                },
+                buildingChange: function(buildingName){
+                    var that = this;
+                    myHttp.ajax({
+                        url: "{:url('Room/getUnits')}",
+                        data: {
+                            region: that.regionName,
+                            building: that.buildingName
+                        },
+                        success: function(res){
+                            that.units = res.Data.units;
+                            that.unitName = that.units[0];
+                            that.rooms = res.Data.rooms;
+                            that.roomName = that.rooms[0].room_no;
+                            room_id = that.rooms[0].id;
+                        }
+                    })
+                },
+                unitChange: function(unitName){
+                    var that = this;
+                    myHttp.ajax({
+                        url: "{:url('Room/getRooms')}",
+                        data: {
+                            region: that.regionName,
+                            building: that.buildingName,
+                            unit: that.unitName
+                        },
+                        success: function(res){
+                            that.rooms = res.Data.rooms;
+                            that.roomName = that.rooms[0].room_no;
+                            room_id = that.rooms[0].id;
+                        }
+                    })
+                },
+                roomChange: function(roomName){
+
+                }
+            }
+        });
+
+        //申请
+        var apply = {
+            data: {
+                residentType: 1,
+            },
+            checkData: function(){
+                var that = this;
+
+            },
+            submit: function(){
+                var that = this;
+                that.data.residentType = $('#resident-type').val();
+                console.log(that.data.residentType);
+                myHttp.ajax({
+                    url: "{:url('RequestApi/request_ajax')}",
+                    data: {
+                        api_action: 'apply_relation_room',
+                        room_id: room_id,
+                        resident_type: that.data.residentType
+                    },
+                    success: function(){
+                        myLayer.alert('提交申请成功，请耐心等待');
+                        setTimeout(function(){
+                            location.href = "{:url('User/roomList')}";
+                        }, 2000);
+                    },
+                    error: function(res){
+                        myLayer.alert(res.ErrorMsg);
+                    }
+                });
+            }
+        };
+        $('#apply-submit').click(function(){
+            apply.submit();
+        });
+
+    });
+</script>

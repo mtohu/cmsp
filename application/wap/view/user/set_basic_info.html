@@ -1,0 +1,89 @@
+{include file="public/head" /}
+<div class="form-item">
+    <div class="form-label">姓名</div>
+    <div class="form-input">
+        <input type="text" value="{$user_info.name}" placeholder="请输入姓名" id="name" />
+    </div>
+</div>
+<div class="form-item">
+    <div class="form-label">身份证号</div>
+    <div class="form-input">
+        <input type="text" value="{$user_info.identification_view}" placeholder="请输入身份证号" id="id-card-no" />
+    </div>
+</div>
+<div class="form-item">
+    <div class="form-label">预留手机号</div>
+    <div class="form-input">
+        <input type="text" value="{$user_info.uphone}" placeholder="请输入预留手机号" id="user-phone" />
+    </div>
+</div>
+<div class="form-submit">
+    <div class="input" id="set-info">提交</div>
+</div>
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+    $(function(){
+        var set_info = {
+            data: {
+                idCardNo: '',
+                name: '',
+                userPhone: '',
+                idCardNoChange: false
+            },
+            checkData: function(){
+                var that = this;
+                if(that.data.name == ''){
+                    myLayer.alert('姓名不能为空');
+                    return false;
+                }
+                if(that.data.userPhone == ''){
+                    myLayer.alert('手机号不能为空');
+                    return false;
+                }
+                return true;
+            },
+            submit: function(){
+                var that = this;
+                that.data.userPhone = $('#user-phone').val();
+                that.data.name = $('#name').val();
+                if(!that.checkData()){
+                    return;
+                }
+                if($('#id-card-no').val() == ''){
+                    myLayer.alert('身份证号不能为空');
+                    return false;
+                }
+                var post_data = {
+                    api_action: 'set_resident',
+                    resident_id: that.data.userId,
+                    uphone: that.data.userPhone,
+                    name: that.data.name,
+                };
+                if(that.data.idCardNoChange){
+                    post_data.identification = $('#id-card-no').val();
+                }
+
+                myHttp.ajax({
+                    url: "{:url('RequestApi/request_ajax')}",
+                    data: post_data,
+                    success: function(){
+                        myLayer.alert('修改成功');
+                        setTimeout(function(){
+                            // location.href = "{:url('User/userSet')}";
+                        }, 2000);
+                    }
+                })
+            }
+        };
+        $('#id-card-no').focus(function(){
+            $(this).val('');
+        });
+        $('#id-card-no').change(function(){
+            set_info.data.idCardNoChange = true;
+        });
+        $('#set-info').click(function(){
+            set_info.submit();
+        });
+    });
+</script>

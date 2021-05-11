@@ -1,0 +1,135 @@
+{include file="public/head" /}
+<style>
+    .check-desc{
+        text-align: center;
+        padding: 15px 0;
+    }
+    .check-desc span{
+        display: block;
+        line-height: 30px;
+    }
+    .get-verify-code{
+        line-height: 24px;
+        border-left: 1px solid #ff6600;
+        position: absolute;
+        right: 0;
+        top: 12px;
+    }
+    .get-verify-code a{
+        padding: 0 15px;
+        color: #ff6600;
+    }
+    .get-verify-code a.no-active{
+        color: #999;
+    }
+    .form-submit{
+        margin-bottom: 50px;
+    }
+</style>
+<div class="form-item check-desc">
+    <span>为确保是您本人操作，请完成以下验证</span>
+    <span style="font-size: 12px">我们已发送了验证码到您的手机</span>
+    <span>*******5255</span>
+</div>
+<div class="form-item">
+    <div class="form-label">校验码：</div>
+    <div class="form-input">
+        <input type="text" placeholder="短信验证码" id="verify-code" />
+        <div class="get-verify-code">
+            <a href="javascript:;" id="get-verify-code">获取验证码</a>
+        </div>
+    </div>
+</div>
+<div class="form-submit">
+    <div class="input" id="check-verify-code">下一步</div>
+</div>
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+    var verify = {
+        data: {
+            phone: "{$phone}",
+            verifyTxt: '获取验证码',
+            secondInit: 0,
+            second: 60
+        },
+        init: function(){
+            var that = this;
+            that.data.secondInit = that.data.second;
+        },
+        resetVerifyTxt: function(){
+            var that = this;
+            that.data.second--;
+            if(that.data.second > 0){
+                $('#get-verify-code').addClass('no-active');
+                $('#get-verify-code').html(that.data.second + '秒');
+                setTimeout(function(){
+                    that.resetVerifyTxt();
+                }, 1000);
+            }else{
+                that.data.second = that.data.secondInit;
+                $('#get-verify-code').removeClass('no-active');
+                $('#get-verify-code').html(that.data.verifyTxt);
+            }
+        },
+        checkSendAuth: function(){
+            var that = this;
+            if(that.data.second < that.data.secondInit){
+                myLayer.alert('发送间隔不得超过' + that.data.secondInit + '秒');
+                return false;
+            }
+            return true;
+        },
+        sendVerifyCode: function(){
+            var that = this;
+            if(!that.checkSendAuth()){
+                return;
+            }
+            that.resetVerifyTxt();
+            myHttp.ajax({
+                url: "{:url('RequestApi/request_ajax')}",
+                data: {
+                    api_action: 'sms_send',
+                    phone: that.data.phone,
+                    type: 2
+                },
+                success: function(){
+
+                },
+                error: function(res){
+                    myLayer.alert(res.ErrorMsg);
+                }
+            });
+        },
+        checkVerifyCode: function(){
+            var that = this;
+            var verify_code = $('#verify-code').val();
+            if(verify_code == ''){
+                myLayer.alert('验证码不能为空');
+                return;
+            }
+            myHttp.ajax({
+                url: "{:url('RequestApi/request_ajax')}",
+                data: {
+                    api_action: 'check_verify_code',
+                    phone: that.data.phone,
+                    verify_code: verify_code,
+                    type: 2
+                },
+                success: function(){
+                    location.href = "{:url('Login/resetPwd')}?phone={$phone}&verify_code=" + verify_code;
+                },
+                error: function(res){
+                    myLayer.alert(res.ErrorMsg);
+                }
+            });
+        }
+    };
+    verify.init();
+    $('#get-verify-code').click(function(){
+        verify.sendVerifyCode();
+    });
+    $('#check-verify-code').click(function(){
+        verify.checkVerifyCode();
+    });
+</script>

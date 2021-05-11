@@ -1,0 +1,74 @@
+{include file="public/head" /}
+<style>
+    .no-fee{
+        padding: 50px 15px;
+        text-align: center;
+    }
+    .no-fee i{
+        display: block;
+        width: 100%;
+        font-size: 40px;
+    }
+    .no-fee span{
+        display: block;
+        line-height: 30px;
+        margin-top: 20px;
+    }
+    .order-list .order-item{
+        padding: 10px 15px;
+        line-height: 30px;
+        border-bottom: 1px solid #ccc;
+    }
+    .order-title .amount{
+        float: right;
+        color: #07c6fd;
+    }
+    .payment-status{
+        float: right;
+        font-size: 12px;
+    }
+</style>
+{if count($fee_list) == 0}
+<div class="no-fee">
+    <i class="iconfont icon-wukong"></i>
+    <span>暂无缴费记录</span>
+</div>
+{/if}
+{if count($fee_list) > 0}
+<div class="order-list">
+    {volist name="fee_list" id="vo"}
+    <div class="order-item" payment-status="{$vo.payment_status}">
+        <div class="order-title">
+            {$vo.name}
+            <span class="amount">￥{$vo.fee_amount}</span>
+        </div>
+        <div class="order-desc">
+            {$vo.fee_description}
+            {if $vo['payment_status'] == 1}
+            <span class="payment-status" style="color: green;">已付款</span>
+            {else/}
+            <span class="payment-status" style="color: red;">未付款</span>
+            {/if}
+        </div>
+    </div>
+    {/volist}
+</div>
+{/if}
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+    $(function(){
+        $('.order-item').click(function(){
+            var payment_status = $(this).attr('payment-status');
+            if(payment_status == 0){
+                layer.open({
+                    content: '您现在要支付吗？'
+                    ,btn: ['是', '否']
+                    ,yes: function(index){
+                        layer.close(index);
+                    }
+                });
+            }
+        });
+    });
+</script>

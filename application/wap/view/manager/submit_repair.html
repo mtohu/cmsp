@@ -1,0 +1,236 @@
+{include file="public/head" /}
+<style>
+    .repair{
+        padding: 15px;
+        overflow: hidden;
+        margin-bottom: 80px;
+    }
+    .repair-tips{
+        line-height: 30px;
+    }
+    .repair-type{
+        margin: 15px 0 15px 0;
+        overflow: hidden;
+    }
+    .repair-type .type-item{
+        width: 56px;
+        height: 56px;
+        float: left;
+        border: 1px solid #999;
+        border-radius: 100%;
+        margin-right: 10px;
+    }
+    .repair-type .type-item span{
+        line-height: 56px;
+        display: block;
+        text-align: center;
+        font-size: 10px;
+    }
+    .repair-desc{
+        margin-top: 20px;
+    }
+    .repair-desc textarea{
+        width: 100%;
+        height: 100px;
+        padding: 15px;
+        line-height: 24px;
+    }
+    .repair-imgs{
+        margin-top: 10px;
+    }
+    .repair-imgs .img-tips{
+        line-height: 30px;
+    }
+    .repair-imgs .img-list{
+        margin-top: 5px;
+    }
+    .repair-imgs .img-list .img-item{
+        width: 50px;
+        height: 50px;
+        float: left;
+        margin: 0 10px 10px 0;
+    }
+    .repair-imgs .img-list .img-item img{
+        width: 100%;
+        height: 100%;
+    }
+    .add-repair-img{
+        position: relative;
+        text-align: center;
+        border: 1px solid #ccc;
+    }
+    .add-repair-img i{
+        position: absolute;
+        z-index: 1;
+        font-size: 30px;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+    .add-repair-img input{
+        position: absolute;
+        z-index: 2;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+    }
+    .submit-repair{
+        width: 100%;
+        height: 48px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        padding: 5px 15px;
+        border-top: 1px solid #eee;
+        background-color: #fff;
+    }
+    .submit-repair .input{
+        border: 0;
+        width: 100%;
+        line-height: 38px;
+        background-color: #07c6fd;
+        color: #fff;
+        text-align: center;
+    }
+</style>
+<div class="repair">
+    <div class="repair-tips">
+        请选择报修类型并输入详细信息：
+    </div>
+    <div class="repair-type">
+        {if count($repair_type) > 0}
+        {volist name="repair_type" id="vo"}
+        <div class="type-item" repair-type="{$vo.id}">
+            <span>{$vo.type_name}</span>
+        </div>
+        {/volist}
+        {/if}
+    </div>
+    <div class="repair-desc">
+        <textarea name="" placeholder="请描述报修内容" id="repair-desc"></textarea>
+    </div>
+    <div class="repair-imgs">
+        <div class="img-tips">
+            上传报修图片（选填）：
+        </div>
+        <div class="img-list">
+            <div class="img-item add-repair-img">
+                <i class="iconfont icon-tianjia"></i>
+                <input type="file" id="select-img" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="submit-repair">
+    <div class="input" id="submit-repair">提交</div>
+</div>
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+<script>
+    $(function(){
+        var repair = {
+            data: {
+                repairType: 0,
+                repairDesc: ''
+            },
+            init: function(){
+                this.selectRepairType();
+            },
+            selectRepairType: function(){
+                var that = this;
+                $('.repair-type .type-item').click(function(){
+                    that.data.repairType = $(this).attr('repair-type');
+                    $('.repair-type .type-item').css({'color': '#333', 'border-color': '#999'});
+                    $(this).css('color', 'red');
+                    $(this).css('border-color', 'red');
+                });
+            },
+            checkData: function(){
+                var that = this;
+                if(that.data.repairType == 0){
+                    myLayer.alert('请选择报修类型');
+                    return false;
+                }
+                if(that.data.repairDesc == ''){
+                    myLayer.alert('内容描述不能为空');
+                    return false;
+                }
+                return true;
+            },
+            submitRepair: function(){
+                var that = this;
+                that.data.repairDesc = $('#repair-desc').val();
+                if(!that.checkData()){
+                    return;
+                }
+                layer.open({type: 2});
+                myHttp.ajax({
+                    url: "",
+                    data: {
+                        repair_type_id: that.data.repairType,
+                        content: that.data.repairDesc,
+                        imgs: repair_img.data.imgs
+                    },
+                    success: function(){
+                        layer.closeAll();
+                        myLayer.alert('提交成功');
+                        setTimeout(function(){
+                            location.href = "{:url('Manager/repairList')}";
+                        }, 200);
+                    },
+                    error: function(res){
+                        layer.closeAll();
+                        myLayer.alert(res.ErrorMsg);
+                    }
+                })
+            }
+        };
+        repair.init();
+        $('#submit-repair').click(function(){
+            repair.submitRepair();
+        });
+        var repair_img = {
+            data: {
+                imgs: []
+            },
+            toBase64: function(file){
+                var that = this;
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = function ()
+                {
+                    that.data.imgs.push(reader.result);
+                };
+            },
+            add: function(){
+                var that = this;
+                var fileList = document.getElementById("select-img").files;
+                var imgArr = [];
+                for (var i = 0; i < fileList.length; i++) {
+                    var imgUrl = window.URL.createObjectURL(fileList[i]);
+                    that.toBase64(fileList[i]);
+                    imgArr.push(imgUrl);
+                    var img = document.createElement("img");
+                    img.setAttribute("src", imgArr[i]);
+                    var imgAdd = document.createElement("div");
+                    imgAdd.setAttribute("class", "img-item");
+                    imgAdd.appendChild(img);
+                    document.getElementsByClassName("img-list")[0].appendChild(imgAdd);
+                }
+            },
+            remove: function(){
+
+            }
+        };
+        $('#select-img').change(function() {
+            repair_img.add();
+        });
+
+    })
+</script>

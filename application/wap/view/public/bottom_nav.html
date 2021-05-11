@@ -1,0 +1,51 @@
+<style>
+    .bottom-nav{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        border-top: 1px solid #ccc;
+    }
+    .bottom-nav .nav-item{
+        width: 33%;
+        float: left;
+        text-align: center;
+    }
+    .bottom-nav .nav-item i{
+        display: inline-block;
+        width: 100%;
+        line-height: 30px;
+    }
+    .bottom-nav .nav-item span{
+        display: inline-block;
+        width: 100%;
+        line-height: 30px;
+    }
+    .bottom-nav .nav-item-active i{
+        color: #07c6fd;
+    }
+    .bottom-nav .nav-item-active span{
+        color: #07c6fd;
+    }
+</style>
+<div class="bottom-nav">
+    <div class="nav-item {$nav_item.index}">
+        <a href="{:url('Index/index')}">
+            <i class="iconfont icon-shouye"></i>
+            <span>首页</span>
+        </a>
+    </div>
+    <div class="nav-item {$nav_item.manager}">
+        <a href="{:url('Manager/index')}">
+            <i class="iconfont icon-liulanmoshi"></i>
+            <span>管家</span>
+        </a>
+    </div>
+    <div class="nav-item {$nav_item.user}">
+        <a href="{:url('User/index')}">
+            <i class="iconfont icon-profile"></i>
+            <span>我的</span>
+        </a>
+    </div>
+</div>

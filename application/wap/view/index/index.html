@@ -1,0 +1,196 @@
+<style>
+    body{
+        padding-bottom: 150px;
+    }
+    /**-------------------top start-------------**/
+    .top{
+        line-height: 36px;
+        height: 36px;
+        background-color: #07c6fd;
+    }
+    .top .pos{
+        width: 50px;
+        text-align: center;
+        color: #fff;
+        float: left;
+    }
+    .top .search{
+        width: calc(100% - 100px);
+        padding: 2px 0;
+        margin: 0 auto;
+        position: relative;
+    }
+    .top .search input{
+        width: 100%;
+        height: 32px;
+        line-height: 32px;
+        border: 0;
+        float: left;
+    }
+    .top .search i{
+        display: block;
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        text-align: center;
+        position: absolute;
+        right: 0;
+        top: 2;
+    }
+    .top .msg{
+        width: 50px;
+        text-align: center;
+        color: #fff;
+        float: left;
+    }
+    .top .msg a{
+        color: #fff;
+    }
+    /**-------------------top end-------------**/
+    /**-------------------menu start-------------**/
+    .menu{
+        padding: 20px 0;
+        overflow: hidden;
+    }
+    .menu ul li{
+        width: 100px;
+        float: left;
+        text-align: center;
+    }
+    .menu ul li a i{
+        font-size: 24px;
+        width: 100%;
+        line-height: 30px;
+        display: inline-block;
+    }
+    .menu ul li a span{
+        font-size: 14px;
+        width: 100%;
+        line-height: 30px;
+        display: inline-block;
+    }
+    /**-------------------menu end-------------**/
+    /**-------------------notice start-------------**/
+    .notice{
+        padding: 8px 15px;
+        overflow: hidden;
+        margin-bottom: 8px;
+        border: 1px solid #ddd;
+        border-width: 1px 0;
+    }
+    .notice .title{
+        width: 50px;
+        line-height: 25px;
+        text-align: center;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        background-color: #fff;
+        float: left;
+    }
+    .notice .notice-con{
+        width: calc(100% - 60px);
+        color: red;
+        font-size: 12px;
+        padding: 0 5px;
+        line-height: 20px;
+        margin-left: 10px;
+        background-color: #eee;
+        float: left;
+    }
+    .notice .notice-con div{
+        color: #999;
+        line-height: 24px;
+    }
+    .notice .notice-con .t{
+        height: 25px;
+        overflow: hidden;
+    }
+    /**-------------------notice end-------------**/
+</style>
+<div class="top">
+    <a class="pos" href="{:url('Index/estatePos')}">
+        <!--<i class="iconfont icon-weizhi"></i>-->
+    </a>
+    <div class="search">
+        <!--<a href="{:url('Manager/feeList')}?source=Index__index"><input type="text" /></a>-->
+        <input type="text" id="search-txt" />
+        <i class="iconfont icon-chazhao" id="search-fee"></i>
+    </div>
+    <div class="msg">
+        <!--<a href="{:url('Index/msgList')}"><i class="iconfont icon-xiaoxi"></i></a>-->
+    </div>
+</div>
+{include file="public/banner" /}
+<div class="menu">
+    <ul>
+        <li>
+            <a href="{:url('Manager/feeList')}?source=Index__index">
+                <i class="iconfont icon-wodejiaofei"></i>
+                <span>我的缴费</span>
+            </a>
+        </li>
+        <!--<li>-->
+            <!--<a href="">-->
+                <!--<i class="iconfont icon-daiban"></i>-->
+                <!--<span>待办事项</span>-->
+            <!--</a>-->
+        <!--</li>-->
+    </ul>
+</div>
+<div id="notice-list" style="display: none;">
+    <div class="notice" v-for="notice in notice_list" @click="show(notice)">
+        <div class="title">通知<br/>通告</div>
+        <div class="notice-con">
+            <div class="t">{{notice.title}}</div>
+            <div class="c" :style="{height: notice.notice_con_c_height, overflow: notice.notice_con_c_overflow, textOverflow: notice.notice_con_c_text_overflow, whiteSpace: notice.notice_con_c_white_space}">{{notice.content}}</div>
+        </div>
+    </div>
+</div>
+{include file="plug_js/vue" /}
+<script>
+    $(function(){
+        myHttp.ajax({
+            url: "{:url('RequestApi/request_ajax')}",
+            data: {
+                api_action: 'notice_list'
+            },
+            success: function(res){
+                $('#notice-list').show();
+                var notice_list = res.Data;
+                for(var i in notice_list){
+                    notice_list[i].notice_con_c_height = '25px';
+                    notice_list[i].notice_con_c_overflow = 'hidden';
+                    notice_list[i].notice_con_c_text_overflow = 'ellipsis';
+                    notice_list[i].notice_con_c_white_space = 'nowrap';
+                }
+                var notice = new Vue({
+                    el: '#notice-list',
+                    data: {
+                        notice_list: notice_list
+                    },
+                    methods: {
+                        show: function(notice){
+                            if(notice.notice_con_c_overflow == 'hidden'){
+                                notice.notice_con_c_height = 'auto';
+                                notice.notice_con_c_overflow = 'visible';
+                                notice.notice_con_c_text_overflow = 'clip';
+                                notice.notice_con_c_white_space = 'normal';
+                            }else{
+                                notice.notice_con_c_height = '25px';
+                                notice.notice_con_c_overflow = 'hidden';
+                                notice.notice_con_c_text_overflow = 'ellipsis';
+                                notice.notice_con_c_white_space = 'nowrap';
+                            }
+                        }
+                    }
+                })
+            }
+        });
+        //搜索
+        $('#search-fee').click(function(){
+            var search_txt = $('#search-txt').val();
+            location.href = "{:url('Manager/feeList')}?source=Index__index&search_txt=" + search_txt;
+        });
+    });
+</script>
+{include file="public/bottom_nav" /}

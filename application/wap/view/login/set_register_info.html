@@ -1,0 +1,267 @@
+{include file="public/head" /}
+<style>
+    .tabs{
+        overflow: hidden;
+    }
+    .tabs .tab{
+        width: 50%;
+        float: left;
+        line-height: 36px;
+        text-align: center;
+    }
+    .tabs .no-active{
+        color: #ccc;
+        border-bottom: 1px solid #d0d0d0;
+    }
+    .form-item select{
+        height: 24px;
+        line-height: 24px;
+    }
+    .form-submit{
+        margin-bottom: 50px;
+    }
+</style>
+<div class="tabs">
+    <div class="tab" id="tab-house" style="border-right: 1px solid #d0d0d0;">绑定房屋产业</div>
+    <div class="tab no-active" id="tab-service">我是维修人员</div>
+</div>
+<div id="house">
+    <div class="form-item tab-house">
+        <div class="form-label">小区</div>
+        <div class="form-input">
+            <select name="" @change="regionChange(regionName)" v-model="regionName">
+                <option v-for="region in regions" :value="region">{{region}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-item tab-house">
+        <div class="form-label">房号</div>
+        <div class="form-input">
+            <select name="" @change="buildingChange(buildingName)" v-model="buildingName">
+                <option v-for="building in buildings" :value="building">{{building}}</option>
+            </select>
+            栋
+            <select name="" @change="unitChange(unitName)" v-model="unitName">
+                <option v-for="unit in units" :value="unit">{{unit}}</option>
+            </select>
+            单元
+            <select name="" @change="roomChange(roomName)" v-model="roomName">
+                <option v-for="room in rooms" :value="room.room_no">{{room.room_no}}</option>
+            </select>
+            室
+        </div>
+    </div>
+</div>
+<div class="form-item tab-house">
+    <div class="form-label">用户类型</div>
+    <div class="form-input">
+        <select id="resident-type">
+            <option value="1">房屋所有者</option>
+            <option value="2">房屋所有者家人</option>
+            <option value="3">租客</option>
+        </select>
+    </div>
+</div>
+<div class="form-item tab-service">
+    <div class="form-label">姓名</div>
+    <div class="form-input">
+        <input type="text" placeholder="请输入姓名" id="name" />
+    </div>
+</div>
+<div class="form-item tab-service">
+    <div class="form-label">身份证号码</div>
+    <div class="form-input">
+        <input type="text" placeholder="请输入房屋登记人身份证号" id="id-card-no" />
+    </div>
+</div>
+<div class="form-item tab-service">
+    <div class="form-label">预留手机号</div>
+    <div class="form-input">
+        <input type="text" placeholder="请输入房屋登记人预留手机号" id="user-phone" />
+    </div>
+</div>
+<div class="form-submit">
+    <div class="input" id="set-info">确定</div>
+</div>
+{include file="plug_js/jquery" /}
+{include file="plug_js/layer" /}
+{include file="plug_js/vue" /}
+<script>
+    var regions = [];
+    var buildings = [];
+    var units = [];
+    var rooms = [];
+    {volist name="regions" id="vo"}
+    regions.push('{$vo}');
+    {/volist}
+        {volist name="buildings" id="vo"}
+        buildings.push('{$vo}');
+        {/volist}
+            {volist name="units" id="vo"}
+            units.push('{$vo}');
+            {/volist}
+                {volist name="rooms" id="vo"}
+                rooms.push({id:{$vo.id},room_no:{$vo.room_no}});
+                {/volist}
+$(function(){
+    var room_id = rooms[0].id;
+    //房间列表
+    var room = new Vue({
+        el: '#house',
+        data: {
+            regions: regions,
+            regionName: regions[0],
+            buildings: buildings,
+            buildingName: buildings[0],
+            units: units,
+            unitName: units[0],
+            rooms: rooms,
+            roomName: rooms[0].room_no,
+        },
+        methods: {
+            regionChange: function(regionName){
+                var that = this;
+                myHttp.ajax({
+                    url: "{:url('Room/getBuildings')}",
+                    data: {
+                        region: that.regionName
+                    },
+                    success: function(res){
+                        that.buildings = res.Data.buildings;
+                        that.buildingName = that.buildings[0];
+                        that.units = res.Data.units;
+                        that.unitName = that.units[0];
+                        that.rooms = res.Data.rooms;
+                        that.roomName = that.rooms[0].room_no;
+                        room_id = that.rooms[0].id;
+                    }
+                })
+            },
+            buildingChange: function(buildingName){
+                var that = this;
+                myHttp.ajax({
+                    url: "{:url('Room/getUnits')}",
+                    data: {
+                        region: that.regionName,
+                        building: that.buildingName
+                    },
+                    success: function(res){
+                        that.units = res.Data.units;
+                        that.unitName = that.units[0];
+                        that.rooms = res.Data.rooms;
+                        that.roomName = that.rooms[0].room_no;
+                        room_id = that.rooms[0].id;
+                    }
+                })
+            },
+            unitChange: function(unitName){
+                var that = this;
+                myHttp.ajax({
+                    url: "{:url('Room/getRooms')}",
+                    data: {
+                        region: that.regionName,
+                        building: that.buildingName,
+                        unit: that.unitName
+                    },
+                    success: function(res){
+                        that.rooms = res.Data.rooms;
+                        that.roomName = that.rooms[0].room_no;
+                        room_id = that.rooms[0].id;
+                    }
+                })
+            },
+            roomChange: function(roomName){
+
+            }
+        }
+    });
+    /*****************  选项卡 start ***************/
+    var tab = {
+        init: function(){
+            this.click();
+        },
+        click: function(){
+            $('#tab-house').click(function(){
+                set_info.data.isStaff = 0;
+                $(this).removeClass('no-active');
+                $('#tab-service').addClass('no-active');
+                $('.tab-house').show();
+            });
+            $('#tab-service').click(function(){
+                set_info.data.isStaff = 1;
+                $(this).removeClass('no-active');
+                $('#tab-house').addClass('no-active');
+                $('.tab-house').hide();
+            });
+        }
+    };
+    tab.init();
+    /*****************  选项卡 end ***************/
+    /*****************  注册 start ***************/
+    var set_info = {
+        data: {
+            token: myCookie.get('token'),
+            userId: parseInt(myCookie.get('user_id')),
+            idCardNo: '',
+            name: '',
+            userPhone: '',
+            isStaff: 0,//是否是维修人员，1：是；0：否
+        },
+        checkData: function(){
+            var that = this;
+            if(that.data.name == ''){
+                myLayer.alert('姓名不能为空');
+                return false;
+            }
+            if(that.data.idCardNo == ''){
+                myLayer.alert('身份证号不能为空');
+                return false;
+            }
+            if(that.data.userPhone == ''){
+                myLayer.alert('手机号不能为空');
+                return false;
+            }
+            return true;
+        },
+        submit: function(){
+            var that = this;
+            that.data.idCardNo = $('#id-card-no').val();
+            that.data.userPhone = $('#user-phone').val();
+            that.data.name = $('#name').val();
+            if(!that.checkData()){
+                return;
+            }
+            var post_data = {
+                api_action: 'save_bind_community_room',
+                token: that.data.token,
+                resident_id: that.data.userId,
+                identification: that.data.idCardNo,
+                uphone: that.data.userPhone,
+                name: that.data.name,
+                is_maintenance_staff: that.data.isStaff
+            };
+            if(that.data.isStaff == 0){
+                post_data.room_id = room_id;
+                post_data.resident_type = $('#resident-type').val();
+            }
+            myHttp.ajax({
+                url: "{:url('RequestApi/request_ajax')}",
+                data: post_data,
+                success: function(){
+                    myLayer.alert('注册成功');
+                    setTimeout(function(){
+                        location.href = "{:url('Index/index')}";
+                    }, 2000);
+                },
+                error: function(res){
+                    myLayer.alert(res.ErrorMsg);
+                }
+            })
+        }
+    };
+    $('#set-info').click(function(){
+        set_info.submit();
+    });
+    /*****************  注册 end ***************/
+});
+</script>
